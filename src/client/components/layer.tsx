@@ -12,7 +12,7 @@ export function Layer({ displayOrder, children }: LayerProps) {
 			BackgroundTransparency={1}
 			Size={new UDim2(1, 0, 1, 0)}
 			Position={new UDim2(0, 0, 0, 0)}
-			ZIndex={displayOrder}
+			// ZIndex={displayOrder}
 		>
 			{children}
 		</frame>
@@ -21,7 +21,7 @@ export function Layer({ displayOrder, children }: LayerProps) {
 			DisplayOrder={displayOrder}
 			IgnoreGuiInset
 			ResetOnSpawn={false}
-			ZIndexBehavior={Enum.ZIndexBehavior.Sibling}
+			// ZIndexBehavior={Enum.ZIndexBehavior.Sibling}
 		>
 			{children}
 		</screengui>
