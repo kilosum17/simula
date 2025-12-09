@@ -26,8 +26,7 @@ const items = [
 
 let last_call = os.time()
 
-interface IProps { }
-export function LeftButtons(props: IProps) {
+export function LeftButtons() {
     const ref1 = useRef<UIScale>()
     const ref2 = useRef<UIScale>()
 
