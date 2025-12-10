@@ -58,7 +58,7 @@ export class Fossil {
         part.CanCollide = false
         part.Anchored = true
         part.Name = `fos ${this.stage.stageNo}-${part.Name}`
-        part.Parent = ensureInstance("Targets.Fossils")
+        part.Parent = ensureInstance({ path: "Targets.Fossils" })
         part.AddTag('fossil');
     }
     private repositionMesh(rotate = true) {

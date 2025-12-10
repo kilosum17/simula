@@ -1,7 +1,12 @@
-import { Players } from "@rbxts/services";
+import { PhysicsService, Players } from "@rbxts/services";
 import { FossilService } from "shared/fossils/fossil_services";
 import { PetsService } from "shared/pets/pets_service";
 import { PlayerService } from "shared/player/player_service";
+
+PhysicsService.RegisterCollisionGroup("PET")
+PhysicsService.RegisterCollisionGroup("PLAYER")
+PhysicsService.CollisionGroupSetCollidable("PET", "PET", false)
+PhysicsService.CollisionGroupSetCollidable("PET", "PLAYER", false)
 
 const playerServices = {} as Record<number, PlayerService>
 const petsServices = {} as Record<number, PetsService>

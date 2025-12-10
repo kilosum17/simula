@@ -3,7 +3,7 @@ import { createMotion } from "@rbxts/ripple"
 import { ensureInstance, getIgnoreFold } from "./assist"
 
 export const getZoneBarrier = (stage: number) => {
-    const barrier = ensureInstance("Game.Zones", undefined, false).FindFirstChild(`${stage}`)
+    const barrier = ensureInstance({ path: "Game.Zones", create: false }).FindFirstChild(`${stage}`)
     if (barrier) {
         return barrier
     }

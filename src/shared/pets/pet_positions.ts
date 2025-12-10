@@ -1,5 +1,5 @@
 import { RunService, Workspace } from "@rbxts/services"
-import { col, getHRP, getHumanoid } from "shared/help/assist"
+import { col, getHRP, getHumanoid, getPlayer } from "shared/help/assist"
 
 const SHOW_PET_POS_PARTS = true
 
@@ -7,8 +7,8 @@ export class PetPositions {
     player: Player
     pos: Vector3[]
 
-    constructor(player: Player) {
-        this.player = player
+    constructor() {
+        this.player = getPlayer()
         this.pos = []
         this._setPositions()
 
@@ -69,7 +69,7 @@ export class PetPositions {
         const [, yRotRad,] = getHRP(this.player).CFrame.ToEulerAnglesYXZ()
         const yRotDeg = math.deg(yRotRad)
         // print('rotate', math.round(yRotDeg))
-        const R = 6
+        const R = 8
         for (let row = 1; row <= 5; row++) {
             for (let i = 0; i < this.angles[row].size(); i++) {
                 // const angle = this.angles[i] + 90 + yRotDeg

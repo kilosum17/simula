@@ -6,11 +6,9 @@ import { listToCountMap } from "shared/help/math";
 export class PetsManager {
     petsServ: PetsService
     pets = [] as Pet[]
-    petPos: PetPositions
 
     constructor(petsServ: PetsService) {
         this.petsServ = petsServ
-        this.petPos = new PetPositions(petsServ.player)
     }
 
     updateEquipedPets(ids: string[]) {
@@ -34,7 +32,7 @@ export class PetsManager {
                 this._removePet(id, -count)
             }
         }
-
+        this._setPetPositions()
     }
 
     _addPet(id: string, count: number) {

@@ -202,9 +202,10 @@ export const getBezierAt = (p0: Vector3, p1: Vector3, p2: Vector3, t: number): V
     return new Vector3(x, y, z);
 }
 
-export const ensureInstance = (name: string, root: Instance = game.Workspace, create = true) => {
-    const parts = name.split(".")
-    // for(game.)
+export const ensureInstance = ({ path, root = game.Workspace, create = true }: {
+    path: string, root?: Instance, create?: boolean,
+}) => {
+    const parts = path.split(".")
     let parent = root
     for (const part of parts) {
         if (!parent.FindFirstChild(part) && create) {
@@ -223,7 +224,7 @@ export const placeTestPart = ({ pos, x = 0, y = 0, z = 0, trans = 0.5, expire = 
         pos = new Vector3(x, y, z)
     }
     const p = new Instance('Part')
-    p.Parent = ensureInstance("Targets.Ignore") as Folder
+    p.Parent = ensureInstance({ path: "Targets.Ignore" }) as Folder
     p.Position = pos
     p.Anchored = true
     p.Name = 'Test'
@@ -510,7 +511,7 @@ export function onAttributesChanged(instance: Instance, atts: string[], changed:
 }
 
 export function getIgnoreFold() {
-    return ensureInstance("Targets.Ignore") as Folder
+    return ensureInstance({ path: "Targets.Ignore" }) as Folder
 }
 
 export function addPointerToFront(basePart: BasePart, len = 3, color = col('red')) {
