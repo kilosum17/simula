@@ -88,6 +88,7 @@ export const getFosOfType2 = (fos: string, ratio: number, clone: (no: number) =>
             let part = folder.WaitForChild(fos + no) as BasePart
             if (clone(no)) {
                 part = part.Clone()
+                part.CollisionGroup = "FOSSIL"
                 const mult = FOS_MODs[fos] || 1
                 part.Size = part.Size.mul(mult)
             }

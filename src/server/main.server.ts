@@ -5,8 +5,11 @@ import { PlayerService } from "shared/player/player_service";
 
 PhysicsService.RegisterCollisionGroup("PET")
 PhysicsService.RegisterCollisionGroup("PLAYER")
+// PhysicsService.RegisterCollisionGroup("FOSSIL")
 PhysicsService.CollisionGroupSetCollidable("PET", "PET", false)
 PhysicsService.CollisionGroupSetCollidable("PET", "PLAYER", false)
+// PhysicsService.CollisionGroupSetCollidable("PET", "FOSSIL", false)
+// PhysicsService.CollisionGroupSetCollidable("PLAYER", "FOSSIL", false)
 
 const playerServices = {} as Record<number, PlayerService>
 const petsServices = {} as Record<number, PetsService>

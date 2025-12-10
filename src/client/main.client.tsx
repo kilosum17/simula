@@ -12,3 +12,4 @@ const target = Players.LocalPlayer.WaitForChild("PlayerGui");
 root.render(<StrictMode>{createPortal(<App />, target)}</StrictMode>);
 
 new PetsServiceClient()
+

@@ -1,7 +1,7 @@
 import { RunService, Workspace } from "@rbxts/services"
 import { col, getHRP, getHumanoid, getPlayer } from "shared/help/assist"
 
-const SHOW_PET_POS_PARTS = true
+const SHOW_PET_POS_PARTS = false
 
 export class PetPositions {
     player: Player
@@ -12,7 +12,6 @@ export class PetPositions {
         this.pos = []
         this._setPositions()
 
-        warn("RENDER PET_POSSESSES")
         RunService.RenderStepped.Connect(() => {
             this._setPositions()
         })
@@ -62,7 +61,7 @@ export class PetPositions {
             return
         }
         this.last_pos = pos
-        const { X: hx, Y: hy, Z: hz } = pos
+        const { X: hrpX, Y: hrpY, Z: hrpZ } = pos
         this.pos = []
         // const height = getHumanoid().HipHeight - 0
         const height = getHumanoid(this.player).HipHeight
@@ -75,9 +74,9 @@ export class PetPositions {
                 // const angle = this.angles[i] + 90 + yRotDeg
                 const radius = R * row
                 const angle = this.angles[row][i] - yRotDeg + 90
-                const x = hx + radius * math.cos(math.rad(angle))
-                const z = hz + radius * math.sin(math.rad(angle))
-                const y = hy - height
+                const x = hrpX + radius * math.cos(math.rad(angle))
+                const z = hrpZ + radius * math.sin(math.rad(angle))
+                const y = hrpY - height
                 // placeTestPart(x, y, z)
                 this.pos.push(new Vector3(x, y, z))
             }

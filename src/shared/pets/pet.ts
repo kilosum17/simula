@@ -3,7 +3,7 @@ import { PetsManager } from "./pets_manager";
 import { getItemConf, IItemConfig } from "shared/help/DATA";
 import { col, ensureInstance, getHRP, setPartDensity } from "shared/help/assist";
 
-type TBody = Part & {
+export type TPetBody = Part & {
     BodyPosition: BodyPosition,
     BodyGyro: BodyGyro,
     BodyVelocity: BodyVelocity,
@@ -14,7 +14,7 @@ export class Pet {
     id: string
     _pos = 0
     _conf: IItemConfig
-    _anchor: TBody
+    _anchor: TPetBody
     _body: BasePart
 
     constructor(petsMan: PetsManager, id: string) {
@@ -39,13 +39,14 @@ export class Pet {
         anchor.Color = col("red")
         anchor.Name = `PET-${this._conf.name} -${this._conf.model_name}`
         const folderName = `${player.UserId}`
-        const folder = ensureInstance({ path: folderName, root: PetStorage})
+        const folder = ensureInstance({ path: folderName, root: PetStorage })
         anchor.Parent = folder
         anchor.SetNetworkOwner(player)
         anchor.CollisionGroup = "PET"
-        anchor.CanCollide = true
+        anchor.CanCollide = false
         anchor.Anchored = false
-        anchor.Size = new Vector3(.5, .5, .5)
+        anchor.Size = new Vector3(.8, .8, .8)
+        anchor.Shape = Enum.PartType.Ball
 
         const body = new Instance("Part")
         body.CollisionGroup = "PET"
@@ -61,7 +62,7 @@ export class Pet {
         weld.Part1 = body
         weld.Parent = anchor
 
-        return { body: body as BasePart, anchor: anchor as TBody }
+        return { body: body as BasePart, anchor: anchor as TPetBody }
     }
 
     _configureModel() {
@@ -70,7 +71,7 @@ export class Pet {
         const BodyPosition = new Instance("BodyPosition")
         BodyPosition.P = BodyPosition.P * 2
         BodyPosition.Position = anchor.Position
-        BodyPosition.MaxForce = new Vector3(math.huge, 50, math.huge)
+        BodyPosition.MaxForce = new Vector3(math.huge, math.huge, math.huge)
         BodyPosition.Parent = anchor
 
         const BodyGyro = new Instance("BodyGyro")
