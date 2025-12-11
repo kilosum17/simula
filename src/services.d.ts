@@ -13375,85 +13375,57 @@ interface Workspace extends Model {
 
 
 
-
-
-
-
 interface ReplicatedStorage extends Instance {
 	TS: Folder & {
-		core: Folder & {
-			Petie: ModuleScript;
-			Syncer: ModuleScript;
-			LeaderBoard: ModuleScript;
-			Stages: ModuleScript;
-			ServerSystems: ModuleScript;
-			Client: ModuleScript;
-			Miner: ModuleScript;
-			Server: ModuleScript;
-			EggHatch: ModuleScript;
-			Boards: ModuleScript;
-			Rebirth: ModuleScript;
-			Upgrader: ModuleScript;
-			ClientSystems: ModuleScript;
-			HoverSystem: ModuleScript;
-			CostUI: ModuleScript;
-			Pager: ModuleScript;
-			Hoverboard_bak: ModuleScript;
-			Hoverboard: ModuleScript;
-			TipsSystem: ModuleScript;
+		pets: Folder & {
+			pet_utils: ModuleScript;
+			pets_service_client: ModuleScript;
+			pets_manager: ModuleScript;
+			pet_bouncer: ModuleScript;
+			pet_positions: ModuleScript;
+			pets_mover: ModuleScript;
+			pets_service: ModuleScript;
+			pet: ModuleScript;
 		};
-		utils: Folder & {
+		player: Folder & {
+			player_location: ModuleScript;
+			player_service: ModuleScript;
+			player_data: ModuleScript;
+		};
+		help: Folder & {
 			CONF: ModuleScript;
-			TakePics: ModuleScript;
-			Automator: ModuleScript;
-			LDATA: ModuleScript;
-			DATA: ModuleScript;
+			play_sound: ModuleScript;
+			math: ModuleScript;
 			assist: ModuleScript;
 			helpers: ModuleScript;
-			play_sound: ModuleScript;
-			REGS: ModuleScript;
+			DATA: ModuleScript;
+			LDATA: ModuleScript;
 		};
-		comps: Folder & {
-			MainPopup: ModuleScript;
-			LoadUI: ModuleScript;
-			Teleporter: ModuleScript;
-			CompHelpers: ModuleScript;
-			Wrappers: ModuleScript;
-			SideTools: ModuleScript;
-			PlayTimeGifts: ModuleScript;
-			Inventory: ModuleScript;
-			TestUi: ModuleScript;
-			QuickToast: ModuleScript;
-			MountWrap: ModuleScript;
-			ShopUI: ModuleScript;
-			Settings: ModuleScript;
-			Popups: ModuleScript;
-			Notifier: ModuleScript;
-			CompNotifiers: ModuleScript;
-			Ranker: ModuleScript;
+		ui: Folder & {
+			hooks: Folder & {
+				use_screensize: ModuleScript;
+			};
+			utils: Folder;
+			comps: Folder & {
+				Wrappers: ModuleScript;
+				LBox: ModuleScript;
+				CostUI: ModuleScript;
+			};
+			LeftButtons: ModuleScript;
+			MainUI: ModuleScript;
 		};
-		classes: Folder & {
-			Egg: ModuleScript;
-			DispencerSystem: ModuleScript;
-			FusePets: ModuleScript;
-			ActiveBoosts: ModuleScript;
-			LightEffects: ModuleScript;
-			ServerHelp: ModuleScript;
-			TradeSystem: ModuleScript;
-			FreeGifts: ModuleScript;
-			TradeList: ModuleScript;
-			ServerLeaderBoard: ModuleScript;
-			GroupRewards: ModuleScript;
-			Toast: ModuleScript;
-			MergeFossils: ModuleScript;
-			Pots: ModuleScript;
-			InfoSystem: ModuleScript;
+		signals: Folder & {
+			client_signals: ModuleScript;
+			MineActionSig: ModuleScript;
+			server_signals: ModuleScript;
 		};
-		bonus: Folder & {
-			NewAnimate: ModuleScript;
-			BSync: ModuleScript;
-			NewAnimateFootsteps: ModuleScript;
+		fossils: Folder & {
+			fossil_health_ui: ModuleScript;
+			fossil_services: ModuleScript;
+			Stage: ModuleScript;
+			fossil: ModuleScript;
 		};
+		constants: ModuleScript;
 	};
 	["public"]: Folder & {
 		models: Folder & {
@@ -13624,9 +13596,9 @@ interface ReplicatedStorage extends Instance {
 				part: Part & {
 					Leave: ParticleEmitter;
 					["0"]: Attachment;
-					Feather: ParticleEmitter;
-					Spec: ParticleEmitter;
 					["Spin Script"]: Script;
+					Spec: ParticleEmitter;
+					Feather: ParticleEmitter;
 				};
 			};
 			littleBurst: Folder & {
@@ -13735,16 +13707,14 @@ interface ReplicatedStorage extends Instance {
 	instance: Folder & {
 		models: Folder & {
 			PetObj: Model & {
-				Animator: RemoteEvent & {
-					Server: Script;
-				};
+				Animator: RemoteEvent;
 				Base: Part;
 				Obj: Model & {
 					["Left Leg"]: Part;
-					["Right Arm"]: Part;
+					AnimationController: AnimationController;
 					["Right Leg"]: Part;
 					["Left Arm"]: Part;
-					AnimationController: AnimationController;
+					Head: Part;
 					Torso: Part & {
 						["Left Shoulder"]: Motor6D;
 						["Right Shoulder"]: Motor6D;
@@ -13752,7 +13722,7 @@ interface ReplicatedStorage extends Instance {
 						["Right Hip"]: Motor6D;
 						["Left Hip"]: Motor6D;
 					};
-					Head: Part;
+					["Right Arm"]: Part;
 					Body: Part & {
 						["Root Hip"]: Motor6D;
 					};
@@ -13791,13 +13761,13 @@ interface ReplicatedStorage extends Instance {
 						};
 					};
 					NeonLight: MeshPart;
+					Base: Model & {
+						["Mesh Parts"]: MeshPart;
+					};
 					Screen: Part & {
 						SurfaceGui: SurfaceGui & {
 							TextLabel: TextLabel;
 						};
-					};
-					Base: Model & {
-						["Mesh Parts"]: MeshPart;
 					};
 					Light: MeshPart;
 				};
@@ -13814,16 +13784,16 @@ interface ReplicatedStorage extends Instance {
 						};
 					};
 					NeonLight: MeshPart;
-					Screen: Part & {
-						SurfaceGui: SurfaceGui & {
-							TextLabel: TextLabel;
-						};
-					};
 					Base: Model & {
 						["Mesh Parts"]: MeshPart & {
 							Attachment: Attachment & {
 								PointLight: PointLight;
 							};
+						};
+					};
+					Screen: Part & {
+						SurfaceGui: SurfaceGui & {
+							TextLabel: TextLabel;
 						};
 					};
 					Light: MeshPart;
@@ -13849,9 +13819,21 @@ interface ReplicatedStorage extends Instance {
 			};
 			["5_terror_bird"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							Neck_01: Bone & {
+								Neck_02: Bone & {
+									Head: Bone;
+								};
+							};
+							wing_R: Bone;
+							tail_01: Bone;
+							Foot_L: Bone;
+							Foot_R: Bone;
+							wing_L: Bone;
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -13903,28 +13885,26 @@ interface ReplicatedStorage extends Instance {
 					RootPart_Initial: CFrameValue;
 					Neck_01_Composited: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							Neck_01: Bone & {
-								Neck_02: Bone & {
-									Head: Bone;
-								};
-							};
-							wing_R: Bone;
-							tail_01: Bone;
-							Foot_L: Bone;
-							Foot_R: Bone;
-							wing_L: Bone;
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["2_coelodonta"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							BFoot_R: Bone;
+							BFoot_L: Bone;
+							Head: Bone;
+							FFoot_R: Bone;
+							FFoot_L: Bone;
+							Tail1: Bone & {
+								Tail2: Bone;
+							};
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -13964,19 +13944,9 @@ interface ReplicatedStorage extends Instance {
 					Tail2_Initial: CFrameValue;
 					Tail1_Original: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							BFoot_R: Bone;
-							BFoot_L: Bone;
-							Head: Bone;
-							FFoot_R: Bone;
-							FFoot_L: Bone;
-							Tail1: Bone & {
-								Tail2: Bone;
-							};
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["07_bracho"]: Model & {
@@ -13984,9 +13954,22 @@ interface ReplicatedStorage extends Instance {
 			};
 			["7_guardian_dog"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							BFoot_R: Bone;
+							BFoot_L: Bone;
+							Head: Bone;
+							Chain_01: Bone & {
+								Chain_02: Bone;
+							};
+							FFoot_R: Bone;
+							FFoot_L: Bone;
+							Tail_01: Bone & {
+								Tail_02: Bone;
+							};
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Chain_01_Original: CFrameValue;
@@ -14038,29 +14021,44 @@ interface ReplicatedStorage extends Instance {
 					Body_Composited: CFrameValue;
 					BFoot_end_L_Initial: CFrameValue;
 				};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
+				};
+			};
+			["13_bearded_dragon"]: Model & {
+				AnimationController: AnimationController;
 				Body: MeshPart & {
 					RootPart: Bone & {
 						Body: Bone & {
 							BFoot_R: Bone;
 							BFoot_L: Bone;
 							Head: Bone;
-							Chain_01: Bone & {
-								Chain_02: Bone;
-							};
 							FFoot_R: Bone;
 							FFoot_L: Bone;
 							Tail_01: Bone & {
-								Tail_02: Bone;
+								Tail_02: Bone & {
+									Tail_03: Bone & {
+										Tail_04: Bone & {
+											Tail_05: Bone & {
+												Tail_06: Bone & {
+													Tail_07: Bone & {
+														Tail_08: Bone & {
+															Tail_09: Bone & {
+																Tail_10: Bone & {
+																	Tail_11: Bone;
+																};
+															};
+														};
+													};
+												};
+											};
+										};
+									};
+								};
 							};
 						};
 					};
-				};
-			};
-			["13_bearded_dragon"]: Model & {
-				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -14136,6 +14134,13 @@ interface ReplicatedStorage extends Instance {
 					Tail_09_Initial: CFrameValue;
 					BFoot_end_L_Initial: CFrameValue;
 				};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
+				};
+			};
+			["16_sphinx"]: Model & {
+				AnimationController: AnimationController;
 				Body: MeshPart & {
 					RootPart: Bone & {
 						Body: Bone & {
@@ -14146,34 +14151,11 @@ interface ReplicatedStorage extends Instance {
 							FFoot_L: Bone;
 							Tail_01: Bone & {
 								Tail_02: Bone & {
-									Tail_03: Bone & {
-										Tail_04: Bone & {
-											Tail_05: Bone & {
-												Tail_06: Bone & {
-													Tail_07: Bone & {
-														Tail_08: Bone & {
-															Tail_09: Bone & {
-																Tail_10: Bone & {
-																	Tail_11: Bone;
-																};
-															};
-														};
-													};
-												};
-											};
-										};
-									};
+									Tail_03: Bone;
 								};
 							};
 						};
 					};
-				};
-			};
-			["16_sphinx"]: Model & {
-				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -14222,28 +14204,34 @@ interface ReplicatedStorage extends Instance {
 					Body_Composited: CFrameValue;
 					Sphinx_16_Initial: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							BFoot_R: Bone;
-							BFoot_L: Bone;
-							Head: Bone;
-							FFoot_R: Bone;
-							FFoot_L: Bone;
-							Tail_01: Bone & {
-								Tail_02: Bone & {
-									Tail_03: Bone;
-								};
-							};
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["8_imagotaria"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							Hand_L: Bone & {
+								Hand_02_L: Bone;
+							};
+							Tail_01: Bone & {
+								Tail_02: Bone & {
+									Tail_03: Bone & {
+										Tail_04: Bone & {
+											Tail_05: Bone;
+										};
+									};
+								};
+							};
+							Hand_R: Bone & {
+								Hand_02_R: Bone;
+							};
+							Head: Bone;
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -14298,34 +14286,41 @@ interface ReplicatedStorage extends Instance {
 					Tail_05_Initial: CFrameValue;
 					Tail_05_Composited: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							Hand_L: Bone & {
-								Hand_02_L: Bone;
-							};
-							Tail_01: Bone & {
-								Tail_02: Bone & {
-									Tail_03: Bone & {
-										Tail_04: Bone & {
-											Tail_05: Bone;
-										};
-									};
-								};
-							};
-							Hand_R: Bone & {
-								Hand_02_R: Bone;
-							};
-							Head: Bone;
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["14_horned_cobra"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Head: Bone & {
+							Neck: Bone & {
+								Body_01: Bone & {
+									Body_02: Bone & {
+										Body_03: Bone & {
+											Body_04: Bone & {
+												Body_05: Bone & {
+													Body_06: Bone & {
+														Body_07: Bone & {
+															Tail_01: Bone & {
+																Tail_02: Bone & {
+																	Tail_03: Bone & {
+																		Tail_04: Bone;
+																	};
+																};
+															};
+														};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Body_06_Composited: CFrameValue;
@@ -14374,34 +14369,9 @@ interface ReplicatedStorage extends Instance {
 					Body_01_Composited: CFrameValue;
 					Horned_Cobra_14_Composited: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Head: Bone & {
-							Neck: Bone & {
-								Body_01: Bone & {
-									Body_02: Bone & {
-										Body_03: Bone & {
-											Body_04: Bone & {
-												Body_05: Bone & {
-													Body_06: Bone & {
-														Body_07: Bone & {
-															Tail_01: Bone & {
-																Tail_02: Bone & {
-																	Tail_03: Bone & {
-																		Tail_04: Bone;
-																	};
-																};
-															};
-														};
-													};
-												};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["01_sabertooth"]: Model & {
@@ -14426,9 +14396,25 @@ interface ReplicatedStorage extends Instance {
 			};
 			["9_guardian_crocodile"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							Foot_L: Bone & {
+								Foot_end_L: Bone;
+							};
+							wing_R: Bone;
+							Head: Bone;
+							wing_L: Bone;
+							Foot_R: Bone & {
+								Foot_end_R: Bone;
+							};
+							tail_01: Bone & {
+								tail_02: Bone & {
+									tail_end: Bone;
+								};
+							};
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -14477,32 +14463,28 @@ interface ReplicatedStorage extends Instance {
 					Head_Composited: CFrameValue;
 					Guardian_Crocodile_9_Composited: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							Foot_L: Bone & {
-								Foot_end_L: Bone;
-							};
-							wing_R: Bone;
-							Head: Bone;
-							wing_L: Bone;
-							Foot_R: Bone & {
-								Foot_end_R: Bone;
-							};
-							tail_01: Bone & {
-								tail_02: Bone & {
-									tail_end: Bone;
-								};
-							};
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["3_glyptodon"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							BFoot_R: Bone;
+							BFoot_L: Bone;
+							Tail_01: Bone & {
+								Tail_02: Bone & {
+									Tail_03: Bone;
+								};
+							};
+							FFoot_R: Bone;
+							FFoot_L: Bone;
+							Head: Bone;
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -14545,28 +14527,23 @@ interface ReplicatedStorage extends Instance {
 					Tail_03_Original: CFrameValue;
 					Head_Initial: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							BFoot_R: Bone;
-							BFoot_L: Bone;
-							Tail_01: Bone & {
-								Tail_02: Bone & {
-									Tail_03: Bone;
-								};
-							};
-							FFoot_R: Bone;
-							FFoot_L: Bone;
-							Head: Bone;
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["15_stripped_owl"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							Foot_L: Bone;
+							Hand_R: Bone;
+							Head: Bone;
+							Hand_L: Bone;
+							Foot_R: Bone;
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -14606,23 +14583,26 @@ interface ReplicatedStorage extends Instance {
 					Hand_end_R_Initial: CFrameValue;
 					Hand_end_R_Original: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							Foot_L: Bone;
-							Hand_R: Bone;
-							Head: Bone;
-							Hand_L: Bone;
-							Foot_R: Bone;
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["6_behemotops"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							BFoot_R: Bone;
+							BFoot_L: Bone;
+							Head: Bone;
+							FFoot_R: Bone;
+							FFoot_L: Bone;
+							Tail_01: Bone & {
+								Tail_02: Bone;
+							};
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -14668,26 +14648,49 @@ interface ReplicatedStorage extends Instance {
 					BFoot_end_R_Original: CFrameValue;
 					BFoot_end_L_Initial: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							BFoot_R: Bone;
-							BFoot_L: Bone;
-							Head: Bone;
-							FFoot_R: Bone;
-							FFoot_L: Bone;
-							Tail_01: Bone & {
-								Tail_02: Bone;
-							};
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["10_giant_crab"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							Foot_03_R: Bone & {
+								Foot_end_03_R: Bone;
+							};
+							Eye_R: Bone & {
+								Eye_End_R: Bone;
+							};
+							Foot_03_L: Bone & {
+								Foot_end_03_L: Bone;
+							};
+							Foot_02_R: Bone & {
+								Foot_end_02_R: Bone;
+							};
+							Eye_L: Bone & {
+								Eye_End_L: Bone;
+							};
+							Claws_L: Bone & {
+								Claws_Lower_L: Bone;
+							};
+							Foot_01_L: Bone & {
+								Foot_end_01_L: Bone;
+							};
+							Foot_01_R: Bone & {
+								Foot_end_01_R: Bone;
+							};
+							Foot_02_L: Bone & {
+								Foot_end_02_L: Bone;
+							};
+							Claws_R: Bone & {
+								Claws_Lower_R: Bone;
+							};
+							Shell: Bone;
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Claws_Lower_R_Composited: CFrameValue;
@@ -14763,42 +14766,9 @@ interface ReplicatedStorage extends Instance {
 					Claws_Lower_R_Initial: CFrameValue;
 					Eye_L_Original: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							Foot_03_R: Bone & {
-								Foot_end_03_R: Bone;
-							};
-							Eye_R: Bone & {
-								Eye_End_R: Bone;
-							};
-							Foot_03_L: Bone & {
-								Foot_end_03_L: Bone;
-							};
-							Foot_02_R: Bone & {
-								Foot_end_02_R: Bone;
-							};
-							Eye_L: Bone & {
-								Eye_End_L: Bone;
-							};
-							Claws_L: Bone & {
-								Claws_Lower_L: Bone;
-							};
-							Foot_01_L: Bone & {
-								Foot_end_01_L: Bone;
-							};
-							Foot_01_R: Bone & {
-								Foot_end_01_R: Bone;
-							};
-							Foot_02_L: Bone & {
-								Foot_end_02_L: Bone;
-							};
-							Claws_R: Bone & {
-								Claws_Lower_R: Bone;
-							};
-							Shell: Bone;
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["02_triceratops"]: Model & {
@@ -14825,9 +14795,21 @@ interface ReplicatedStorage extends Instance {
 			};
 			["1_castoroides"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							BFoot_R: Bone;
+							BFoot_L: Bone;
+							Tail_01: Bone & {
+								Tail_02: Bone & {
+									Tail_03: Bone;
+								};
+							};
+							FFoot_R: Bone;
+							FFoot_L: Bone;
+							Heat: Bone;
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Castoroides_1_Initial: CFrameValue;
@@ -14876,28 +14858,28 @@ interface ReplicatedStorage extends Instance {
 					BFoot_end_R_Initial: CFrameValue;
 					BFoot_end_L_Initial: CFrameValue;
 				};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
+				};
+			};
+			["12_leon_desert"]: Model & {
+				AnimationController: AnimationController;
 				Body: MeshPart & {
 					RootPart: Bone & {
 						Body: Bone & {
 							BFoot_R: Bone;
 							BFoot_L: Bone;
+							Head: Bone;
+							FFoot_R: Bone;
+							FFoot_L: Bone;
 							Tail_01: Bone & {
 								Tail_02: Bone & {
 									Tail_03: Bone;
 								};
 							};
-							FFoot_R: Bone;
-							FFoot_L: Bone;
-							Heat: Bone;
 						};
 					};
-				};
-			};
-			["12_leon_desert"]: Model & {
-				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -14946,28 +14928,25 @@ interface ReplicatedStorage extends Instance {
 					FFoot_end_R_Original: CFrameValue;
 					BFoot_end_L_Initial: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							BFoot_R: Bone;
-							BFoot_L: Bone;
-							Head: Bone;
-							FFoot_R: Bone;
-							FFoot_L: Bone;
-							Tail_01: Bone & {
-								Tail_02: Bone & {
-									Tail_03: Bone;
-								};
-							};
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["17_anubis"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							Foot_L: Bone;
+							Hand_R: Bone;
+							Hand_L: Bone;
+							Foot_R: Bone;
+							Neck: Bone & {
+								Head: Bone;
+							};
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -15010,18 +14989,9 @@ interface ReplicatedStorage extends Instance {
 					Hand_end_R_Composited: CFrameValue;
 					Hand_end_R_Original: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							Foot_L: Bone;
-							Hand_R: Bone;
-							Hand_L: Bone;
-							Foot_R: Bone;
-							Neck: Bone & {
-								Head: Bone;
-							};
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["09_stego"]: Model & {
@@ -15099,9 +15069,17 @@ interface ReplicatedStorage extends Instance {
 			};
 			["18_spirit_bear"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							Foot_L: Bone;
+							Hand_R: Bone;
+							Head: Bone;
+							Hand_L: Bone;
+							Foot_R: Bone;
+							Tail_01: Bone;
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -15144,17 +15122,9 @@ interface ReplicatedStorage extends Instance {
 					Spirit_Bear_18_Initial: CFrameValue;
 					Hand_end_R_Original: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							Foot_L: Bone;
-							Hand_R: Bone;
-							Head: Bone;
-							Hand_L: Bone;
-							Foot_R: Bone;
-							Tail_01: Bone;
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["04_dino"]: Model & {
@@ -15211,9 +15181,23 @@ interface ReplicatedStorage extends Instance {
 			};
 			["4_megatherium"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							BFoot_R: Bone;
+							BFoot_L: Bone;
+							Head: Bone;
+							FFoot_R: Bone;
+							FFoot_L: Bone;
+							Tail_01: Bone & {
+								Tail_02: Bone & {
+									Tail_03: Bone & {
+										Tail_04: Bone;
+									};
+								};
+							};
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -15265,30 +15249,27 @@ interface ReplicatedStorage extends Instance {
 					FFoot_R_Initial: CFrameValue;
 					BFoot_end_L_Initial: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							BFoot_R: Bone;
-							BFoot_L: Bone;
-							Head: Bone;
-							FFoot_R: Bone;
-							FFoot_L: Bone;
-							Tail_01: Bone & {
-								Tail_02: Bone & {
-									Tail_03: Bone & {
-										Tail_04: Bone;
-									};
-								};
-							};
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["19_spirit_owl"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							Foot_L: Bone;
+							Wing_R: Bone & {
+								Wing_end_R: Bone;
+							};
+							Head: Bone;
+							Foot_R: Bone;
+							Wing_L: Bone & {
+								Wing_end_L: Bone;
+							};
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Foot_L_Original: CFrameValue;
@@ -15328,20 +15309,9 @@ interface ReplicatedStorage extends Instance {
 					Wing_L_Composited: CFrameValue;
 					Foot_end_L_Composited: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							Foot_L: Bone;
-							Wing_R: Bone & {
-								Wing_end_R: Bone;
-							};
-							Head: Bone;
-							Foot_R: Bone;
-							Wing_L: Bone & {
-								Wing_end_L: Bone;
-							};
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["06_mamuth"]: Model & {
@@ -15380,9 +15350,43 @@ interface ReplicatedStorage extends Instance {
 			};
 			["11_scorpion"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							Claws_L: Bone & {
+								Claws_Lower_L: Bone;
+							};
+							Foot_03_L: Bone & {
+								Foot_end_03_L: Bone;
+							};
+							Tail_01: Bone & {
+								Tail_02: Bone & {
+									Tail_03: Bone & {
+										Sting: Bone;
+									};
+								};
+							};
+							Foot_02_R: Bone & {
+								Foot_end_02_R: Bone;
+							};
+							Foot_01_L: Bone & {
+								Foot_end_01_L: Bone;
+							};
+							Foot_03_R: Bone & {
+								Foot_end_03_R: Bone;
+							};
+							Foot_01_R: Bone & {
+								Foot_end_01_R: Bone;
+							};
+							Foot_02_L: Bone & {
+								Foot_end_02_L: Bone;
+							};
+							Claws_R: Bone & {
+								Claws_Lower_R: Bone;
+							};
+							Head: Bone;
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -15458,50 +15462,34 @@ interface ReplicatedStorage extends Instance {
 					Foot_end_02_R_Composited: CFrameValue;
 					Tail_02_Original: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							Claws_L: Bone & {
-								Claws_Lower_L: Bone;
-							};
-							Foot_03_L: Bone & {
-								Foot_end_03_L: Bone;
-							};
-							Tail_01: Bone & {
-								Tail_02: Bone & {
-									Tail_03: Bone & {
-										Sting: Bone;
-									};
-								};
-							};
-							Foot_02_R: Bone & {
-								Foot_end_02_R: Bone;
-							};
-							Foot_01_L: Bone & {
-								Foot_end_01_L: Bone;
-							};
-							Foot_03_R: Bone & {
-								Foot_end_03_R: Bone;
-							};
-							Foot_01_R: Bone & {
-								Foot_end_01_R: Bone;
-							};
-							Foot_02_L: Bone & {
-								Foot_end_02_L: Bone;
-							};
-							Claws_R: Bone & {
-								Claws_Lower_R: Bone;
-							};
-							Head: Bone;
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 			["20_spirit_wolf"]: Model & {
 				AnimationController: AnimationController;
-				AnimSaves: Model & {
-					idle: KeyframeSequence;
-					jump: KeyframeSequence;
+				Body: MeshPart & {
+					RootPart: Bone & {
+						Body: Bone & {
+							BFoot_R: Bone;
+							BFoot_L: Bone;
+							Head: Bone;
+							FFoot_R: Bone;
+							FFoot_L: Bone;
+							Tail_01: Bone & {
+								Tail_02: Bone & {
+									Tail_03: Bone & {
+										Tail_04: Bone & {
+											Tail_05: Bone & {
+												Tail_06: Bone;
+											};
+										};
+									};
+								};
+							};
+						};
+					};
 				};
 				InitialPoses: Folder & {
 					Head_Original: CFrameValue;
@@ -15562,31 +15550,817 @@ interface ReplicatedStorage extends Instance {
 					Tail_05_Initial: CFrameValue;
 					BFoot_end_L_Initial: CFrameValue;
 				};
-				Body: MeshPart & {
-					RootPart: Bone & {
-						Body: Bone & {
-							BFoot_R: Bone;
-							BFoot_L: Bone;
-							Head: Bone;
-							FFoot_R: Bone;
-							FFoot_L: Bone;
-							Tail_01: Bone & {
-								Tail_02: Bone & {
-									Tail_03: Bone & {
-										Tail_04: Bone & {
-											Tail_05: Bone & {
-												Tail_06: Bone;
-											};
-										};
-									};
-								};
-							};
-						};
-					};
+				AnimSaves: Model & {
+					idle: KeyframeSequence;
+					jump: KeyframeSequence;
 				};
 			};
 		};
+		BoxPets: Folder & {
+			dolphin: Model & {
+				["Cylinder.001"]: MeshPart;
+				["Roundcube.001"]: MeshPart & {
+					Weld: Weld;
+				};
+				Plane: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Sphere.001"]: MeshPart;
+				Sphere: MeshPart;
+				["Plane.001"]: MeshPart;
+			};
+			buffalo: Model & {
+				Cylinder: MeshPart;
+				["outer eye"]: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				Cube: MeshPart & {
+					Weld: Weld;
+				};
+				["Roundcube.001"]: MeshPart;
+				Roundcube: MeshPart;
+				Plane: MeshPart;
+				["inner eye"]: MeshPart;
+			};
+			fox: Model & {
+				noise: MeshPart;
+				Plane: MeshPart;
+				["outer ear.001"]: MeshPart;
+				["inner ear .001"]: MeshPart;
+				Roundcube: MeshPart;
+				Cube: MeshPart;
+				["outer eye"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["inner eye.001"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			monkey: Model & {
+				["outer eye"]: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cube.010"]: MeshPart;
+				["Cube.009"]: MeshPart;
+				Roundcube: MeshPart;
+				Cube: MeshPart;
+				["Cube.004"]: MeshPart;
+				["inner eye.001"]: MeshPart;
+				["Cube.002"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.003"]: MeshPart;
+				["outer eye.001"]: MeshPart;
+				["Cube.006"]: MeshPart;
+				Cylinder: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cube.005"]: MeshPart;
+				["Cube.008"]: MeshPart;
+				["inner eye"]: MeshPart;
+			};
+			scorpion: Model & {
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cube.005"]: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["Cube.004"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			squirrel: Model & {
+				["Cylinder.001"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.003"]: MeshPart;
+				["Cube.006"]: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cube.004"]: MeshPart;
+				["Cube.001"]: MeshPart;
+			};
+			Reindeer: Model & {
+				["Cylinder.006"]: MeshPart;
+				["Roundcube.001"]: MeshPart;
+				["inner eye 2.001"]: MeshPart;
+				Plane: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.004"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["Roundcube.002"]: MeshPart;
+			};
+			fish: Model & {
+				["Cube.007"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.001"]: MeshPart;
+				["Cube.015"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cube.011"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cube.001"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cube.003"]: MeshPart & {
+					Weld: Weld;
+				};
+				Cylinder: MeshPart;
+				Roundcube: MeshPart;
+				Model: Model & {
+					["Cube.006"]: MeshPart & {
+						Weld: Weld;
+					};
+					Cube: MeshPart & {
+						Weld: Weld;
+					};
+					["Cube.014"]: MeshPart & {
+						Weld: Weld;
+					};
+					["Cube.002"]: MeshPart & {
+						Weld: Weld;
+					};
+					["Cube.012"]: MeshPart & {
+						Weld: Weld;
+					};
+					["Cube.004"]: MeshPart & {
+						Weld: Weld;
+					};
+					["Cube.008"]: MeshPart & {
+						Weld: Weld;
+					};
+					["Cube.010"]: MeshPart & {
+						Weld: Weld;
+					};
+				};
+				["Cube.005"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.003"]: MeshPart;
+				["Cube.013"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cube.009"]: MeshPart & {
+					Weld: Weld;
+				};
+			};
+			fawn: Model & {
+				["Cylinder.001"]: MeshPart;
+				["Cylinder.005"]: MeshPart;
+				Plane: MeshPart;
+				["Cylinder.008"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart;
+				Cube: MeshPart;
+				["Cylinder.007"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Cylinder.006"]: MeshPart;
+				["Cylinder.004"]: MeshPart;
+			};
+			["snow ram"]: Model & {
+				noise: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["Cylinder.005"]: MeshPart;
+				Plane: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.004"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Cylinder.006"]: MeshPart;
+				Cube: MeshPart;
+			};
+			wolf: Model & {
+				["Cylinder.001"]: MeshPart;
+				Plane: MeshPart;
+				["outer ear.001"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["inner ear .001"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			chicken: Model & {
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Plane.001"]: MeshPart;
+				Plane: MeshPart;
+				["Plane.002"]: MeshPart;
+			};
+			spider: Model & {
+				Cylinder: MeshPart;
+				Roundcube: MeshPart;
+				Plane: MeshPart;
+				["Cube.001"]: MeshPart & {
+					Weld: Weld;
+				};
+			};
+			walrus: Model & {
+				["Cylinder.006"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.003"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart;
+				Cube: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["Cylinder.004"]: MeshPart;
+				["Cube.002"]: MeshPart & {
+					Weld: Weld;
+				};
+			};
+			seal: Model & {
+				["outer eye"]: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				Plane: MeshPart;
+				["inner eye"]: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cube.003"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["inner eye 2"]: MeshPart;
+				["outer eye 2"]: MeshPart;
+				["Cube.001"]: MeshPart;
+			};
+			raccoon: Model & {
+				["Cylinder.001"]: MeshPart;
+				["outer eye 2"]: MeshPart;
+				["inner eye"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cube.001"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cube.006"]: MeshPart;
+				["inner eye.001"]: MeshPart;
+				Plane: MeshPart;
+			};
+			rat: Model & {
+				noise: MeshPart;
+				["inner eye 2.001"]: MeshPart;
+				["inner eye"]: MeshPart;
+				Cylinder: MeshPart;
+				["nose.001"]: MeshPart;
+				["inner eye 2.002"]: MeshPart;
+				["noise.002"]: MeshPart;
+				["inner eye.001"]: MeshPart;
+				["inner eye 2"]: MeshPart;
+				["noise.001"]: MeshPart;
+				Roundcube: MeshPart;
+			};
+			bee: Model & {
+				["Cylinder.001"]: MeshPart;
+				["Roundcube.001"]: MeshPart;
+				["Cylinder.005"]: MeshPart;
+				Plane: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart;
+				["Cylinder.004"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+			};
+			hippo: Model & {
+				["outer eye"]: MeshPart;
+				["Cylinder.006"]: MeshPart;
+				["Cylinder.009"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cylinder.014"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["inner eye.001"]: MeshPart;
+				["Cube.002"]: MeshPart;
+				["Cylinder.012"]: MeshPart;
+				["Cylinder.015"]: MeshPart;
+				["Cylinder.013"]: MeshPart;
+				["Cylinder.007"]: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["inner eye"]: MeshPart;
+				["outer eye.001"]: MeshPart;
+				["Cylinder.016"]: MeshPart;
+				["Cylinder.011"]: MeshPart;
+				["Cylinder.005"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.010"]: MeshPart;
+				["Cylinder.004"]: MeshPart;
+				["Cylinder.008"]: MeshPart;
+			};
+			snake: Model & {
+				["outer eye"]: MeshPart;
+				["Plane.003"]: MeshPart;
+				["Roundcube.001"]: MeshPart & {
+					Weld: Weld;
+				};
+				Roundcube: MeshPart;
+				Plane: MeshPart;
+				["inner eye"]: MeshPart;
+			};
+			flamingo: Model & {
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.001"]: MeshPart;
+				["Plane.001"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				Plane: MeshPart;
+				["Cylinder.004"]: MeshPart;
+			};
+			ant: Model & {
+				["Cylinder.001"]: MeshPart;
+				["Cylinder.005"]: MeshPart;
+				Plane: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.004"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				Cube: MeshPart;
+			};
+			bear: Model & {
+				["outer eye"]: MeshPart;
+				["Cube.003"]: MeshPart;
+				Sphere: MeshPart;
+				["outer eye 2"]: MeshPart;
+				["inner eye"]: MeshPart;
+				["outer eye.001"]: MeshPart;
+				Roundcube: MeshPart;
+				Cube: MeshPart;
+				["Cube.001"]: MeshPart;
+				nose: MeshPart;
+				["inner eye 2"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			bull: Model & {
+				["outer eye"]: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["Roundcube.001"]: MeshPart;
+				Plane: MeshPart;
+				["inner eye"]: MeshPart;
+				["outer eye.001"]: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["inner eye.001"]: MeshPart;
+				["Cube.001"]: MeshPart;
+			};
+			owl: Model & {
+				Cylinder: MeshPart;
+				Roundcube: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				Model: Model & {
+					["Cylinder.007"]: MeshPart;
+					["Cylinder.012"]: MeshPart;
+					["Cylinder.008"]: MeshPart;
+					["Cylinder.009"]: MeshPart;
+					["Cylinder.013"]: MeshPart;
+					["Cylinder.011"]: MeshPart;
+				};
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Cylinder.010"]: MeshPart;
+				["Cylinder.004"]: MeshPart;
+			};
+			snowman: Model & {
+				Cylinder: MeshPart;
+				["Cube.006"]: MeshPart;
+				Cube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cube.005"]: MeshPart;
+				["Cube.003"]: MeshPart;
+				["Cube.004"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			["wight bear"]: Model & {
+				["outer eye"]: MeshPart;
+				["Cube.003"]: MeshPart;
+				["outer eye.003"]: MeshPart;
+				["outer eye.004"]: MeshPart;
+				Sphere: MeshPart;
+				["outer eye 2"]: MeshPart;
+				["inner eye"]: MeshPart;
+				["outer eye.001"]: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cube.001"]: MeshPart;
+				nose: MeshPart;
+				["inner eye 2"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			bat: Model & {
+				["outer eye"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.003"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cone.001"]: MeshPart;
+				nose: MeshPart;
+				["Cube.004"]: MeshPart;
+				["inner eye.001"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			penguin: Model & {
+				["Cylinder.001"]: MeshPart;
+				["Cylinder.005"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.004"]: MeshPart;
+				["Cylinder.006"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Cube.008"]: MeshPart;
+				Cube: MeshPart;
+			};
+			camel: Model & {
+				Cylinder: MeshPart;
+				Cube: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.001"]: MeshPart & {
+					Weld: Weld;
+				};
+			};
+			panda: Model & {
+				["Roundcube.001"]: MeshPart;
+				["Cylinder.007"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.003"]: MeshPart;
+				["outer eye.002"]: MeshPart;
+				Roundcube: MeshPart;
+				Cube: MeshPart;
+				["outer eye.003"]: MeshPart;
+				nose: MeshPart;
+				["Cube.004"]: MeshPart;
+				["inner eye.001"]: MeshPart;
+				Sphere: MeshPart;
+			};
+			peacock: Model & {
+				["outer eye"]: MeshPart;
+				["Cylinder.006"]: MeshPart;
+				["Cylinder.005"]: MeshPart;
+				["inner eye.002"]: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.004"]: MeshPart;
+				["Plane.001"]: MeshPart;
+				["inner eye.001"]: MeshPart;
+				["Plane.005"]: MeshPart;
+				["Cylinder.011"]: MeshPart;
+				["Plane.004"]: MeshPart;
+				["Plane.003"]: MeshPart;
+				["Plane.002"]: MeshPart;
+				["Cylinder.007"]: MeshPart;
+				Plane: MeshPart;
+				["Plane.006"]: MeshPart;
+				["outer eye.001"]: MeshPart;
+				["Cylinder.010"]: MeshPart;
+				["Cylinder.009"]: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.008"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				Cylinder: MeshPart;
+			};
+			parrot: Model & {
+				["Cylinder.010"]: MeshPart;
+				["Cylinder.008"]: MeshPart;
+				["Cylinder.005"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cube.003"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cube.004"]: MeshPart;
+				["Cube.005"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			eagle: Model & {
+				["Cylinder.001"]: MeshPart;
+				["Roundcube.001"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cube.001"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cylinder.006"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Cylinder.004"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			dog: Model & {
+				["Roundcube.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.003"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart;
+				Cube: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["Cube.005"]: MeshPart;
+				["Cube.004"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			goldenpeacock: Model & {
+				["outer eye"]: MeshPart;
+				["Cylinder.006"]: MeshPart;
+				["Plane.003"]: MeshPart;
+				["Plane.004"]: MeshPart;
+				["Cylinder.007"]: MeshPart;
+				Plane: MeshPart;
+				["Plane.006"]: MeshPart;
+				["Cylinder.010"]: MeshPart;
+				["Cylinder.011"]: MeshPart;
+				["Cylinder.009"]: MeshPart;
+				["Cylinder.005"]: MeshPart;
+				["Cylinder.008"]: MeshPart;
+				["Cylinder.003"]: MeshPart & {
+					Weld: Weld;
+				};
+				["inner eye.001"]: MeshPart;
+				["Plane.001"]: MeshPart;
+			};
+			["desert snake"]: Model & {
+				["outer eye"]: MeshPart;
+				["Plane.003"]: MeshPart;
+				["Roundcube.001"]: MeshPart & {
+					Weld: Weld;
+				};
+				Roundcube: MeshPart;
+				Plane: MeshPart;
+				["inner eye"]: MeshPart;
+			};
+			cat: Model & {
+				noise: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				taill: MeshPart;
+				["taill.001"]: MeshPart;
+				["outer ear.001"]: MeshPart;
+				["inner ear .001"]: MeshPart;
+				Roundcube: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				Plane: MeshPart;
+				Cylinder: MeshPart;
+			};
+			["ray fish"]: Model & {
+				["Cylinder.001"]: MeshPart;
+				["Roundcube.001"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.005"]: MeshPart;
+				Plane: MeshPart;
+				Cube: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Plane.001"]: MeshPart;
+				["Cylinder.004"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+			};
+			worm: Model & {
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.001"]: MeshPart;
+				Cube: MeshPart;
+				Plane: MeshPart;
+				["Roundcube.002"]: MeshPart & {
+					Weld: Weld;
+				};
+			};
+			ladybug: Model & {
+				["Cylinder.001"]: MeshPart;
+				["Roundcube.001"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.005"]: MeshPart;
+				Plane: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart & {
+					Weld: Weld;
+				};
+			};
+			butterfly: Model & {
+				["Cylinder.001"]: MeshPart;
+				["Cube.001"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cube.010"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cube.013"]: MeshPart;
+				["Cube.004"]: MeshPart;
+				["Cube.002"]: MeshPart;
+				["Cube.007"]: MeshPart;
+				["Cube.011"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.003"]: MeshPart;
+				["Cube.014"]: MeshPart;
+				["Cube.012"]: MeshPart;
+				["Cube.009"]: MeshPart;
+				["Cube.005"]: MeshPart & {
+					Weld: Weld;
+				};
+				["Cube.008"]: MeshPart;
+				["Cube.006"]: MeshPart;
+			};
+			dragon: Model & {
+				["Cylinder.001"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cone.001"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			shark: Model & {
+				["Cylinder.001"]: MeshPart;
+				Cube: MeshPart;
+				Cone: MeshPart;
+				["Cylinder.005"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cube.003"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.004"]: MeshPart;
+				["Cone.001"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Cone.002"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			rabbit: Model & {
+				["outer eye"]: MeshPart;
+				["outer ear"]: MeshPart;
+				["outer eye 2"]: MeshPart;
+				["outer ear.001"]: MeshPart;
+				["inner ear .001"]: MeshPart;
+				Roundcube: MeshPart;
+				Sphere: MeshPart;
+				["nose.001"]: MeshPart;
+				nose: MeshPart;
+				["inner eye 2"]: MeshPart;
+				["inner eye"]: MeshPart;
+				["inner ear "]: MeshPart;
+			};
+			elephant: Model & {
+				["Cube.002"]: MeshPart;
+				Sphere: MeshPart;
+				Cube: MeshPart;
+				["Sphere.002"]: MeshPart;
+				["Sphere.003"]: MeshPart;
+				["Sphere.001"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cube.003"]: MeshPart;
+			};
+			crocodile: Model & {
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cone.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cone.006"]: MeshPart;
+			};
+			axolotl: Model & {
+				["Cube.007"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cylinder.001"]: MeshPart;
+				["Cube.010"]: MeshPart;
+				["Cube.009"]: MeshPart;
+				["Cube.011"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.003"]: MeshPart;
+				["Cube.006"]: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cube.005"]: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cube.004"]: MeshPart;
+				["Cube.008"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			horse: Model & {
+				["Cylinder.001"]: MeshPart;
+				Plane: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				Cube: MeshPart;
+				["Cylinder.002"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+			["SUPER FOX"]: Model & {
+				["outer eye"]: MeshPart;
+				["Roundcube.002"]: MeshPart;
+				["outer ear.001"]: MeshPart;
+				["Cube.009"]: MeshPart;
+				Roundcube: MeshPart;
+				Cube: MeshPart;
+				["inner eye.001"]: MeshPart;
+				["outer ear.002"]: MeshPart;
+				noise: MeshPart;
+				["Roundcube.001"]: MeshPart;
+				Plane: MeshPart;
+				["outer eye.001"]: MeshPart;
+				["outer eye.002"]: MeshPart;
+				["inner ear .002"]: MeshPart;
+				["inner eye.003"]: MeshPart;
+				["inner eye.002"]: MeshPart;
+				["Cube.008"]: MeshPart;
+				["inner ear .001"]: MeshPart;
+			};
+			koala: Model & {
+				["Cylinder.007"]: MeshPart;
+				["Cube.001"]: MeshPart;
+				Cylinder: MeshPart;
+				Roundcube: MeshPart & {
+					Weld: Weld;
+				};
+				["Cylinder.004"]: MeshPart;
+				["Plane.001"]: MeshPart;
+				["Cylinder.003"]: MeshPart;
+				Plane: MeshPart;
+				["Cube.002"]: MeshPart;
+			};
+		};
 		vfx: Folder & {
+			hoverTrail: ParticleEmitter;
+			water_trails: Part & {
+				effects: ParticleEmitter;
+			};
 			leafDrops: Part & {
 				effects: ParticleEmitter;
 			};
@@ -15607,6 +16381,46 @@ interface ReplicatedStorage extends Instance {
 				};
 				SnowPineTree: MeshPart;
 				SnowMountainD: MeshPart;
+			};
+			Trees: Folder & {
+				MojaveTree: MeshPart;
+				TreeA: MeshPart;
+			};
+			Plants: Folder & {
+				Captus: MeshPart;
+				Planta: MeshPart;
+				Bush: MeshPart;
+			};
+			WaterFalls: Folder & {
+				WaterFall: Model & {
+					A: Part & {
+						Attachment: Attachment;
+					};
+					B: Part & {
+						LavaFlow: ParticleEmitter;
+					};
+				};
+				["Water Flow"]: Model & {
+					A: Part & {
+						Attachment: Attachment & {
+							Beam: Beam;
+						};
+					};
+					B: Part & {
+						Attachment: Attachment;
+					};
+				};
+				Weaves: MeshPart & {
+					["Particle 3"]: ParticleEmitter;
+				};
+				Water: Model & {
+					WatterColor: Part & {
+						Texture: Texture;
+					};
+					WatterEffect: MeshPart & {
+						SurfaceAppearance: SurfaceAppearance;
+					};
+				};
 			};
 			Mountains: Folder & {
 				Niagara: Folder & {
@@ -15640,8 +16454,6 @@ interface ReplicatedStorage extends Instance {
 				};
 			};
 			FossilProps: Folder & {
-				CrateCloset: MeshPart;
-				ChestCloset: MeshPart;
 				OpenChest: Model & {
 					Bones2: MeshPart;
 					ChestOpen: MeshPart;
@@ -15650,12 +16462,14 @@ interface ReplicatedStorage extends Instance {
 					Bones: MeshPart;
 					Bones3: MeshPart;
 				};
-				CrateOpen: Model & {
-					CrateOpen: MeshPart;
-					["Bones.001"]: MeshPart;
-				};
+				ChestCloset: MeshPart;
+				CrateCloset: MeshPart;
 				Gift: Model & {
 					gift: MeshPart;
+					["Bones.001"]: MeshPart;
+				};
+				CrateOpen: Model & {
+					CrateOpen: MeshPart;
 					["Bones.001"]: MeshPart;
 				};
 			};
@@ -15665,46 +16479,6 @@ interface ReplicatedStorage extends Instance {
 				NorthpoleMountainD: MeshPart;
 				NorthpoleMountainB: MeshPart;
 				NorthpoleMountainE: MeshPart;
-			};
-			WaterFalls: Folder & {
-				Water: Model & {
-					WatterColor: Part & {
-						Texture: Texture;
-					};
-					WatterEffect: MeshPart & {
-						SurfaceAppearance: SurfaceAppearance;
-					};
-				};
-				["Water Flow"]: Model & {
-					A: Part & {
-						Attachment: Attachment & {
-							Beam: Beam;
-						};
-					};
-					B: Part & {
-						Attachment: Attachment;
-					};
-				};
-				Weaves: MeshPart & {
-					["Particle 3"]: ParticleEmitter;
-				};
-				WaterFall: Model & {
-					A: Part & {
-						Attachment: Attachment;
-					};
-					B: Part & {
-						LavaFlow: ParticleEmitter;
-					};
-				};
-			};
-			Trees: Folder & {
-				MojaveTree: MeshPart;
-				TreeA: MeshPart;
-			};
-			Plants: Folder & {
-				Captus: MeshPart;
-				Planta: MeshPart;
-				Bush: MeshPart;
 			};
 			Rocks: Folder & {
 				RocckA2: MeshPart;
@@ -15772,6 +16546,171 @@ interface ReplicatedStorage extends Instance {
 		Promise: ModuleScript;
 		node_modules: Folder & {
 			["@rbxts"]: Folder & {
+				["pretty-react-hooks"]: Folder & {
+					out: ModuleScript & {
+						["use-latest"]: ModuleScript & {
+							["use-latest"]: ModuleScript;
+						};
+						utils: Folder & {
+							binding: ModuleScript;
+							hoarcekat: ModuleScript;
+							["shallow-equal"]: ModuleScript;
+							math: ModuleScript;
+							motor: ModuleScript;
+							testez: ModuleScript;
+						};
+						["use-binding-state"]: ModuleScript & {
+							["use-binding-state"]: ModuleScript;
+						};
+						["use-unmount-effect"]: ModuleScript & {
+							["use-unmount-effect"]: ModuleScript;
+						};
+						["use-update-effect"]: ModuleScript & {
+							["use-update-effect"]: ModuleScript;
+						};
+						["use-previous"]: ModuleScript & {
+							["use-previous"]: ModuleScript;
+						};
+						["use-interval"]: ModuleScript & {
+							["use-interval"]: ModuleScript;
+						};
+						["use-debounce-callback"]: ModuleScript & {
+							["use-debounce-callback"]: ModuleScript;
+						};
+						["use-defer-state"]: ModuleScript & {
+							["use-defer-state"]: ModuleScript;
+						};
+						["use-key-press"]: ModuleScript & {
+							["use-key-press"]: ModuleScript;
+						};
+						["use-timeout"]: ModuleScript & {
+							["use-timeout"]: ModuleScript;
+						};
+						["use-composed-ref"]: ModuleScript & {
+							["use-composed-ref"]: ModuleScript;
+						};
+						["use-async-callback"]: ModuleScript & {
+							["use-async-callback"]: ModuleScript;
+						};
+						["use-throttle-state"]: ModuleScript & {
+							["use-throttle-state"]: ModuleScript;
+						};
+						["use-defer-callback"]: ModuleScript & {
+							["use-defer-callback"]: ModuleScript;
+						};
+						["use-latest-callback"]: ModuleScript & {
+							["use-latest-callback"]: ModuleScript;
+						};
+						["use-motor"]: ModuleScript & {
+							["use-motor"]: ModuleScript;
+						};
+						["use-throttle-callback"]: ModuleScript & {
+							["use-throttle-callback"]: ModuleScript;
+						};
+						["use-update"]: ModuleScript & {
+							["use-update"]: ModuleScript;
+						};
+						["use-async-effect"]: ModuleScript & {
+							["use-async-effect"]: ModuleScript;
+						};
+						["use-debounce-effect"]: ModuleScript & {
+							["use-debounce-effect"]: ModuleScript;
+						};
+						["use-binding-listener"]: ModuleScript & {
+							["use-binding-listener"]: ModuleScript;
+						};
+						["use-async"]: ModuleScript & {
+							["use-async"]: ModuleScript;
+						};
+						["use-viewport"]: ModuleScript & {
+							["use-viewport"]: ModuleScript;
+						};
+						["use-throttle-effect"]: ModuleScript & {
+							["use-throttle-effect"]: ModuleScript;
+						};
+						["use-timer"]: ModuleScript & {
+							["use-timer"]: ModuleScript;
+						};
+						["use-defer-effect"]: ModuleScript & {
+							["use-defer-effect"]: ModuleScript;
+						};
+						["use-debounce-state"]: ModuleScript & {
+							["use-debounce-state"]: ModuleScript;
+						};
+						["use-event-listener"]: ModuleScript & {
+							["use-event-listener"]: ModuleScript;
+						};
+						["use-lifetime"]: ModuleScript & {
+							["use-lifetime"]: ModuleScript;
+						};
+						["use-camera"]: ModuleScript & {
+							["use-camera"]: ModuleScript;
+						};
+						["use-mount-effect"]: ModuleScript & {
+							["use-mount-effect"]: ModuleScript;
+						};
+						["use-mouse"]: ModuleScript & {
+							["use-mouse"]: ModuleScript;
+						};
+					};
+				};
+				rodux: Folder & {
+					src: ModuleScript & {
+						combineReducers: ModuleScript;
+						NoYield: ModuleScript;
+						createReducer: ModuleScript;
+						loggerMiddleware: ModuleScript;
+						makeActionCreator: ModuleScript;
+						thunkMiddleware: ModuleScript;
+						prettyPrint: ModuleScript;
+						Store: ModuleScript;
+						Signal: ModuleScript;
+					};
+				};
+				["react-roblox"]: ModuleScript;
+				flipper: Folder & {
+					typings: Folder;
+					src: ModuleScript & {
+						isMotor: ModuleScript;
+						Spring: ModuleScript;
+						GroupMotor: ModuleScript;
+						Signal: ModuleScript;
+						SingleMotor: ModuleScript;
+						Instant: ModuleScript;
+						Linear: ModuleScript;
+						BaseMotor: ModuleScript;
+					};
+				};
+				["set-timeout"]: Folder & {
+					out: ModuleScript & {
+						["set-countdown"]: ModuleScript;
+						["set-interval"]: ModuleScript;
+						["debounce.spec"]: ModuleScript;
+						["set-timeout"]: ModuleScript;
+						throttle: ModuleScript;
+						["set-timeout.spec"]: ModuleScript;
+						["throttle.spec"]: ModuleScript;
+						["set-interval.spec"]: ModuleScript;
+						["set-countdown.spec"]: ModuleScript;
+						debounce: ModuleScript;
+					};
+				};
+				["compiler-types"]: Folder & {
+					types: Folder;
+				};
+				redux: Folder & {
+					src: ModuleScript & {
+						combineReducers: ModuleScript;
+						NoYield: ModuleScript;
+						createReducer: ModuleScript;
+						loggerMiddleware: ModuleScript;
+						makeActionCreator: ModuleScript;
+						thunkMiddleware: ModuleScript;
+						prettyPrint: ModuleScript;
+						Store: ModuleScript;
+						Signal: ModuleScript;
+					};
+				};
 				ripple: ModuleScript & {
 					["createMotion.spec"]: ModuleScript;
 					config: ModuleScript;
@@ -15796,111 +16735,606 @@ interface ReplicatedStorage extends Instance {
 					createMotion: ModuleScript;
 					types: ModuleScript;
 				};
-				roact: Folder & {
-					src: ModuleScript & {
-						createSpy: ModuleScript;
-						createSignal: ModuleScript;
-						oneChild: ModuleScript;
-						Component: ModuleScript;
-						createElement: ModuleScript;
-						createReconciler: ModuleScript;
-						GlobalConfig: ModuleScript;
-						strict: ModuleScript;
-						createRef: ModuleScript;
-						Type: ModuleScript;
-						Portal: ModuleScript;
-						Symbol: ModuleScript;
-						PropMarkers: Folder & {
-							Ref: ModuleScript;
-							Change: ModuleScript;
-							Children: ModuleScript;
-							Event: ModuleScript;
-						};
-						ComponentLifecyclePhase: ModuleScript;
-						Config: ModuleScript;
-						assign: ModuleScript;
-						assertDeepEqual: ModuleScript;
-						getDefaultInstanceProperty: ModuleScript;
-						Binding: ModuleScript;
-						NoopRenderer: ModuleScript;
-						forwardRef: ModuleScript;
-						internalAssert: ModuleScript;
-						createReconcilerCompat: ModuleScript;
-						createFragment: ModuleScript;
-						RobloxRenderer: ModuleScript;
-						PureComponent: ModuleScript;
-						invalidSetStateMessages: ModuleScript;
-						ElementKind: ModuleScript;
-						createContext: ModuleScript;
-						Logging: ModuleScript;
-						ElementUtils: ModuleScript;
-						SingleEventManager: ModuleScript;
-						None: ModuleScript;
-					};
-				};
-				["camera-shaker"]: Folder & {
-					CameraShaker: ModuleScript & {
-						CameraShakeInstance: ModuleScript;
-						CameraShakePresets: ModuleScript;
-					};
-				};
-				services: ModuleScript;
-				net: Folder & {
-					out: ModuleScript & {
-						definitions: ModuleScript & {
-							ServerDefinitionBuilder: ModuleScript;
-							NamespaceBuilder: ModuleScript;
-							ClientDefinitionBuilder: ModuleScript;
-							Types: ModuleScript;
-						};
-						messaging: Folder & {
-							ExperienceBroadcastEvent: ModuleScript;
-							MessagingService: ModuleScript;
-						};
-						client: ModuleScript & {
-							ClientFunction: ModuleScript;
-							ClientEvent: ModuleScript;
-							ClientAsyncFunction: ModuleScript;
-						};
-						internal: ModuleScript & {
-							validator: ModuleScript;
-							tables: ModuleScript;
-						};
-						middleware: ModuleScript & {
-							RateLimitMiddleware: ModuleScript & {
-								throttle: ModuleScript;
+				ReactLua: Folder & {
+					node_modules: Folder & {
+						["@jsdotlua"]: Folder & {
+							number: Folder & {
+								["package"]: ModuleScript;
+								src: ModuleScript & {
+									MAX_SAFE_INTEGER: ModuleScript;
+									isSafeInteger: ModuleScript;
+									toExponential: ModuleScript;
+									isNaN: ModuleScript;
+									isInteger: ModuleScript;
+									isFinite: ModuleScript;
+									MIN_SAFE_INTEGER: ModuleScript;
+								};
 							};
-							LoggerMiddleware: ModuleScript;
-							TypeCheckMiddleware: ModuleScript;
+							collections: Folder & {
+								["package"]: ModuleScript;
+								src: ModuleScript & {
+									Map: ModuleScript & {
+										Map: ModuleScript;
+										coerceToTable: ModuleScript;
+										coerceToMap: ModuleScript;
+									};
+									Object: ModuleScript & {
+										values: ModuleScript;
+										assign: ModuleScript;
+										is: ModuleScript;
+										seal: ModuleScript;
+										entries: ModuleScript;
+										preventExtensions: ModuleScript;
+										isFrozen: ModuleScript;
+										keys: ModuleScript;
+										freeze: ModuleScript;
+										None: ModuleScript;
+									};
+									Set: ModuleScript;
+									Array: ModuleScript & {
+										flat: ModuleScript;
+										indexOf: ModuleScript;
+										every: ModuleScript;
+										slice: ModuleScript;
+										sort: ModuleScript;
+										shift: ModuleScript;
+										map: ModuleScript;
+										isArray: ModuleScript;
+										findIndex: ModuleScript;
+										unshift: ModuleScript;
+										splice: ModuleScript;
+										filter: ModuleScript;
+										find: ModuleScript;
+										forEach: ModuleScript;
+										reverse: ModuleScript;
+										includes: ModuleScript;
+										concat: ModuleScript;
+										from: ModuleScript & {
+											fromString: ModuleScript;
+											fromArray: ModuleScript;
+											fromSet: ModuleScript;
+											fromMap: ModuleScript;
+										};
+										join: ModuleScript;
+										flatMap: ModuleScript;
+										reduce: ModuleScript;
+										some: ModuleScript;
+									};
+									inspect: ModuleScript;
+									WeakMap: ModuleScript;
+								};
+							};
+							["react-roblox"]: ModuleScript & {
+								client: Folder & {
+									roblox: Folder & {
+										RobloxComponentProps: ModuleScript;
+										SingleEventManager: ModuleScript;
+										getDefaultInstanceProperty: ModuleScript;
+									};
+									ReactRobloxHostConfig: ModuleScript;
+									ReactRobloxRoot: ModuleScript;
+									ReactRoblox: ModuleScript;
+									ReactRobloxComponentTree: ModuleScript;
+									["ReactRobloxHostTypes.roblox"]: ModuleScript;
+									ReactRobloxComponent: ModuleScript;
+								};
+								["ReactReconciler.roblox"]: ModuleScript;
+							};
+							["react-is"]: ModuleScript;
+							["react-shallow-renderer"]: ModuleScript;
+							["roact-compat"]: ModuleScript & {
+								warnOnce: ModuleScript;
+								Portal: ModuleScript;
+								setGlobalConfig: ModuleScript;
+								oneChild: ModuleScript;
+								createFragment: ModuleScript;
+								RoactTree: ModuleScript;
+							};
+							["react-reconciler"]: ModuleScript & {
+								ReactRootTags: ModuleScript;
+								["ReactFiberDevToolsHook.new"]: ModuleScript;
+								["ReactFiberWorkLoop.new"]: ModuleScript;
+								ReactTestSelectors: ModuleScript;
+								["ReactFiberHotReloading.new"]: ModuleScript;
+								ReactCapturedValue: ModuleScript;
+								["ReactFiberUnwindWork.new"]: ModuleScript;
+								["ReactFiberNewContext.new"]: ModuleScript;
+								["ReactProfilerTimer.new"]: ModuleScript;
+								ReactInternalTypes: ModuleScript;
+								["ReactFiber.new"]: ModuleScript;
+								["ReactFiberCommitWork.new"]: ModuleScript;
+								ReactFiberTransition: ModuleScript;
+								forks: Folder & {
+									["ReactFiberHostConfig.test"]: ModuleScript;
+								};
+								["ReactStrictModeWarnings.new"]: ModuleScript;
+								ReactPortal: ModuleScript;
+								SchedulingProfiler: ModuleScript;
+								["SchedulerWithReactIntegration.new"]: ModuleScript;
+								ReactWorkTags: ModuleScript;
+								ReactFiberHostConfig: ModuleScript;
+								ReactTypeOfMode: ModuleScript;
+								ReactFiberOffscreenComponent: ModuleScript;
+								["ReactUpdateQueue.new"]: ModuleScript;
+								ReactFiberLane: ModuleScript;
+								["ReactFiberClassComponent.new"]: ModuleScript;
+								ReactHookEffectTags: ModuleScript;
+								ReactFiberWorkInProgress: ModuleScript;
+								ReactFiberTreeReflection: ModuleScript;
+								["ReactChildFiber.new"]: ModuleScript;
+								MaxInts: ModuleScript;
+								["ReactFiberLazyComponent.new"]: ModuleScript;
+								ReactFiberErrorDialog: ModuleScript;
+								["ReactFiberBeginWork.new"]: ModuleScript;
+								ReactFiberFlags: ModuleScript;
+								DebugTracing: ModuleScript;
+								ReactFiberErrorLogger: ModuleScript;
+								["ReactFiberHooks.new"]: ModuleScript;
+								["ReactFiberSchedulerPriorities.roblox"]: ModuleScript;
+								["ReactFiberHydrationContext.new"]: ModuleScript;
+								ReactFiberReconciler: ModuleScript;
+								["ReactFiberContext.new"]: ModuleScript;
+								["ReactFiberSuspenseContext.new"]: ModuleScript;
+								["ReactFiberStack.new"]: ModuleScript;
+								["ReactFiberHostContext.new"]: ModuleScript;
+								["ReactMutableSource.new"]: ModuleScript;
+								ReactCurrentFiber: ModuleScript;
+								ReactFiberComponentStack: ModuleScript;
+								["ReactFiberSuspenseComponent.new"]: ModuleScript;
+								["ReactFiberCompleteWork.new"]: ModuleScript;
+								["ReactFiberReconciler.new"]: ModuleScript;
+								["ReactFiberRoot.new"]: ModuleScript;
+								["ReactFiberThrow.new"]: ModuleScript;
+							};
+							math: Folder & {
+								["package"]: ModuleScript;
+								src: ModuleScript & {
+									clz32: ModuleScript;
+								};
+							};
+							timers: Folder & {
+								["package"]: ModuleScript;
+								src: ModuleScript & {
+									makeIntervalImpl: ModuleScript;
+									makeTimerImpl: ModuleScript;
+								};
+							};
+							["react-test-renderer"]: ModuleScript & {
+								ReactTestRenderer: ModuleScript;
+								roblox: Folder & {
+									RobloxComponentProps: ModuleScript;
+								};
+								ReactTestHostConfig: ModuleScript;
+							};
+							shared: ModuleScript & {
+								["UninitializedState.roblox"]: ModuleScript;
+								console: ModuleScript;
+								ReactComponentStackFrame: ModuleScript;
+								invariant: ModuleScript;
+								ReactTypes: ModuleScript;
+								objectIs: ModuleScript;
+								ReactInstanceMap: ModuleScript;
+								["Type.roblox"]: ModuleScript;
+								["ConsolePatchingDev.roblox"]: ModuleScript;
+								["ErrorHandling.roblox"]: ModuleScript;
+								ReactFeatureFlags: ModuleScript;
+								ReactElementType: ModuleScript;
+								shallowEqual: ModuleScript;
+								isValidElementType: ModuleScript;
+								invokeGuardedCallbackImpl: ModuleScript;
+								getComponentName: ModuleScript;
+								formatProdErrorMessage: ModuleScript;
+								PropMarkers: Folder & {
+									Change: ModuleScript;
+									Event: ModuleScript;
+									Tag: ModuleScript;
+								};
+								consoleWithStackDev: ModuleScript;
+								ReactErrorUtils: ModuleScript;
+								["enqueueTask.roblox"]: ModuleScript;
+								checkPropTypes: ModuleScript;
+								ReactSharedInternals: ModuleScript & {
+									ReactDebugCurrentFrame: ModuleScript;
+									ReactCurrentOwner: ModuleScript;
+									ReactCurrentDispatcher: ModuleScript;
+									IsSomeRendererActing: ModuleScript;
+									ReactCurrentBatchConfig: ModuleScript;
+								};
+								ReactVersion: ModuleScript;
+								ReactSymbols: ModuleScript;
+								["flowtypes.roblox"]: ModuleScript;
+								["Symbol.roblox"]: ModuleScript;
+								ExecutionEnvironment: ModuleScript;
+								ReactFiberHostConfig: ModuleScript & {
+									WithNoTestSelectors: ModuleScript;
+									WithNoHydration: ModuleScript;
+									WithNoPersistence: ModuleScript;
+								};
+							};
+							string: Folder & {
+								["package"]: ModuleScript;
+								src: ModuleScript & {
+									endsWith: ModuleScript;
+									indexOf: ModuleScript;
+									lastIndexOf: ModuleScript;
+									trimStart: ModuleScript;
+									trim: ModuleScript;
+									findOr: ModuleScript;
+									substr: ModuleScript;
+									slice: ModuleScript;
+									startsWith: ModuleScript;
+									charCodeAt: ModuleScript;
+									trimEnd: ModuleScript;
+									includes: ModuleScript;
+									split: ModuleScript;
+								};
+							};
+							promise: Folder & {
+								lib: ModuleScript;
+								["package"]: ModuleScript;
+							};
+							["luau-polyfill"]: Folder & {
+								["package"]: ModuleScript;
+								src: ModuleScript & {
+									Promise: ModuleScript;
+									["extends"]: ModuleScript;
+									AssertionError: ModuleScript & {
+										["AssertionError.global"]: ModuleScript;
+									};
+									Error: ModuleScript & {
+										["Error.global"]: ModuleScript;
+									};
+									encodeURIComponent: ModuleScript;
+								};
+							};
+							["instance-of"]: Folder & {
+								["package"]: ModuleScript;
+								src: ModuleScript & {
+									["instanceof"]: ModuleScript;
+								};
+							};
+							["es7-types"]: Folder & {
+								["package"]: ModuleScript;
+								src: ModuleScript;
+							};
+							console: Folder & {
+								["package"]: ModuleScript;
+								src: ModuleScript & {
+									makeConsoleImpl: ModuleScript;
+								};
+							};
+							["react-devtools-extensions"]: ModuleScript & {
+								backend: ModuleScript;
+							};
+							["react-devtools-shared"]: ModuleScript & {
+								hook: ModuleScript;
+								bridge: ModuleScript;
+								constants: ModuleScript;
+								utils: ModuleScript;
+								devtools: ModuleScript & {
+									views: Folder & {
+										Components: Folder & {
+											types: ModuleScript;
+										};
+										Profiler: Folder & {
+											InteractionsChartBuilder: ModuleScript;
+											utils: ModuleScript;
+											CommitTreeBuilder: ModuleScript;
+											RankedChartBuilder: ModuleScript;
+											FlamegraphChartBuilder: ModuleScript;
+											types: ModuleScript;
+										};
+									};
+									utils: ModuleScript;
+									cache: ModuleScript;
+									types: ModuleScript;
+									ProfilingCache: ModuleScript;
+									store: ModuleScript;
+									ProfilerStore: ModuleScript;
+								};
+								events: ModuleScript;
+								hydration: ModuleScript;
+								["clipboardjs.mock"]: ModuleScript;
+								storage: ModuleScript;
+								backend: ModuleScript & {
+									console: ModuleScript;
+									NativeStyleEditor: Folder & {
+										types: ModuleScript;
+									};
+									ReactSymbols: ModuleScript;
+									renderer: ModuleScript;
+									agent: ModuleScript;
+									utils: ModuleScript;
+									types: ModuleScript;
+								};
+								types: ModuleScript;
+							};
+							scheduler: ModuleScript & {
+								SchedulerPriorities: ModuleScript;
+								TracingSubscriptions: ModuleScript;
+								SchedulerMinHeap: ModuleScript;
+								forks: Folder & {
+									["SchedulerHostConfig.mock"]: ModuleScript;
+									["SchedulerHostConfig.default"]: ModuleScript;
+								};
+								Tracing: ModuleScript;
+								Scheduler: ModuleScript;
+								unstable_mock: ModuleScript;
+								SchedulerProfiling: ModuleScript;
+								SchedulerHostConfig: ModuleScript;
+								SchedulerFeatureFlags: ModuleScript;
+							};
+							react: ModuleScript & {
+								["None.roblox"]: ModuleScript;
+								ReactLazy: ModuleScript;
+								ReactElementValidator: ModuleScript;
+								["createSignal.roblox"]: ModuleScript;
+								ReactElement: ModuleScript;
+								ReactMutableSource: ModuleScript;
+								ReactContext: ModuleScript;
+								ReactBaseClasses: ModuleScript;
+								ReactNoopUpdateQueue: ModuleScript;
+								ReactMemo: ModuleScript;
+								ReactCreateRef: ModuleScript;
+								ReactForwardRef: ModuleScript;
+								React: ModuleScript;
+								["ReactBinding.roblox"]: ModuleScript;
+								ReactHooks: ModuleScript;
+								ReactChildren: ModuleScript;
+							};
+							["react-cache"]: ModuleScript & {
+								ReactCacheOld: ModuleScript;
+								LRU: ModuleScript;
+							};
+							boolean: Folder & {
+								["package"]: ModuleScript;
+								src: ModuleScript & {
+									toJSBoolean: ModuleScript;
+								};
+							};
+							ReactDebugTools: ModuleScript & {
+								ReactDebugTools: ModuleScript;
+								ReactDebugHooks: ModuleScript;
+							};
 						};
-						server: ModuleScript & {
-							ServerEvent: ModuleScript;
-							ServerAsyncFunction: ModuleScript;
-							ServerFunction: ModuleScript;
-							MiddlewareFunction: ModuleScript;
-							NetServerScriptSignal: ModuleScript;
-							CreateServerListener: ModuleScript;
-							ServerMessagingEvent: ModuleScript;
-							MiddlewareEvent: ModuleScript;
+						commander: Folder & {
+							["package"]: ModuleScript;
+							["package-support"]: ModuleScript;
+							lib: Folder;
+							typings: Folder;
 						};
+						[".luau-aliases"]: Folder & {
+							["symbol-luau"]: ModuleScript;
+							["@jsdotlua"]: Folder & {
+								number: ModuleScript;
+								console: ModuleScript;
+								["react-roblox"]: ModuleScript;
+								["react-is"]: ModuleScript;
+								["instance-of"]: ModuleScript;
+								["react-cache"]: ModuleScript;
+								["es7-types"]: ModuleScript;
+								math: ModuleScript;
+								["react-debug-tools"]: ModuleScript;
+								["react-test-renderer"]: ModuleScript;
+								promise: ModuleScript;
+								timers: ModuleScript;
+								string: ModuleScript;
+								shared: ModuleScript;
+								scheduler: ModuleScript;
+								["roact-compat"]: ModuleScript;
+								["react-reconciler"]: ModuleScript;
+								["react-devtools-extensions"]: ModuleScript;
+								["react-shallow-renderer"]: ModuleScript;
+								collections: ModuleScript;
+								react: ModuleScript;
+								["react-devtools-shared"]: ModuleScript;
+								boolean: ModuleScript;
+								["luau-polyfill"]: ModuleScript;
+							};
+						};
+						["symbol-luau"]: Folder & {
+							["package"]: ModuleScript;
+							src: ModuleScript & {
+								["Registry.global"]: ModuleScript;
+								Symbol: ModuleScript;
+							};
+							LICENSE: StringValue;
+						};
+						npmluau: Folder & {
+							["package"]: ModuleScript;
+							src: Folder;
+							["luau-types-re-export"]: Folder & {
+								pkg: Folder & {
+									["package"]: ModuleScript;
+								};
+							};
+							LICENSE: StringValue;
+						};
+						walkdir: Folder & {
+							["package"]: ModuleScript;
+							test: Folder & {
+								dir: Folder & {
+									["nested-symlink"]: Folder;
+									symlinks: Folder & {
+										dir1: Folder;
+										dir2: Folder;
+									};
+									foo: Folder & {
+										a: Folder & {
+											b: Folder & {
+												c: Folder;
+											};
+										};
+									};
+								};
+								comparison: Folder & {
+									["package"]: ModuleScript;
+								};
+							};
+						};
+						[".bin"]: Folder;
 					};
-				};
-				remoteevent: Folder & {
-					main: ModuleScript;
-					["readme-image"]: Folder;
-				};
-				["compiler-types"]: Folder & {
-					types: Folder;
+					ReactShallowRenderer: ModuleScript;
+					ReactRoblox: ModuleScript;
+					ReactDevtoolsShared: ModuleScript;
+					ReactIs: ModuleScript;
+					Shared: ModuleScript;
+					ReactReconciler: ModuleScript;
+					RoactCompat: ModuleScript;
+					Scheduler: ModuleScript;
+					ReactTestRenderer: ModuleScript;
+					React: ModuleScript;
+					ReactDevtoolsExtensions: ModuleScript;
+					ReactDebugTools: ModuleScript;
+					ReactCache: ModuleScript;
 				};
 				types: Folder & {
 					include: Folder & {
 						generated: Folder;
 					};
 				};
+				LuauPolyfill: ModuleScript & {
+					Number: ModuleScript & {
+						MAX_SAFE_INTEGER: ModuleScript;
+						isSafeInteger: ModuleScript;
+						toExponential: ModuleScript;
+						isNaN: ModuleScript;
+						isInteger: ModuleScript;
+						isFinite: ModuleScript;
+						MIN_SAFE_INTEGER: ModuleScript;
+					};
+					Collections: ModuleScript & {
+						Map: ModuleScript & {
+							Map: ModuleScript;
+							coerceToTable: ModuleScript;
+							coerceToMap: ModuleScript;
+						};
+						Object: ModuleScript & {
+							values: ModuleScript;
+							assign: ModuleScript;
+							is: ModuleScript;
+							seal: ModuleScript;
+							entries: ModuleScript;
+							preventExtensions: ModuleScript;
+							isFrozen: ModuleScript;
+							keys: ModuleScript;
+							freeze: ModuleScript;
+							None: ModuleScript;
+						};
+						Set: ModuleScript;
+						Array: ModuleScript & {
+							flat: ModuleScript;
+							indexOf: ModuleScript;
+							every: ModuleScript;
+							slice: ModuleScript;
+							sort: ModuleScript;
+							shift: ModuleScript;
+							map: ModuleScript;
+							isArray: ModuleScript;
+							findIndex: ModuleScript;
+							unshift: ModuleScript;
+							splice: ModuleScript;
+							filter: ModuleScript;
+							find: ModuleScript;
+							forEach: ModuleScript;
+							reverse: ModuleScript;
+							includes: ModuleScript;
+							concat: ModuleScript;
+							from: ModuleScript & {
+								fromString: ModuleScript;
+								fromArray: ModuleScript;
+								fromSet: ModuleScript;
+								fromMap: ModuleScript;
+							};
+							join: ModuleScript;
+							flatMap: ModuleScript;
+							reduce: ModuleScript;
+							some: ModuleScript;
+						};
+						inspect: ModuleScript;
+						WeakMap: ModuleScript;
+					};
+					InstanceOf: ModuleScript & {
+						["instanceof"]: ModuleScript;
+					};
+					Symbol: ModuleScript & {
+						Symbol: ModuleScript;
+						["Registry.global"]: ModuleScript;
+						GlobalRegistry: ModuleScript;
+					};
+					Timers: ModuleScript & {
+						makeIntervalImpl: ModuleScript;
+						makeTimerImpl: ModuleScript;
+					};
+					String: ModuleScript & {
+						endsWith: ModuleScript;
+						indexOf: ModuleScript;
+						lastIndexOf: ModuleScript;
+						trimStart: ModuleScript;
+						trim: ModuleScript;
+						findOr: ModuleScript;
+						substr: ModuleScript;
+						slice: ModuleScript;
+						startsWith: ModuleScript;
+						charCodeAt: ModuleScript;
+						trimEnd: ModuleScript;
+						includes: ModuleScript;
+						split: ModuleScript;
+					};
+					LuauPolyfill: ModuleScript & {
+						Promise: ModuleScript;
+						["extends"]: ModuleScript;
+						AssertionError: ModuleScript & {
+							["AssertionError.global"]: ModuleScript;
+						};
+						Error: ModuleScript & {
+							["Error.global"]: ModuleScript;
+						};
+						encodeURIComponent: ModuleScript;
+					};
+					Math: ModuleScript;
+					Console: ModuleScript & {
+						makeConsoleImpl: ModuleScript;
+					};
+					Boolean: ModuleScript & {
+						toJSBoolean: ModuleScript;
+					};
+					ES7Types: ModuleScript;
+				};
+				react: ModuleScript & {
+					tags: ModuleScript;
+				};
+				services: ModuleScript;
+				ReactRedux: ModuleScript & {
+					hooks: Folder & {
+						useReduxContext: ModuleScript;
+						useSelector: ModuleScript;
+						useDispatch: ModuleScript;
+						useStore: ModuleScript;
+					};
+					utils: Folder & {
+						batch: ModuleScript;
+						["reactBatchedUpdates.roblox"]: ModuleScript;
+						shallowEqual: ModuleScript;
+						Subscription: ModuleScript;
+						useSyncExternalStore: ModuleScript;
+					};
+					useSyncExternalStore: Folder & {
+						useSyncExternalStoreWithSelector: ModuleScript;
+						useSyncExternalStoreShimClient: ModuleScript;
+					};
+					components: Folder & {
+						Context: ModuleScript;
+						Provider: ModuleScript;
+					};
+					types: ModuleScript;
+				};
+				signal: ModuleScript;
 			};
 		};
 	};
 }
+
 
 
 

@@ -2,6 +2,7 @@ import { RunService, Workspace } from "@rbxts/services";
 import { PetsServiceClient } from "./pets_service_client";
 import { getHRP, getPlayer } from "shared/help/assist";
 import { TPetBody } from "./pet";
+import { PetBouncer } from "./pet_bouncer";
 
 const rayParams = new RaycastParams()
 const RAY_DIST = 20
@@ -9,9 +10,11 @@ const RAY_DIST = 20
 export class PetsMover {
     petCServ: PetsServiceClient
     status = "FOLLOW" as "FOLLOW" | "GOMINE" | "MINE"
+    petBouncher: PetBouncer
 
     constructor(petCServ: PetsServiceClient) {
         this.petCServ = petCServ
+        this.petBouncher = new PetBouncer()
 
         RunService.RenderStepped.Connect(() => {
             this.updatePets()
@@ -30,12 +33,15 @@ export class PetsMover {
     _updateOnePet(pet: TPetBody) {
         const bodyPos = pet.WaitForChild("BodyPosition") as BodyPosition
         const bodyGyro = pet.WaitForChild("BodyGyro") as BodyGyro
-        const petPos = (pet.GetAttribute("pos") || 0) as number
+        const petIdx = (pet.GetAttribute("idx") || 0) as number
+        const hrp = getHRP()
         if (this.status === "FOLLOW") {
-            const targetPos = this.petCServ.petPos.pos[petPos]
-            const rayPos = this._raycastPos(pet, targetPos)
-            bodyPos.Position = rayPos
-            // warn("Update pets", pet.Name)
+            const frontPos = hrp.Position.add(hrp.CFrame.LookVector.mul(100))
+            let pos = this.petCServ.petPos.pos[petIdx]
+            pos = this._raycastPos(pet, pos)
+            pos = this.petBouncher.update(pos, petIdx * 10000)
+            bodyPos.Position = pos
+            bodyGyro.CFrame = new CFrame(pos, frontPos)
         }
     }
 

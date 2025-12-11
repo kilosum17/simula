@@ -62,7 +62,7 @@ export class PetsManager {
 
     _setPetPositions() {
         this.pets.forEach((pet, i) => {
-            pet.setPos(i)
+            pet.setIdx(i)
         })
     }
 

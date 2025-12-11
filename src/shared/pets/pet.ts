@@ -12,7 +12,7 @@ export type TPetBody = Part & {
 export class Pet {
     petsMan: PetsManager
     id: string
-    _pos = 0
+    _idx = 0
     _conf: IItemConfig
     _anchor: TPetBody
     _body: BasePart
@@ -26,7 +26,7 @@ export class Pet {
         this._anchor = anchor
         this._body = body
         this._configureModel()
-        this.setPos(this._pos)
+        this.setIdx(this._idx)
         warn("CREATE PET", this._conf.name)
     }
 
@@ -87,9 +87,9 @@ export class Pet {
         setPartDensity(anchor, 1.2)
     }
 
-    setPos(pos: number) {
-        this._pos = pos
-        this._anchor.SetAttribute("pos", pos)
+    setIdx(idx: number) {
+        this._idx = idx
+        this._anchor.SetAttribute("idx", idx)
     }
 
     kill() {
