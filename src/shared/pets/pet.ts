@@ -1,26 +1,30 @@
-import { Workspace } from "@rbxts/services";
+import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { PetsManager } from "./pets_manager";
 import { getItemConf, IItemConfig } from "shared/help/DATA";
 import { col, ensureInstance, getHRP, setPartDensity } from "shared/help/assist";
+import { getPetConf, TPetData } from "shared/help/pet_catalog";
+import { weldModelParts } from "./pet_utils";
 
 export type TPetBody = Part & {
     BodyPosition: BodyPosition,
     BodyGyro: BodyGyro,
     BodyVelocity: BodyVelocity,
+    Root: BasePart,
+    Model: Model,
 }
 
 export class Pet {
     petsMan: PetsManager
     id: string
     _idx = 0
-    _conf: IItemConfig
+    _conf: TPetData
     _anchor: TPetBody
     _body: BasePart
 
     constructor(petsMan: PetsManager, id: string) {
         this.petsMan = petsMan
         this.id = id
-        this._conf = getItemConf(tonumber(id)!)!;
+        this._conf = getPetConf(tonumber(id)!)!;
         const { anchor, body } = this._createBody()
         // const { body } = this._createBody()
         this._anchor = anchor
@@ -47,11 +51,15 @@ export class Pet {
         anchor.Anchored = false
         anchor.Size = new Vector3(.8, .8, .8)
         anchor.Shape = Enum.PartType.Ball
+        anchor.Transparency = 1
+        anchor.SetAttribute("id", tonumber(this.id)!)
 
-        const body = new Instance("Part")
-        body.CollisionGroup = "PET"
-        body.CFrame = getHRP(player).CFrame.mul(new CFrame(0, 3, 0))
-        body.Size = new Vector3(2, 2, 2)
+        const model = ReplicatedStorage.instance.BoxPets.WaitForChild(this._conf.model_name).Clone() as Model
+        model.Parent = anchor
+        model.Name = "Model"
+        model.ScaleTo(1 / 70)
+        const body = weldModelParts(model, this.petsMan.petsServ.player, this._conf.rotation ?? 0)
+        model.PivotTo(getHRP(player).CFrame.mul(new CFrame(0, 5, 0)))
         body.CanCollide = false
         body.Anchored = false
         body.Parent = anchor
@@ -93,7 +101,7 @@ export class Pet {
     }
 
     kill() {
-
+        this._anchor.Destroy()
     }
 
 }

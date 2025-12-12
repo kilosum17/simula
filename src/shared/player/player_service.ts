@@ -25,7 +25,7 @@ export class PlayerService {
             for (const part of char.GetDescendants()) {
                 if (part.IsA("BasePart")) {
                     part.CollisionGroup = "PLAYER"
-                    warn("COL", part.Name, "PLAYER")
+                    // warn("COL", part.Name, "PLAYER")
                 }
             }
         })

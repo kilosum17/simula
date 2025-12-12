@@ -440,6 +440,7 @@ export const LText = ({ Text, Var = 'black', Size, Pos, StrokeThickness = 0, Str
         Visible?: | boolean,
         TextSize?: number,
         Color?: Color3,
+        Font?: Font,
         LayoutOrder?: number, MaxSize?: number, MinSize?: number, Ref?: Ref<TextLabel>,
     }) => {
     const color = (() => {

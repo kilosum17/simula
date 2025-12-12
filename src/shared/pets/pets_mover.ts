@@ -3,6 +3,7 @@ import { PetsServiceClient } from "./pets_service_client";
 import { getHRP, getPlayer } from "shared/help/assist";
 import { TPetBody } from "./pet";
 import { PetBouncer } from "./pet_bouncer";
+import { getPlayerPetsFolder } from "./pet_utils";
 
 const rayParams = new RaycastParams()
 const RAY_DIST = 20
@@ -22,9 +23,7 @@ export class PetsMover {
     }
 
     updatePets() {
-        const player = getPlayer()
-        const fold = Workspace.FindFirstChild("PetStorage")?.FindFirstChild(`${player.UserId}`)
-        if (!fold) return
+        const fold = getPlayerPetsFolder()
         for (const pet of fold.GetChildren()) {
             this._updateOnePet(pet as TPetBody)
         }
@@ -53,7 +52,8 @@ export class PetsMover {
         }
         this._lastPos = targetPos
         rayParams.FilterType = Enum.RaycastFilterType.Exclude
-        rayParams.FilterDescendantsInstances = [pet, Workspace.Targets]
+        const petsFolder = Workspace.FindFirstChild("PetStorage") || new Instance("Folder")
+        rayParams.FilterDescendantsInstances = [pet, Workspace.Targets, petsFolder]
         const origin = targetPos.add(new Vector3(0, RAY_DIST, 0))
         const dir = new Vector3(0, -2 * RAY_DIST, 0)
         const raycastRes = Workspace.Raycast(origin, dir, rayParams)

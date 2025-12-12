@@ -142,7 +142,6 @@ export function LeftButtons() {
                 </LBox >
                 <LPusher gapS={0.05} />
                 <LBox Size={new UDim2(1, 0, 0.5, 0)} Trans >
-
                     {/* <LBox Size={new UDim2(1, 0, 1, 0)} Trans Padding={new UDim(0, 10)}   >
                                 <LImage Image={icons.ToolsCoins} Aspect Size={new UDim2(1, 0, 1, 0)} MinSize={new Vector2(20, 20)} />
                                 <LText Text={cash} Var='white' StrokeThickness={3}

@@ -5,11 +5,10 @@ import { createPortal, createRoot } from "@rbxts/react-roblox";
 import { Players } from "@rbxts/services";
 import { App } from "./components/app";
 import { PetsServiceClient } from "shared/pets/pets_service_client";
+import { root } from "shared/ui/create_root";
 
-const root = createRoot(new Instance("Folder"));
 const target = Players.LocalPlayer.WaitForChild("PlayerGui");
-
-root.render(<StrictMode>{createPortal(<App />, target)}</StrictMode>);
+// root.render(<StrictMode>{createPortal(<App />, target)}</StrictMode>);
 
 new PetsServiceClient()
 
