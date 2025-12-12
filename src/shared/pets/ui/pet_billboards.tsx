@@ -53,7 +53,8 @@ interface PetUIRoot {
 const ActivePetUIs = new Map<TPetBody, PetUIRoot>();
 
 export function attachPetBillboard(petRoot: TPetBody) {
-    if (ActivePetUIs.has(petRoot)) {
+    const show = false
+    if (!show || ActivePetUIs.has(petRoot)) {
         return;
     }
 

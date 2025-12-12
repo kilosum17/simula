@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "@rbxts/react";
-import { useMotion } from "client/hooks/use-motion";
-import { usePx } from "client/hooks/use-px";
-import { brighten } from "client/utils/color-utils";
-import { fonts } from "client/utils/fonts";
-import { palette } from "client/utils/palette";
-import { springs } from "client/utils/springs";
+import { useMotion } from "shared/help/lab/use-motion";
+import { usePx } from "shared/help/lab/use-px";
+import { brighten } from "shared/help/lab/color-utils";
+import { fonts } from "shared/help/lab/fonts";
+import { palette } from "shared/help/lab/palette";
+import { springs } from "shared/help/lab/springs";
 
 interface ButtonProps {
 	onClick?: () => void;

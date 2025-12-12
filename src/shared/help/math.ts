@@ -20,3 +20,8 @@ export const countMapToList = <T extends string | number,>(counts: Record<T, num
     }
     return items
 }
+
+export const randSample = <T>(val: T[]) => {
+    const idx = math.random(0, val.size() - 1);
+    return val[idx]
+}

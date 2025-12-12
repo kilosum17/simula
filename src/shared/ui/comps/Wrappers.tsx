@@ -2,14 +2,14 @@ import { useEventListener } from "@rbxts/pretty-react-hooks"
 import React, { Fragment, ReactElement, ReactNode, Ref, useEffect, useRef, useState } from "@rbxts/react"
 import { createMotion, config } from "@rbxts/ripple"
 import { Players, UserInputService, VRService } from "@rbxts/services"
-import { getMousePos, getPlayer } from "shared/help/assist"
+import { col, getMousePos, getPlayer } from "shared/help/assist"
 import { BUY_IMG, colors, GPT_ICONS, icons } from "shared/help/DATA"
 import { playSoundType } from "shared/help/play_sound"
 
 export type TChildren = '_jsx_children'
 
 type TLBoxProps = {
-    Size?: UDim2, Pos?: UDim2, CornerRadius?: number, CornerRadius2?: UDim,
+    Size?: UDim2, Pos?: UDim2, CornerRadius2?: UDim,
     Trans?: boolean, Vert?: boolean, StrokeThickness?: number, StokeColor?: Color3,
     MaxSize?: Vector2, MinSize?: Vector2, BorderSizePixel?: number, ZIndex?: number, AutoSize?: 'X' | 'Y' | "XY",
     VAlign?: 'Center' | 'Top' | 'Bottom', HAlign?: 'Center' | 'Right' | 'Left', Padding?: UDim, Wraps?: boolean,
@@ -18,37 +18,49 @@ type TLBoxProps = {
     Spacing?: UDim, NoList?: boolean, TransVal?: number, Ref?: Ref<Frame>,
     Aspect?: number, isScroll?: boolean, RandomBG?: boolean,
     LayoutOrder?: number, SortOrder?: 'Name' | 'LayoutOrder', ScrollThickness?: number,
-    children: React.ReactNode,
+    children?: React.ReactNode,
+    AutoCanvasSize?: "X" | "Y" | "XY",
+    TrackWidth?: number,
+    HoverEffect?: boolean,
 }
 
 export const LBox = (props: TLBoxProps) => {
-    const { Size, Pos, Trans, Vert, StokeColor, StrokeThickness = 0, CornerRadius = 0, AutoSize, Aspect = 0,
+    const { Size, Pos, Trans, Vert, StokeColor, StrokeThickness = 0, AutoSize, Aspect = 0,
         VAlign, HAlign, Padding, Center, Visible, Background, AnchorPoint, MaxSize, TransVal, Wraps,
         SpaceY, SpaceX, SpaceL, SpaceR, SpaceB, SpaceT, NoList = false, MinSize, BorderSizePixel, ZIndex, CornerRadius2,
         isScroll, SortOrder, LayoutOrder, ScrollThickness, RandomBG, Spacing, Ref,
+        HoverEffect,
     } = props
 
     const alignV = VAlign ? VAlign : (Center ? 'Center' : undefined)
     const alignH = HAlign ? HAlign : (Center ? 'Center' : undefined)
     const pt = Spacing || SpaceY || SpaceT; const pb = Spacing || SpaceY || SpaceB;
     const pl = Spacing || SpaceX || SpaceL; const pr = Spacing || SpaceX || SpaceR;
+    const scaleRef = useRef<UIScale>()
+
+    useEffect(() => {
+        if (!HoverEffect) return
+        const scaler = scaleRef.current!
+        
+    }, [])
 
     const scrollProps = {
-        TopImage: icons.TopImage, ScrollBarThickness: 6,
+        TopImage: icons.TopImage, ScrollBarThickness: props.TrackWidth ?? 6,
         BottomImage: icons.BottomImage,
-        MidImage: icons.MidImage, ScrollBarImageColor3: colors.backdrop.stroke,
+        MidImage: icons.MidImage, ScrollBarImageColor3: col('black'),
         AutomaticCanvasSize: Enum.AutomaticSize.Y, CanvasSize: Size, ScrollingDirection: 'Y' as 'Y',
     }
     const children = <Fragment>
         {props.children as React.JSX.Element}
         <uistroke Enabled={StrokeThickness > 0} Thickness={StrokeThickness} Color={StokeColor} />
-        {CornerRadius > 0 && <uicorner CornerRadius={CornerRadius ? new UDim(0, CornerRadius) : CornerRadius2} />}
-        {CornerRadius2 && <uicorner CornerRadius={CornerRadius ? new UDim(0, CornerRadius) : CornerRadius2} />}
+        {/* {CornerRadius > 0 && <uicorner CornerRadius={CornerRadius ? new UDim(0, CornerRadius) : CornerRadius2} />} */}
+        {CornerRadius2 && <uicorner CornerRadius={CornerRadius2} />}
         {!NoList && <uilistlayout FillDirection={Vert ? 'Vertical' : 'Horizontal'} VerticalAlignment={alignV}
             HorizontalAlignment={alignH} Padding={Padding} Wraps={Wraps} SortOrder={SortOrder} />}
         {(MaxSize || MinSize) && <uisizeconstraint MaxSize={MaxSize} MinSize={MinSize} />}
         <uipadding PaddingTop={pt} PaddingBottom={pb} PaddingLeft={pl} PaddingRight={pr} />
         {!!Aspect && <uiaspectratioconstraint AspectRatio={Aspect} />}
+        {HoverEffect && <uiscale ref={scaleRef} />}
     </Fragment>
     const bg = RandomBG ? BrickColor.random().Color : Background
     const bgTrans = RandomBG ? 0 : (TransVal ? TransVal : (Trans ? 1 : 0))
@@ -57,6 +69,7 @@ export const LBox = (props: TLBoxProps) => {
             Size={Size} Position={Pos} BackgroundTransparency={bgTrans}
             Visible={Visible} BackgroundColor3={bg} AnchorPoint={AnchorPoint} BorderSizePixel={BorderSizePixel}
             ZIndex={ZIndex} AutomaticSize={AutoSize} LayoutOrder={LayoutOrder} ScrollBarThickness={ScrollThickness}
+            AutomaticCanvasSize={"Y"}
         >
             {children}
         </scrollingframe>
@@ -420,29 +433,37 @@ export const LTooltip = (props: {
     )
 }
 
-export const LPusher = ({ gapS = 0, gapF = 0, Visible = true, LayoutOrder }: {
-    gapS?: number, gapF?: number, Visible?: boolean, LayoutOrder?: number
+export const LPusher = ({
+    gapS = 0, gapF = 0, Visible = true, LayoutOrder,
+}: {
+    gapS?: number, gapF?: number, Visible?: boolean, LayoutOrder?: number,
 }) => {
     return <frame Size={new UDim2(gapS, gapF, gapS, gapF)} BackgroundTransparency={1}
         Visible={Visible} LayoutOrder={LayoutOrder} >
+        <uiaspectratioconstraint AspectRatio={1} />
     </frame>
 }
 
-export const LText = ({ Text, Var = 'black', Size, Pos, StrokeThickness = 0, StrokeColor, Align, AnchorPoint, RichText, ZIndex, Visible = true,
-    TextSize = 0, AutoSize, Color, LayoutOrder, MaxSize = 0, MinSize = 0, Ref }: {
-        Pos?: UDim2, Size?: UDim2,
-        StrokeThickness?: number, StrokeColor?: Color3, Align?: 'Left' | 'Right' | 'Center',
-        Text: | string,
-        Var?: 'black' | 'white' | 'blue' | 'green' | 'yellow' | 'gray' | 'red', AutoSize?: 'X' | 'Y' | 'XY',
-        AnchorPoint?: Vector2,
-        RichText?: boolean,
-        ZIndex?: number,
-        Visible?: | boolean,
-        TextSize?: number,
-        Color?: Color3,
-        Font?: Font,
-        LayoutOrder?: number, MaxSize?: number, MinSize?: number, Ref?: Ref<TextLabel>,
-    }) => {
+export const LText = ({
+    Text, Var = 'black', Size, Pos, StrokeThickness = 0, StrokeColor, Align, AnchorPoint, RichText, ZIndex, Visible = true,
+    TextSize = 0, AutoSize, Color, LayoutOrder, MaxSize = 0, MinSize = 0, Ref, Background, BorderSizePixel,
+}: {
+    Pos?: UDim2, Size?: UDim2,
+    StrokeThickness?: number, StrokeColor?: Color3, Align?: 'Left' | 'Right' | 'Center',
+    Text: string,
+    Var?: 'black' | 'white' | 'blue' | 'green' | 'yellow' | 'gray' | 'red',
+    AutoSize?: 'X' | 'Y' | 'XY',
+    AnchorPoint?: Vector2,
+    RichText?: boolean,
+    ZIndex?: number,
+    Visible?: | boolean,
+    TextSize?: number,
+    Color?: Color3,
+    Background?: Color3,
+    Font?: Font,
+    LayoutOrder?: number, MaxSize?: number, MinSize?: number, Ref?: Ref<TextLabel>,
+    BorderSizePixel?: number,
+}) => {
     const color = (() => {
         if (Color) {
             return Color
@@ -471,13 +492,50 @@ export const LText = ({ Text, Var = 'black', Size, Pos, StrokeThickness = 0, Str
     })()
 
     return <textlabel ref={Ref} Visible={Visible} Text={Text} TextColor3={color} Size={Size} Position={Pos} AnchorPoint={AnchorPoint} ZIndex={ZIndex}
-        Font={'FredokaOne'} TextScaled={TextSize === 0} BackgroundTransparency={1} TextXAlignment={Align} RichText={RichText} TextSize={TextSize}
-        AutomaticSize={AutoSize} LayoutOrder={LayoutOrder} >
+        Font={'FredokaOne'}
+        // Font={Enum.Font.F} 
+        BorderSizePixel={BorderSizePixel}
+        TextScaled={TextSize === 0} BackgroundTransparency={Background ? 0 : 1} TextXAlignment={Align} RichText={RichText} TextSize={TextSize}
+        AutomaticSize={AutoSize} LayoutOrder={LayoutOrder} BackgroundColor3={Background} >
         {StrokeThickness > 0 && <uistroke Thickness={StrokeThickness} Color={StrokeColor} />}
         {(MaxSize > 0 || MinSize > 0) && <uitextsizeconstraint MaxTextSize={MaxSize} MinTextSize={MinSize} />}
     </textlabel>
 }
 
+
+export const LTextbox = ({
+    Text, Size, Pos, StrokeThickness = 0, StrokeColor, Align, AnchorPoint, RichText, ZIndex, Visible = true,
+    TextSize = 0, AutoSize, Color, LayoutOrder, MaxSize = 0, MinSize = 0, Ref, Placeholder, StrokeMode, CornerRadius,
+}: {
+    Pos?: UDim2, Size?: UDim2,
+    StrokeThickness?: number, StrokeColor?: Color3, Align?: 'Left' | 'Right' | 'Center',
+    Text: string,
+    AutoSize?: 'X' | 'Y' | 'XY',
+    AnchorPoint?: Vector2,
+    RichText?: boolean,
+    ZIndex?: number,
+    Visible?: | boolean,
+    TextSize?: number,
+    Color?: Color3,
+    Font?: Font,
+    LayoutOrder?: number, MaxSize?: number, MinSize?: number,
+    Ref?: Ref<TextBox>,
+    Placeholder?: string,
+    StrokeMode?: "Border" | "Contextual",
+    CornerRadius?: UDim,
+}) => {
+
+    return (
+        <textbox ref={Ref} Visible={Visible} Text={Text} TextColor3={Color} Size={Size} Position={Pos} AnchorPoint={AnchorPoint} ZIndex={ZIndex}
+            Font={'FredokaOne'} TextScaled={TextSize === 0} BackgroundTransparency={1} TextXAlignment={Align} RichText={RichText} TextSize={TextSize}
+            AutomaticSize={AutoSize} LayoutOrder={LayoutOrder} PlaceholderText={Placeholder}
+        >
+            {StrokeThickness > 0 && <uistroke Thickness={StrokeThickness} Color={StrokeColor} ApplyStrokeMode={StrokeMode} />}
+            {(MaxSize > 0 || MinSize > 0) && <uitextsizeconstraint MaxTextSize={MaxSize} MinTextSize={MinSize} />}
+            {CornerRadius && <uicorner CornerRadius={CornerRadius} />}
+        </textbox>
+    )
+}
 
 export const LButton = ({ Var, Size, Pos, KeepAspect = false, ZIndex, onClick, Visible }: {
     Pos?: UDim2, Size?: UDim2, KeepAspect?: boolean, ZIndex?: number,
@@ -531,10 +589,17 @@ export const LHiders = ({ Size, Corners, Color, colors }: {
     )
 }
 
-export const LLine = () => {
+export const LLine = ({ Size = new UDim2(1, 0, 0, 4), Text, TextY }: {
+    Size?: UDim2, Text?: string, TextY: number,
+}) => {
     return (
-        <imagelabel Size={new UDim2(1, 0, 0, 4)} Image={icons.DivideImg}
+        <imagelabel Size={Size} Image={icons.DivideImg}
             BackgroundTransparency={1}  >
+            {Text && <LBox Size={new UDim2(1, 0, 1, 0)} Trans Center >
+                <LText Size={new UDim2(0, 0, 0, TextY)} AutoSize="X" RichText
+                    Text={Text} Background={col('white')} BorderSizePixel={0}
+                />
+            </LBox>}
         </imagelabel>
     )
 }
@@ -607,17 +672,23 @@ export function LLister<T>(props: IProps) {
     }
 }
 
-export const LImage = ({ Pos, Size, Aspect, Image, Ref, ScaleType, MinSize, MaxSize, Child, ZIndex, CornerRadius, Rotation, Vis }: {
+export const LImage = ({
+    Pos, Size, Aspect, Image, Ref, ScaleType, MinSize, MaxSize, Child, ZIndex, CornerRadius, Rotation, Vis,
+    AnchorPoint, Scale,
+}: {
     Pos?: UDim2, Size?: UDim2, Aspect?: boolean, MinSize?: Vector2, MaxSize?: Vector2,
     Image: string, ScaleType?: Enum.ScaleType, Ref?: Ref<ImageLabel>,
     Child?: ReactNode, ZIndex?: number, CornerRadius?: UDim, Rotation?: number, Vis?: boolean,
+    AnchorPoint?: Vector2, Scale?: number,
 }) => {
     return (
         <imagelabel Image={Image} Size={Size} Position={Pos} BackgroundTransparency={1} ref={Ref}
-            ScaleType={ScaleType} ZIndex={ZIndex} Rotation={Rotation} Visible={Vis} >
+            ScaleType={ScaleType} ZIndex={ZIndex} Rotation={Rotation} Visible={Vis}
+            AnchorPoint={AnchorPoint} >
             {Aspect && <uiaspectratioconstraint />}
             <uisizeconstraint MinSize={MinSize} MaxSize={MaxSize} />
             <uicorner CornerRadius={CornerRadius} />
+            {Scale && <uiscale Scale={Scale} />}
             {Child}
         </imagelabel>
     )
@@ -647,10 +718,11 @@ export const NButton = ({ Pos, Size, Var, Large, Small, Text = '', ZIndex, onCli
     if (Var === 'dark_green') color = BrickColor.Green().Color
     if (Var === 'red') color = Color3.fromHex('#FF145C')
     if (Var === 'gray') color = Color3.fromHex('#99AED1')
+    const corn = corner || (Large ? 12 : Small ? 4 : 8)
     return (
         <LScaler Position={Pos} Size={Size} onClick={onClick} AnchorPoint={new Vector2(0.5, 0.5)} sfx={false} Visible={Vis} >
             <LBox Size={new UDim2(1, 0, 1, 0)} Background={color} ZIndex={ZIndex}
-                StrokeThickness={Large ? 4 : 2} CornerRadius={corner || (Large ? 12 : Small ? 4 : 8)} Center >
+                StrokeThickness={Large ? 4 : 2} CornerRadius2={new UDim(0, corn)} Center >
                 <imagelabel Size={new UDim2(0.8, 0, 0.8, 0)} BackgroundTransparency={1}  >
                     <LText Size={new UDim2(1, 0, 1, 0)} Text={Text} Var="white" StrokeThickness={Large ? 3 : 2} ZIndex={ZIndex} />
                 </imagelabel >

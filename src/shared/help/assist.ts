@@ -433,6 +433,7 @@ export const getUUID = (prefix = '') => {
 }
 
 export function setPartDensity(part: BasePart, newDensity: number) {
+    newDensity = math.max(newDensity, 0.1)
     const current = part.CustomPhysicalProperties || new PhysicalProperties(0, 0, 0);
     const updated = new PhysicalProperties(
         newDensity, current.Friction, current.Elasticity,
@@ -543,4 +544,20 @@ export function addPointerToFront(basePart: BasePart, len = 3, color = col('red'
 export function isHoverActive() {
     let active = getPlayerData<Boolean>('hoverActive')[0]
     return active
+}
+
+export function objKeys<T>(obj: Record<string, T>) {
+    const keys = [] as string[]
+    for (const [key] of pairs(obj)) {
+        keys.push(key)
+    }
+    return keys
+}
+
+export function objValues<T extends defined,>(obj: Record<string, T>) {
+    const vals = [] as T[]
+    for (const [_, val] of pairs(obj)) {
+        vals.push(val)
+    }
+    return vals
 }
