@@ -2,6 +2,7 @@ import React from "@rbxts/react";
 import { LBox, LHover, LImage } from "../comps/Wrappers";
 import { col } from "shared/help/assist";
 import { GPT_ICONS } from "shared/help/DATA";
+import { NTooltip } from "../nitifications/NTooltip";
 
 export function InvSidebar() {
     const Header = [
@@ -21,9 +22,11 @@ export function InvSidebar() {
             {Header.map(h => {
                 return (
                     <LHover key={h.name} Size={new UDim2(0.95, 0, 0.2, 0)} Aspect={1} Scale={1.05} >
-                        <LBox Size={new UDim2(1, 0, 1, 0)} Center Trans >
-                            <LImage Size={new UDim2(1, 0, 1, 0)} Aspect Image={h.icon} />
-                        </LBox>
+                        <NTooltip text={h.name} >
+                            <LBox Size={new UDim2(1, 0, 1, 0)} Center Trans >
+                                <LImage Size={new UDim2(1, 0, 1, 0)} Aspect Image={h.icon} />
+                            </LBox>
+                        </NTooltip>
                     </LHover>
                 )
             })}

@@ -78,3 +78,21 @@ export const getPetConf = (idx: number) => {
     return PetCatalog.find(p => p.id === idx)
 }
 
+export const getRankColor = (rank: string) => {
+    switch (rank) {
+        case "Common":
+            return Color3.fromRGB(150, 150, 150);
+        case "Uncommon":
+            return Color3.fromRGB(0, 175, 0);
+        case "Rare":
+            return Color3.fromRGB(0, 120, 255);
+        case "Epic":
+            return Color3.fromRGB(150, 0, 255);
+        case "Legendary":
+            return Color3.fromRGB(255, 175, 0);
+        case "Mythic":
+            return Color3.fromRGB(255, 50, 50);
+        default:
+            return Color3.fromRGB(100, 100, 100);
+    }
+}

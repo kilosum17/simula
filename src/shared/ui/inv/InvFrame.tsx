@@ -4,11 +4,16 @@ import { col } from "shared/help/assist";
 import { InvSidebar } from "./InvSidebar";
 import { InvHeader } from "./InvHeader";
 import { InvPetsFrame } from "./Inv_pets/InvPetsFrame";
+import { usePageState } from "../hooks/use_page_state";
 
 
 
 export function InvFrame() {
+    const { page } = usePageState()
 
+    if (page !== 'INV') {
+        return <frame Transparency={1} />
+    }
     return (
         <LBox NoList Size={new UDim2(0.9, 0, 0.6, 0)} Pos={new UDim2(0.5, 0, 0.5, 0)}
             MaxSize={new Vector2(800, 600)} Trans

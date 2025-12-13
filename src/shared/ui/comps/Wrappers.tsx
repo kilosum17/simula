@@ -81,10 +81,12 @@ export const LBox = (props: TLBoxProps) => {
 }
 
 export const LHover = ({
-    Size, Pos, children, Aspect, Scale = 1, LayoutOrder,
+    Size = new UDim2(1, 0, 1, 0), onClick, AnchorPoint,
+    Pos, children, Aspect, Scale = 1.05, LayoutOrder,
 }: {
     Size?: UDim2, Pos?: UDim2, children?: ReactNode, Aspect?: number,
-    Scale?: number, LayoutOrder?: number,
+    Scale?: number, LayoutOrder?: number, onClick?: () => void, sfx?: boolean,
+    AnchorPoint?: Vector2,
 }) => {
     const scalerRef = useRef<UIScale>()
 
@@ -103,11 +105,13 @@ export const LHover = ({
     }
 
     return (
-        <LBox Trans Size={Size} Pos={Pos} Aspect={Aspect} LayoutOrder={LayoutOrder} Center >
-            <frame
+        <LBox Trans Size={Size} Pos={Pos} Aspect={Aspect} LayoutOrder={LayoutOrder} AnchorPoint={AnchorPoint} Center >
+            <imagebutton
                 Event={{
                     MouseEnter: () => playHover(true),
                     MouseLeave: () => playHover(false),
+                    MouseButton1Click: () => onClick?.()
+
                 }}
                 Size={new UDim2(1, 0, 1, 0)}
                 BackgroundTransparency={1}
@@ -115,7 +119,7 @@ export const LHover = ({
                 <uilistlayout HorizontalAlignment={"Center"} VerticalAlignment={"Center"} />
                 <uiscale ref={scalerRef} />
                 {children as React.JSX.Element}
-            </frame>
+            </imagebutton>
         </LBox>
     )
 }
@@ -626,13 +630,13 @@ export const LHiders = ({ Size, Corners, Color, colors }: {
 }
 
 export const LLine = ({ Size = new UDim2(1, 0, 0, 4), Text, TextY }: {
-    Size?: UDim2, Text?: string, TextY: number,
+    Size?: UDim2, Text?: string, TextY?: number,
 }) => {
     return (
         <imagelabel Size={Size} Image={icons.DivideImg}
             BackgroundTransparency={1}  >
             {Text && <LBox Size={new UDim2(1, 0, 1, 0)} Trans Center >
-                <LText Size={new UDim2(0, 0, 0, TextY)} AutoSize="X" RichText
+                <LText Size={new UDim2(0, 0, 0, TextY || 35)} AutoSize="X" RichText
                     Text={Text} Background={col('white')} BorderSizePixel={0}
                 />
             </LBox>}

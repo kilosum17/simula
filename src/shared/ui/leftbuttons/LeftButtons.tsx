@@ -1,15 +1,17 @@
 import { GPT_ICONS, icons } from "shared/help/DATA"
 import { formatNumber } from "shared/help/helpers"
-import { PolicyService, UserInputService, Workspace } from "@rbxts/services"
-import { useEffect, useRef, useState } from "@rbxts/react"
+import { PolicyService, UserInputService } from "@rbxts/services"
+import { useEffect, useRef } from "@rbxts/react"
 import { mineActionSignal } from "shared/signals/client_signals"
 import { useEventListener } from "@rbxts/pretty-react-hooks"
 import { randInt } from "shared/help/math"
 import React from "@rbxts/react"
 import { getPlayer, shakeUI } from "shared/help/assist"
 import { useSceenSize } from "../hooks/use_screensize"
-import { LBox, LImage, LPusher, LScaler, LText, LTooltip } from "../comps/Wrappers"
+import { LBox, LHover, LImage, LPusher, LText } from "../comps/Wrappers"
 import { CostUI } from "../comps/CostUI"
+import { NTooltip } from "../nitifications/NTooltip"
+import { usePageState } from "../hooks/use_page_state"
 
 
 const items = [
@@ -29,6 +31,7 @@ let last_call = os.time()
 export function LeftButtons() {
     const ref1 = useRef<UIScale>()
     const ref2 = useRef<UIScale>()
+    const { setPage } = usePageState()
 
     const { size } = useSceenSize()
     const isDesk = size.Y > 430
@@ -68,7 +71,7 @@ export function LeftButtons() {
             "Auto Hatch": () => { },
             "Auto Farm": () => { },
             "Inventory": () => {
-                // MainPager.togglePage('BOOSTS')
+                setPage("INV")
             },
             "Shop": () => {
                 // MainPager.togglePage('SHOP')
@@ -121,11 +124,11 @@ export function LeftButtons() {
                     return (
                         <LBox Size={new UDim2(0.3, -5, 0, 100)} Aspect={1} Trans Spacing={new UDim(0.05, 0)}
                             MinSize={new Vector2(45, 45)} MaxSize={new Vector2(75, 75)} >
-                            <LTooltip Text={text} Size={new UDim2(1, 0, 1, 0)} TextSize={new UDim2(1.5, 0, 0, 40)} >
-                                <LScaler onClick={() => clicked(m.name)} Size={new UDim2(1, 0, 1, 0)} sfx={false} >
+                            <NTooltip text={text} maxSize={new Vector2(200, 10000)} >
+                                <LHover sfx={false} onClick={() => clicked(m.name)} >
                                     <LImage Image={m.icon} Size={new UDim2(1, 0, 1, 0)} Aspect />
-                                </LScaler>
-                            </LTooltip>
+                                </LHover>
+                            </NTooltip>
                         </LBox>
                     )
                 })}

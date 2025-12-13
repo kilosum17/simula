@@ -2,14 +2,15 @@ import Signal from "@rbxts/signal";
 import { getPetConf, TPetData } from "shared/help/pet_catalog";
 import { TPetBody } from "shared/pets/pet";
 import { getPlayerPetsFolder } from "shared/pets/pet_utils";
+import { Sync } from "./Sync";
 
 export const mineActionSignal = new Signal()
 
 export type IPageName = "INV"
 export const pageChangeSignal = new Signal<(page: IPageName, open: boolean) => void>()
 
-// PETS
-export const petsSig = new Signal<(args: { petBody: TPetBody, petConf: TPetData }[]) => void>()
+// PETS sync
+const petsFolder = getPlayerPetsFolder()
 
 export const getPetsSigData = () => {
     return petsFolder.GetChildren().map(c => {
@@ -20,15 +21,15 @@ export const getPetsSigData = () => {
     })
 }
 
-const petsFolder = getPlayerPetsFolder()
+export const petsSync = new Sync(getPetsSigData())
 
-const updatePetsSig = () => {
-    petsSig.Fire(getPetsSigData())
-}
+petsFolder.ChildAdded.Connect(() => {
+    petsSync.update(getPetsSigData())
+})
 
-petsFolder.ChildAdded.Connect(c => updatePetsSig())
-petsFolder.ChildRemoved.Connect(c => updatePetsSig())
-updatePetsSig()
+petsFolder.ChildRemoved.Connect(() => {
+    petsSync.update(getPetsSigData())
+})
 
 
 

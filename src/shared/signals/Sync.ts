@@ -25,7 +25,7 @@ export class Sync<T> {
                 })
             }, [])
 
-            return store
+            return [store, this] as const
         }
     }
 }
