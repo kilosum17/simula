@@ -1,12 +1,10 @@
 import React from "@rbxts/react";
 import { col } from "shared/help/assist";
 import { ITEMS_CONFING } from "shared/help/DATA";
-import { icon } from "shared/help/icons";
 import { randSample } from "shared/help/math";
-import { usePets } from "shared/signals/use_pets";
-import { LBox, LImage, LLine, LPusher, LText } from "shared/ui/comps/Wrappers";
-import { ModelViewport } from "./ModelViewport";
+import { LBox, LHover, LImage, LLine, LPusher, LText } from "shared/ui/comps/Wrappers";
 import { Workspace } from "@rbxts/services";
+import { usePets } from "shared/ui/hooks/use_pets";
 
 export function InvPetsFrame() {
     const { pets: _pets } = usePets()
@@ -30,14 +28,15 @@ export function InvPetsFrame() {
             <LBox Size={new UDim2(1, 0, 0, 0)} AutoSize="Y" Wraps HAlign="Center" Trans >
                 {pets.map((p, i) => {
                     return (
-                        <LBox key={p.petConf.name + i} Size={new UDim2(1 / 7, -3, 0, 500)} Aspect={1} NoList
-                            Trans  >
-                            <LImage Size={new UDim2(1, 0, 1, 0)} Image={randSample(petIcons)} />
-                            {/* <ModelViewport Size={new UDim2(1, 0, 1, 0)} model={model} /> */}
-                            <LText Pos={new UDim2(1, 0, 1, 0)} Size={new UDim2(1, 0, 0.3, 0)}
-                                AnchorPoint={new Vector2(1, 1)} Text="6.78t" Align="Right"
-                                StrokeThickness={2} Color={col('white')} />
-                        </LBox>
+                        <LHover key={p.petConf.name + i} Size={new UDim2(1 / 7, -3, 0, 500)} Aspect={1} Scale={1.08} >
+                            <LBox Size={new UDim2(1, 0, 1, 0)} NoList Trans  >
+                                <LImage Size={new UDim2(1, 0, 1, 0)} Image={randSample(petIcons)} />
+                                {/* <ModelViewport Size={new UDim2(1, 0, 1, 0)} model={model} /> */}
+                                <LText Pos={new UDim2(1, 0, 1, 0)} Size={new UDim2(1, 0, 0.3, 0)}
+                                    AnchorPoint={new Vector2(1, 1)} Text="6.78t" Align="Right"
+                                    StrokeThickness={2} Color={col('white')} />
+                            </LBox>
+                        </LHover>
                     )
                 })}
             </LBox>

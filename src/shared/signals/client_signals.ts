@@ -5,6 +5,8 @@ import { getPlayerPetsFolder } from "shared/pets/pet_utils";
 
 export const mineActionSignal = new Signal()
 
+export type IPageName = "INV"
+export const pageChangeSignal = new Signal<(page: IPageName, open: boolean) => void>()
 
 // PETS
 export const petsSig = new Signal<(args: { petBody: TPetBody, petConf: TPetData }[]) => void>()

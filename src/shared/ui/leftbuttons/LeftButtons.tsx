@@ -2,14 +2,14 @@ import { GPT_ICONS, icons } from "shared/help/DATA"
 import { formatNumber } from "shared/help/helpers"
 import { PolicyService, UserInputService, Workspace } from "@rbxts/services"
 import { useEffect, useRef, useState } from "@rbxts/react"
-import { useSceenSize } from "./hooks/use_screensize"
 import { mineActionSignal } from "shared/signals/client_signals"
 import { useEventListener } from "@rbxts/pretty-react-hooks"
 import { randInt } from "shared/help/math"
 import React from "@rbxts/react"
 import { getPlayer, shakeUI } from "shared/help/assist"
-import { LBox, LImage, LPusher, LScaler, LText, LTooltip } from "./comps/Wrappers"
-import { CostUI } from "./comps/CostUI"
+import { useSceenSize } from "../hooks/use_screensize"
+import { LBox, LImage, LPusher, LScaler, LText, LTooltip } from "../comps/Wrappers"
+import { CostUI } from "../comps/CostUI"
 
 
 const items = [

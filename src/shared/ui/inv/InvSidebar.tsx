@@ -1,5 +1,5 @@
 import React from "@rbxts/react";
-import { LBox, LImage } from "../comps/Wrappers";
+import { LBox, LHover, LImage } from "../comps/Wrappers";
 import { col } from "shared/help/assist";
 import { GPT_ICONS } from "shared/help/DATA";
 
@@ -19,9 +19,13 @@ export function InvSidebar() {
             Padding={new UDim(0.02, 0)} MinSize={new Vector2(40, 0)}
         >
             {Header.map(h => {
-                return <LBox Size={new UDim2(0.95, 0, 0.2, 0)} Aspect={1} Center Trans >
-                    <LImage Size={new UDim2(1, 0, 1, 0)} Aspect Image={h.icon} />
-                </LBox>
+                return (
+                    <LHover key={h.name} Size={new UDim2(0.95, 0, 0.2, 0)} Aspect={1} Scale={1.05} >
+                        <LBox Size={new UDim2(1, 0, 1, 0)} Center Trans >
+                            <LImage Size={new UDim2(1, 0, 1, 0)} Aspect Image={h.icon} />
+                        </LBox>
+                    </LHover>
+                )
             })}
         </LBox>
     )

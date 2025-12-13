@@ -1,10 +1,12 @@
 import { useEventListener } from "@rbxts/pretty-react-hooks"
-import React, { Fragment, ReactElement, ReactNode, Ref, useEffect, useRef, useState } from "@rbxts/react"
+import React, { Fragment, ReactNode, Ref, useEffect, useRef, useState } from "@rbxts/react"
 import { createMotion, config } from "@rbxts/ripple"
-import { Players, UserInputService, VRService } from "@rbxts/services"
+import { Players, TweenService } from "@rbxts/services"
 import { col, getMousePos, getPlayer } from "shared/help/assist"
 import { BUY_IMG, colors, GPT_ICONS, icons } from "shared/help/DATA"
 import { playSoundType } from "shared/help/play_sound"
+import motion from "@rbxts/react-motion"
+import { cursors } from "shared/help/icons"
 
 export type TChildren = '_jsx_children'
 
@@ -37,12 +39,6 @@ export const LBox = (props: TLBoxProps) => {
     const pt = Spacing || SpaceY || SpaceT; const pb = Spacing || SpaceY || SpaceB;
     const pl = Spacing || SpaceX || SpaceL; const pr = Spacing || SpaceX || SpaceR;
     const scaleRef = useRef<UIScale>()
-
-    useEffect(() => {
-        if (!HoverEffect) return
-        const scaler = scaleRef.current!
-        
-    }, [])
 
     const scrollProps = {
         TopImage: icons.TopImage, ScrollBarThickness: props.TrackWidth ?? 6,
@@ -81,6 +77,46 @@ export const LBox = (props: TLBoxProps) => {
         >
             {children}
         </frame >
+    )
+}
+
+export const LHover = ({
+    Size, Pos, children, Aspect, Scale = 1, LayoutOrder,
+}: {
+    Size?: UDim2, Pos?: UDim2, children?: ReactNode, Aspect?: number,
+    Scale?: number, LayoutOrder?: number,
+}) => {
+    const scalerRef = useRef<UIScale>()
+
+    const playHover = (entered: boolean) => {
+        const scaler = scalerRef.current!
+        const ti = new TweenInfo(
+            0.05,
+            Enum.EasingStyle.Linear,
+            Enum.EasingDirection.InOut
+        )
+        const tween = TweenService.Create(scaler, ti, {
+            Scale: entered ? Scale : 1
+        })
+        tween.Play()
+        getPlayer().GetMouse().Icon = entered ? cursors.hand : cursors.arrow
+    }
+
+    return (
+        <LBox Trans Size={Size} Pos={Pos} Aspect={Aspect} LayoutOrder={LayoutOrder} Center >
+            <frame
+                Event={{
+                    MouseEnter: () => playHover(true),
+                    MouseLeave: () => playHover(false),
+                }}
+                Size={new UDim2(1, 0, 1, 0)}
+                BackgroundTransparency={1}
+            >
+                <uilistlayout HorizontalAlignment={"Center"} VerticalAlignment={"Center"} />
+                <uiscale ref={scalerRef} />
+                {children as React.JSX.Element}
+            </frame>
+        </LBox>
     )
 }
 
@@ -421,7 +457,7 @@ export const LTooltip = (props: {
                 },
             }} >
             {props.children}
-            <textlabel Font={'FredokaOne'} Text={Text} ZIndex={100} Size={TextSize} AutomaticSize="X"
+            <textlabel Font={'FredokaOne'} Text={Text} ZIndex={100000} Size={TextSize} AutomaticSize="X"
                 BackgroundColor3={BrickColor.White().Color} Position={pos}
                 Visible={hover} >
                 <uitextsizeconstraint MinTextSize={24} />

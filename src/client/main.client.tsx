@@ -1,14 +1,13 @@
 import "./dev";
 
-import React, { StrictMode } from "@rbxts/react";
-import { createPortal, createRoot } from "@rbxts/react-roblox";
-import { Players } from "@rbxts/services";
-import { App } from "./components/app";
+import React from "@rbxts/react";
 import { PetsServiceClient } from "shared/pets/pets_service_client";
-import { root } from "shared/ui/create_root";
+import { mountFrame } from "shared/ui/create_root";
+import { InvFrame } from "shared/ui/inv/InvFrame";
+import { LeftButtons } from "shared/ui/leftbuttons/LeftButtons";
 
-const target = Players.LocalPlayer.WaitForChild("PlayerGui");
-root.render(<StrictMode>{createPortal(<App />, target)}</StrictMode>);
+mountFrame(<LeftButtons />)
+mountFrame(<InvFrame />)
 
 new PetsServiceClient()
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "@rbxts/react"
-import { getPetsSigData, petsSig } from "./client_signals"
+import { getPetsSigData, petsSig } from "shared/signals/client_signals"
 
 export const usePets = () => {
     const [pets, setPets] = useState(getPetsSigData())

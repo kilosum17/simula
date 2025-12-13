@@ -561,3 +561,9 @@ export function objValues<T extends defined,>(obj: Record<string, T>) {
     }
     return vals
 }
+
+export function scaleUDim2(udim2: UDim2, scale: number): UDim2 {
+    const newX = new UDim(udim2.X.Scale * scale, udim2.X.Offset * scale);
+    const newY = new UDim(udim2.Y.Scale * scale, udim2.Y.Offset * scale);
+    return new UDim2(newX, newY);
+}
