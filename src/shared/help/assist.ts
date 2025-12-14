@@ -11,8 +11,8 @@ export const chooseRandom = <T>(_list: T[], defItem?: T) => {
     }
     const list = [..._list, ..._list]
     while (true) {
-        let idx = math.floor(math.random(0, list.size() - 1))
-        let val = list[idx]
+        const idx = math.floor(math.random(0, list.size() - 1))
+        const val = list[idx]
         if (val !== undefined) return val
     }
 }
@@ -20,7 +20,7 @@ export const chooseRandom = <T>(_list: T[], defItem?: T) => {
 const FOS_MODs = {
     'bone': 2,
     'dino': 6,
-    'crate': 4,
+    'crate': 2.5,
     'fossil': 6,
 } as { [key: string]: number }
 
@@ -571,3 +571,5 @@ export function scaleUDim2(udim2: UDim2, scale: number): UDim2 {
 export const getFossilsFolder = (stageNo: number) => {
     return ensureInstance({ path: `Targets.Fossils.${stageNo}` })
 }
+
+export const DEV_PLAYER_ID = 4771575111

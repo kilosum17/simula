@@ -53,7 +53,7 @@ export class Pet {
         anchor.Anchored = false
         anchor.Size = new Vector3(0.8, 0.8, 0.8)
         anchor.Shape = Enum.PartType.Ball
-        // anchor.Transparency = 1
+        anchor.Transparency = 1
         anchor.SetAttribute("id", tonumber(this.id)!)
 
         const model = ReplicatedStorage.instance.BoxPets.WaitForChild(this._conf.model_name).Clone() as Model

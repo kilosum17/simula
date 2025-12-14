@@ -21,7 +21,6 @@ export class PetClient {
     status = "FOLLOW" as "FOLLOW" | "GOMINE" | "MINING"
     goingToMine = false
     isMining = false
-    petId: number
 
     constructor(petsMover: PetsMover, body: TPetBody) {
         this.petsMover = petsMover
@@ -29,12 +28,10 @@ export class PetClient {
         this._body = body
         this.petBouncher = new PetBouncer()
         this.petMineActions = new PetMineActions(this)
-        this.petId = body.GetAttribute("id") as number
 
         RunService.RenderStepped.Connect(() => {
             this.update()
         })
-
     }
 
     startMining() {

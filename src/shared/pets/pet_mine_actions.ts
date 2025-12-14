@@ -1,97 +1,119 @@
-import { TweenService } from "@rbxts/services";
+import { randInt } from "shared/help/math";
 import { PetClient } from "./pet_client";
+import { TweenService } from "@rbxts/services";
 
-const HIT_OFFSET_STUD = 3.0; // Lunge distance
-const WIGGLE_ANGLE_DEG = 20; // Wiggle rotation in degrees
+const HIT_OFFSET_STUD = 2.0;
+const WIGGLE_ANGLE_DEG = 15;
+const JUMP_HEIGHT_STUD = 4.0;
+const MULT = 1;
 
-const MULT = 1.5
-// TweenInfo for the Lunge (Quick out, quick back)
 const LUNGE_TWEEN_INFO = new TweenInfo(
-    0.05 * MULT, // Duration (Fast hit)
-    Enum.EasingStyle.Linear,
+    0.05 * MULT,
+    Enum.EasingStyle.Cubic,
     Enum.EasingDirection.Out,
     0,
-    true, // Reverses: True (automatically returns to start)
+    true,
     0
 );
 
-// TweenInfo for the Wiggle (Slightly longer, elastic feel)
-const WIGGLE_TWEEN_INFO = new TweenInfo(
-    0.15 * MULT, // Duration (Slightly slower for the bounce)
-    Enum.EasingStyle.Linear,
+
+const WIGGLE_TWEEN_INFO_STEP1 = new TweenInfo(
+    0.075 * MULT,
+    Enum.EasingStyle.Quad,
     Enum.EasingDirection.Out,
     0,
-    true, // Reverses: True (automatically returns to start)
+    false,
+    0
+);
+
+
+const JUMP_TWEEN_INFO = new TweenInfo(
+    0.15 * MULT,
+    Enum.EasingStyle.Quad,
+    Enum.EasingDirection.InOut,
+    0,
+    true,
     0
 );
 
 export class PetMineActions {
-    petClient: PetClient
-    isMining = false
+    petClient: PetClient;
+    isMining = false;
 
     constructor(petClient: PetClient) {
-        this.petClient = petClient
+        this.petClient = petClient;
     }
 
     resetState() {
-        this.isMining = false
+        this.isMining = false;
     }
 
     mineOnce() {
         if (this.isMining) {
-            return
+            return;
         }
-        this.isMining = true
-        this._runMine()
+        this.isMining = true;
+        this._runMine();
     }
 
     _runMine() {
-        const part = this.petClient._body
-        const mineSpot = this.petClient.mineSpot!
-        part.BodyPosition.P = 0
-        part.BodyGyro.P = 0
+        const part = this.petClient._body;
+        const mineSpot = this.petClient.mineSpot!;
+        const petIdx = this.petClient._body.GetAttribute("idx") as number
 
-        const originalCFrame = mineSpot.CFrame
-        part.CFrame = originalCFrame
+        const originalBodyPosP = part.BodyPosition.GetAttribute("P") as number;
+        const originalBodyGyroP = part.BodyGyro.GetAttribute("P") as number;
+        part.BodyPosition.P = 0;
+        part.BodyGyro.P = 0;
 
-        let targetCFrame: CFrame;
-        let tweenInfo: TweenInfo;
-        // const animationType = math.random(1, 2);
-        const animationType = this.petClient.petId % 2
+
+        const originalCFrame = mineSpot.CFrame;
+        part.CFrame = originalCFrame;
+
+        const animationType = petIdx % 3;
+
+        const restorePhysics = () => {
+            delay(0.01, () => {
+                part.BodyPosition.Position = originalCFrame.Position;
+                part.BodyPosition.P = originalBodyPosP;
+                part.BodyGyro.P = originalBodyGyroP;
+                delay(randInt(50, 100) / 100, () => {
+                    this.isMining = false;
+                });
+            });
+        };
+
         if (animationType === 0) {
-            targetCFrame = originalCFrame.add(
+            const targetCFrame = originalCFrame.add(
                 originalCFrame.LookVector.mul(HIT_OFFSET_STUD).add(new Vector3(0, -2, 0))
             );
-            tweenInfo = LUNGE_TWEEN_INFO;
+            const lungeTween = TweenService.Create(part, LUNGE_TWEEN_INFO, { CFrame: targetCFrame });
+
+            lungeTween.Completed.Connect(restorePhysics);
+            lungeTween.Play();
+
+        } else if (animationType === 1) {
+            const targetWiggleLeft = originalCFrame.mul(CFrame.Angles(0, math.rad(-WIGGLE_ANGLE_DEG), 0));
+            const tweenLeft = TweenService.Create(part, WIGGLE_TWEEN_INFO_STEP1, { CFrame: targetWiggleLeft });
+
+            const targetWiggleRight = originalCFrame.mul(CFrame.Angles(0, math.rad(WIGGLE_ANGLE_DEG), 0));
+            const tweenRight = TweenService.Create(part, WIGGLE_TWEEN_INFO_STEP1, { CFrame: targetWiggleRight });
+            const tweenReturn = TweenService.Create(part, WIGGLE_TWEEN_INFO_STEP1, { CFrame: originalCFrame });
+
+            tweenLeft.Completed.Connect(() => {
+                tweenRight.Play();
+            });
+            tweenRight.Completed.Connect(() => {
+                tweenReturn.Play();
+            });
+            tweenReturn.Completed.Connect(restorePhysics);
+            tweenLeft.Play();
         } else {
-            targetCFrame = originalCFrame.mul(
-                CFrame.Angles(0, math.rad(WIGGLE_ANGLE_DEG), 0)
-            );
-            tweenInfo = WIGGLE_TWEEN_INFO;
+            const targetCFrame = originalCFrame.add(new Vector3(0, JUMP_HEIGHT_STUD, 0));
+            const jumpTween = TweenService.Create(part, JUMP_TWEEN_INFO, { CFrame: targetCFrame });
+            jumpTween.Completed.Connect(restorePhysics);
+            jumpTween.Play();
         }
-
-        const hitTween = TweenService.Create(
-            part,
-            tweenInfo,
-            { CFrame: targetCFrame }
-        );
-
-        // 4. (Optional) Visual Impact
-        // You would typically add a brief visual/sound effect here, e.g.:
-        // SoundService.PlaySound(hitSoundAssetId); 
-        // EffectManager.SpawnHitParticles(drop.pos); 
-        hitTween.Completed.Connect((state) => {
-            warn("TWEEN complete", state, animationType)
-            task.spawn(() => {
-                task.wait(0.01)
-                part.BodyPosition.Position = originalCFrame.Position
-                part.BodyPosition.P = part.BodyPosition.GetAttribute("P") as number
-                part.BodyGyro.P = part.BodyGyro.GetAttribute("P") as number
-                task.wait(2)
-                this.petClient.isMining = false
-            })
-        })
-        warn("TWEEN playing", animationType)
-        hitTween.Play();
     }
 }
+

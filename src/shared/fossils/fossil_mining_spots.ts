@@ -42,7 +42,7 @@ export class FossilMiningSpots {
             part.Size = new Vector3(0.5, 0.5, 0.5); // Small marker size
             part.CanCollide = false;
             part.Anchored = true
-            // part.Transparency = 1;
+            part.Transparency = 1;
             part.Color = col('random')
 
             const cframe = CFrame.lookAt(spotPosition, center);
