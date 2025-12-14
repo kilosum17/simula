@@ -6,6 +6,7 @@ import { PetBouncer } from "./pet_bouncer"
 import { getFossilsFolder, getHRP } from "shared/help/assist"
 import { randSample } from "shared/help/math"
 import { PetMineActions } from "./pet_mine_actions"
+import { Remotes } from "shared/signals/remotes"
 
 const rayParams = new RaycastParams()
 const RAY_DIST = 20
@@ -42,6 +43,9 @@ export class PetClient {
 
     stopMining() {
         this.status = "FOLLOW"
+        if (this.mineSpot) {
+            Remotes.Client.Get("SetAttribute").SendToServer(this.mineSpot, "occupied", false)
+        }
     }
 
     update() {
@@ -76,6 +80,8 @@ export class PetClient {
             }
             this.goingToMine = true
             this.mineSpot = this._chooseMineSpot()
+            Remotes.Client.Get("SetAttribute").SendToServer(this.mineSpot, "occupied", true)
+
             const frontPos = this.mineSpot.Position.add(this.mineSpot.CFrame.LookVector.mul(100))
             let pos = this.mineSpot.Position
             // pos = this._raycastPos(pet, pos)
