@@ -9,6 +9,7 @@ export class PetsService {
         this.petMan = new PetsManager(this)
 
         const petIds = [
+            // "1"
             '1', '2',
             //  '3', '4'
         ]

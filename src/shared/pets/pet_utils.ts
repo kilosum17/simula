@@ -18,11 +18,12 @@ export function weldModelParts(petModel: Model, networkOwner: Player, rotation: 
         if (part.IsA("BasePart") && part !== rootPart) {
             part.CanCollide = false;
             part.Anchored = false;
+            part.Massless = true
 
             const weld = new Instance("WeldConstraint");
             weld.Part0 = rootPart;
             weld.Part1 = part;
-            weld.Parent = part;
+            weld.Parent = rootPart;
             part.SetNetworkOwner(networkOwner)
         }
     }

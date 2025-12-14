@@ -68,7 +68,7 @@ export const NTooltip = ({
                     const vec = new Vector2(x + 15, y + 15);
                     const pos = new UDim2(0, vec.X, 0, vec.Y)
                     tooltipSync.update({ pos, pet, text, maxSize, open: true, })
-                    warn("offset", vec, 'pos', x, y, 'frame')
+                    // warn("offset", vec, 'pos', x, y, 'frame')
                 }
             }} >
             {children as React.JSX.Element}

@@ -10,6 +10,8 @@ export type TPetBody = Part & {
     BodyGyro: BodyGyro,
     BodyVelocity: BodyVelocity,
     Root: BasePart,
+    Extra: Part,
+    Weld: WeldConstraint,
     Model: Model,
 }
 
@@ -49,7 +51,7 @@ export class Pet {
         anchor.CollisionGroup = "PET"
         anchor.CanCollide = false
         anchor.Anchored = false
-        anchor.Size = new Vector3(.8, .8, .8)
+        anchor.Size = new Vector3(0.8, 0.8, 0.8)
         anchor.Shape = Enum.PartType.Ball
         // anchor.Transparency = 1
         anchor.SetAttribute("id", tonumber(this.id)!)
@@ -59,16 +61,24 @@ export class Pet {
         model.Name = "Model"
         model.ScaleTo(1 / 70)
         const body = weldModelParts(model, this.petsMan.petsServ.player, this._conf.rotation ?? 0)
-        model.PivotTo(getHRP(player).CFrame.mul(new CFrame(0, 5, 0)))
+        model.PivotTo(getHRP(player).CFrame.mul(new CFrame(0, 4, 0)))
         body.CanCollide = false
         body.Anchored = false
-        // body.Parent = anchor
         body.SetNetworkOwner(player)
 
         const weld = new Instance("WeldConstraint")
+        weld.Name = 'Weld'
         weld.Part0 = anchor
         weld.Part1 = body
         weld.Parent = anchor
+
+        const extra = new Instance("Part")
+        extra.Parent = anchor
+        extra.Name = "Extra"
+        extra.CFrame = getHRP(player).CFrame
+        extra.Color = col('random')
+        extra.Size = new Vector3(1, 1, 1)
+        extra.Transparency = 1
 
         return { body: body as BasePart, anchor: anchor as TPetBody }
     }
