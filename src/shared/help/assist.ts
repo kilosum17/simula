@@ -567,3 +567,7 @@ export function scaleUDim2(udim2: UDim2, scale: number): UDim2 {
     const newY = new UDim(udim2.Y.Scale * scale, udim2.Y.Offset * scale);
     return new UDim2(newX, newY);
 }
+
+export const getFossilsFolder = (stageNo: number) => {
+    return ensureInstance({ path: `Targets.Fossils.${stageNo}` })
+}

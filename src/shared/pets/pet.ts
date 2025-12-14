@@ -51,7 +51,7 @@ export class Pet {
         anchor.Anchored = false
         anchor.Size = new Vector3(.8, .8, .8)
         anchor.Shape = Enum.PartType.Ball
-        anchor.Transparency = 1
+        // anchor.Transparency = 1
         anchor.SetAttribute("id", tonumber(this.id)!)
 
         const model = ReplicatedStorage.instance.BoxPets.WaitForChild(this._conf.model_name).Clone() as Model
@@ -62,7 +62,7 @@ export class Pet {
         model.PivotTo(getHRP(player).CFrame.mul(new CFrame(0, 5, 0)))
         body.CanCollide = false
         body.Anchored = false
-        body.Parent = anchor
+        // body.Parent = anchor
         body.SetNetworkOwner(player)
 
         const weld = new Instance("WeldConstraint")
@@ -81,16 +81,19 @@ export class Pet {
         BodyPosition.Position = anchor.Position
         BodyPosition.MaxForce = new Vector3(math.huge, math.huge, math.huge)
         BodyPosition.Parent = anchor
+        BodyPosition.SetAttribute("P", BodyPosition.P)
 
         const BodyGyro = new Instance("BodyGyro")
         BodyGyro.CFrame = anchor.CFrame
         BodyGyro.MaxTorque = new Vector3(math.huge, math.huge, math.huge)
         BodyGyro.Parent = anchor
+        BodyGyro.SetAttribute("P", BodyGyro.P)
 
         const BodyVelocity = new Instance("BodyVelocity")
         BodyVelocity.Velocity = new Vector3(0, 0, 0)
         BodyVelocity.MaxForce = new Vector3(0, 0, 0)
         BodyVelocity.Parent = anchor
+        BodyVelocity.SetAttribute("P", BodyVelocity.P)
 
         setPartDensity(anchor, 1.2)
     }

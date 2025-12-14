@@ -5,18 +5,18 @@ import { RunService } from "@rbxts/services"
 import { enteredAreaSig, enteredMineSig } from "shared/signals/server_signals"
 
 export class PlayerLocation {
-    _ps: PlayerService
+    _player: Player
     inMineZone = false
     inStage = -1
 
-    constructor(ps: PlayerService) {
-        this._ps = ps
+    constructor(player: Player) {
+        this._player = player
 
         RunService.Heartbeat.Connect(() => this._checkPosition())
     }
 
     private _checkPosition() {
-        const hrpPos = getHRP(this._ps.player).Position
+        const hrpPos = getHRP(this._player).Position
         let minDist = math.huge
         let closeStageNo = 0
         for (const [strStageNo, posList] of pairs(DEF_AREA_CACHE)) {
@@ -31,12 +31,12 @@ export class PlayerLocation {
         }
         if (this.inStage !== closeStageNo) {
             this.inStage = closeStageNo
-            enteredAreaSig.Fire(closeStageNo)
+            enteredAreaSig.Fire(this._player, closeStageNo, this.inStage)
         }
         const newInMineZone = minDist < 60
         if (this.inMineZone !== newInMineZone) {
             this.inMineZone = newInMineZone
-            enteredMineSig.Fire(closeStageNo)
+            enteredMineSig.Fire(this._player, closeStageNo, this.inMineZone)
         }
     }
 

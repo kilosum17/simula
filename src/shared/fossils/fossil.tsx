@@ -1,12 +1,13 @@
-import { chooseRandom, ensureInstance, getFosOfType2, getHealthMult } from "shared/help/assist";
+import { chooseRandom, ensureInstance, getFosOfType2, getFossilsFolder, getHealthMult } from "shared/help/assist";
 import { Stage } from "./Stage";
 import { STAGE_CONF } from "shared/help/CONF";
-import { TweenService, Workspace } from "@rbxts/services";
+import { TweenService } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 import { createPortal, createRoot } from "@rbxts/react-roblox";
 import { StrictMode } from "@rbxts/react";
 import { FossilHealthUi } from "./fossil_health_ui";
 import React from "@rbxts/react";
+import { FossilMiningSpots } from "./fossil_mining_spots";
 
 export class Fossil {
     stage: Stage
@@ -17,10 +18,12 @@ export class Fossil {
     last_mine_time = -1000
     killed = false
     changeSig = new Signal()
+    spots: FossilMiningSpots
 
     constructor(stage: Stage, pos: Vector3) {
         this.stage = stage
         this.pos = pos
+        this.spots = new FossilMiningSpots(this)
         this.maxHealth = 100 * getHealthMult(stage.stageNo)
         this.health = this.maxHealth
         this.mesh = this.popupFossil()
@@ -45,6 +48,7 @@ export class Fossil {
         const [no, part] = getFosOfType2(fos, this.health / this.maxHealth, () => true, this.stage.stageNo)!
         this.setNewMesh(part, no)
         this.repositionMesh()
+        this.spots.add_mining_spots()
         this.bounceMesh('normal')
         // print('popup')
         return part
@@ -58,7 +62,7 @@ export class Fossil {
         part.CanCollide = false
         part.Anchored = true
         part.Name = `fos ${this.stage.stageNo}-${part.Name}`
-        part.Parent = ensureInstance({ path: "Targets.Fossils" })
+        part.Parent = getFossilsFolder(this.stage.stageNo)
         part.AddTag('fossil');
     }
     private repositionMesh(rotate = true) {
@@ -75,6 +79,7 @@ export class Fossil {
             )
         }
     }
+
     private bounceMesh(pace: 'normal' | 'fast') {
         const Size = this.mesh.Size
         const isFast = pace === 'fast'

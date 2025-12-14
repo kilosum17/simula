@@ -1,6 +1,7 @@
 import "./dev";
 
 import React from "@rbxts/react";
+import { MineServiceClient } from "shared/mine/mine_service_client";
 import { PetsServiceClient } from "shared/pets/pets_service_client";
 import { mountFrame } from "shared/ui/create_root";
 import { InvFrame } from "shared/ui/inv/InvFrame";
@@ -13,4 +14,4 @@ mountFrame(<NTooltipFrame />)
 
 
 new PetsServiceClient()
-
+new MineServiceClient()

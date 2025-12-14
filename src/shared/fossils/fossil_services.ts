@@ -13,7 +13,7 @@ export class FossilService {
 
         this.playerEntered(0)
 
-        enteredAreaSig.Connect(stageNo => {
+        enteredAreaSig.Connect((_, stageNo) => {
             this.playerEntered(stageNo)
         })
     }

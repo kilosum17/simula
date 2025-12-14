@@ -11,7 +11,7 @@ export class PlayerService {
     constructor(player: Player) {
         this.player = player
         this.ps_data = new PlayerData(this)
-        this.ps_location = new PlayerLocation(this)
+        this.ps_location = new PlayerLocation(player)
         this._setPlayerCollisionGroup()
     }
 

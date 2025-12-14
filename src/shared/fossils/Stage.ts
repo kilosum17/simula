@@ -11,7 +11,7 @@ export class Stage {
 
     constructor(stageNo: number) {
         this.stageNo = stageNo
-        let _pos = DEF_AREA_CACHE["" + (stageNo + 1)]
+        const _pos = DEF_AREA_CACHE[tostring(stageNo + 1)]
         this.center = new Vector3(_pos[0], _pos[1], _pos[2])
     }
 
@@ -34,7 +34,7 @@ export class Stage {
         const fosNo = conf.no
         // const fosNo = 10
         for (let i = 0; i < fosNo; i++) {
-            let possible_zones = [] as Vector3[]
+            const possible_zones = [] as Vector3[]
             for (let z = 0; z < zones.size(); z++) {
                 if (this.used_zones.includes(z)) continue
                 let passed = true
@@ -61,17 +61,16 @@ export class Stage {
                 this.fossils.push(fos)
             }
         }
-        print(`stage ${this.stageNo} placed accuracy: `, (100 - math.ceil(fails / conf.no * 100)) + '%', 'fails:', fails)
+        const accuracy = 100 - math.ceil(fails / conf.no * 100)
+        print(`stage ${this.stageNo} placed accuracy: `, accuracy, '%', 'fails:', fails)
     }
 
     getSquares(center: Vector3, r: number) {
         const w = 2.5
-        let sx = center.X - r
-        let ex = center.X + r
-        let sz = center.Z - r
-        let ez = center.Z + r
-        let count = 0
-        let added = 0
+        const sx = center.X - r
+        const ex = center.X + r
+        const sz = center.Z - r
+        const ez = center.Z + r
         const vals = [] as Vector3[]
         for (let x = sx; x <= ex; x += w) {
             for (let z = sz; z <= ez; z += w) {
@@ -79,12 +78,9 @@ export class Stage {
                 const dist = pos.sub(center).Magnitude
                 if (dist <= (r)) {
                     vals.push(pos)
-                    added++
                 }
-                count++
             }
         }
-        // print('zone cover: ', math.round(added / count * 100) + '%')
         for (let i = 0; i < vals.size() / 2; i++) {
             const idx = math.random(0, vals.size() - 1)
             const temp = vals[idx]
