@@ -22,7 +22,7 @@ export function InvHeader() {
                     Color={col("white")} StrokeThickness={3} Text="Inventory!" Align="Left" />
             </LBox>
             <LBox Size={new UDim2(0.3, 0, 0.6, 0)} Center Trans >
-                <LBox Size={new UDim2(0, 0, 1, 0)} AutoSize="X" StrokeThickness={3} CornerRadius2={new UDim(0.5, 0)}
+                {/* <LBox Size={new UDim2(0, 0, 1, 0)} AutoSize="X" StrokeThickness={3} CornerRadius2={new UDim(0.5, 0)}
                     Padding={new UDim(0.02, 0)} SpaceX={new UDim(0.1, 0)} Center SortOrder="LayoutOrder" Background={col('white')} >
                     <LPusher gapS={0.5} LayoutOrder={-1} />
                     {icons.map((c, i) => {
@@ -35,7 +35,7 @@ export function InvHeader() {
                         )
                     })}
                     <LPusher gapS={0.5} LayoutOrder={10} />
-                </LBox>
+                </LBox> */}
             </LBox>
             <LBox Size={new UDim2(0.35, 0, 1, 0)} Trans NoList >
                 <LBox Pos={new UDim2(0.1, 0, 0.5, 0)} Size={new UDim2(0.75, 0, 0.6, 0)} AnchorPoint={new Vector2(0, 0.5)}

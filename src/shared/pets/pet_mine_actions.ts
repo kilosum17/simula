@@ -3,6 +3,7 @@ import { PetClient } from "./pet_client";
 import { TweenService } from "@rbxts/services";
 import { fossilDamageSig } from "shared/signals/server_signals";
 import { Remotes } from "shared/signals/remotes";
+import { getFossilAtts } from "shared/signals/fossil_attributes";
 
 const HIT_OFFSET_STUD = 2.0;
 const WIGGLE_ANGLE_DEG = 15;
@@ -60,9 +61,14 @@ export class PetMineActions {
     }
 
     _runMine() {
+        const mineSpot = this.petClient.mineSpot!;
+        const fosAtts = getFossilAtts(mineSpot.Parent! as BasePart)
+        if (fosAtts.health === 0) {
+            this.petClient.startMining()
+            return
+        }
         this.mineCount++
         const part = this.petClient._body;
-        const mineSpot = this.petClient.mineSpot!;
         const petIdx = this.petClient._body.GetAttribute("idx") as number
 
         const originalBodyPosP = part.BodyPosition.GetAttribute("P") as number;
@@ -76,7 +82,7 @@ export class PetMineActions {
 
         const animationType = petIdx % 3;
 
-        const restorePhysics = () => {
+        const onTweenComplete = () => {
             delay(0.01, () => {
                 part.BodyPosition.Position = originalCFrame.Position;
                 part.BodyPosition.P = originalBodyPosP;
@@ -98,7 +104,7 @@ export class PetMineActions {
             );
             const lungeTween = TweenService.Create(part, LUNGE_TWEEN_INFO, { CFrame: targetCFrame });
 
-            lungeTween.Completed.Connect(restorePhysics);
+            lungeTween.Completed.Connect(onTweenComplete);
             lungeTween.Play();
         } else if (animationType === 1) {
             const targetWiggleLeft = originalCFrame.mul(CFrame.Angles(0, math.rad(-WIGGLE_ANGLE_DEG), 0));
@@ -114,12 +120,12 @@ export class PetMineActions {
             tweenRight.Completed.Connect(() => {
                 tweenReturn.Play();
             });
-            tweenReturn.Completed.Connect(restorePhysics);
+            tweenReturn.Completed.Connect(onTweenComplete);
             tweenLeft.Play();
         } else {
             const targetCFrame = originalCFrame.add(new Vector3(0, JUMP_HEIGHT_STUD, 0));
             const jumpTween = TweenService.Create(part, JUMP_TWEEN_INFO, { CFrame: targetCFrame });
-            jumpTween.Completed.Connect(restorePhysics);
+            jumpTween.Completed.Connect(onTweenComplete);
             jumpTween.Play();
         }
     }

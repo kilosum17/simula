@@ -1,7 +1,7 @@
 import { DEF_AREA_CACHE } from "shared/help/DATA"
 import { Fossil } from "./fossil"
 import { STAGE_CONF } from "shared/help/CONF"
-import { chooseRandom } from "shared/help/assist"
+import { chooseRandom, ensureInstance } from "shared/help/assist"
 
 export class Stage {
     stageNo: number
@@ -13,6 +13,7 @@ export class Stage {
         this.stageNo = stageNo
         const _pos = DEF_AREA_CACHE[tostring(stageNo + 1)]
         this.center = new Vector3(_pos[0], _pos[1], _pos[2])
+        ensureInstance({ path: `Targets.Fossils.${stageNo}` })
     }
 
     entered() {
@@ -56,9 +57,7 @@ export class Stage {
             } else {
                 const pos = chooseRandom(possible_zones)
                 this.taken_pos.push(pos)
-                this.taken_pos.push(pos)
-                const fos = new Fossil(this, pos)
-                this.fossils.push(fos)
+                this.addFossilAt(pos)
             }
         }
         const accuracy = 100 - math.ceil(fails / conf.no * 100)
@@ -88,6 +87,18 @@ export class Stage {
             vals[i] = temp
         }
         return vals
+    }
+
+    removeFossil(fossil: Fossil) {
+        this.fossils = this.fossils.filter(f => f !== fossil)
+        this.addFossilAt(fossil.pos, 4)
+    }
+
+    addFossilAt(pos: Vector3, waitTime = 0) {
+        delay(waitTime, () => {
+            const fos = new Fossil(this, pos)
+            this.fossils.push(fos)
+        })
     }
 
 }

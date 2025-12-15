@@ -9,7 +9,7 @@ export class MineSender {
     }
 
     sendToArea(areaNo: number) {
-        warn("Sending pets to", areaNo, getPlayer())
+        // warn("Sending pets to", areaNo, getPlayer())
     }
 
 }

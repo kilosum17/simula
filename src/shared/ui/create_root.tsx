@@ -40,3 +40,31 @@ export const mountFrame = (frame: React.JSX.Element, displayOrder = 1) => {
         );
     })
 }
+
+export const mountSurfaceGui = ({ name, comp, part, face }: { name: string, comp: React.JSX.Element, part: BasePart, face: Enum.NormalId }) => {
+    const surfaceGui = new Instance("SurfaceGui");
+    surfaceGui.Parent = part;
+    surfaceGui.MaxDistance = 800
+    surfaceGui.Face = face
+    const root = createRoot(surfaceGui);
+    root.render(comp);
+    return root
+}
+
+export const mountBillboardGui = ({
+    part, size, extendsOffset, alwaysOnTop = false, maxDistance, comp,
+}: {
+    part: BasePart, size: UDim2, extendsOffset: Vector3,
+    alwaysOnTop?: boolean, maxDistance?: number, comp: React.JSX.Element,
+}) => {
+    const billboard = new Instance("BillboardGui");
+    billboard.Parent = part;
+    billboard.Size = size
+    billboard.ExtentsOffset = extendsOffset
+    billboard.AlwaysOnTop = alwaysOnTop
+    if (maxDistance) billboard.MaxDistance = maxDistance
+
+    const root = createRoot(billboard);
+    root.render(comp);
+    return root
+}

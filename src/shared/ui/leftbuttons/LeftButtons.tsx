@@ -12,7 +12,7 @@ import { LBox, LHover, LImage, LPusher, LText } from "../comps/Wrappers"
 import { CostUI } from "../comps/CostUI"
 import { NTooltip } from "../nitifications/NTooltip"
 import { usePageState } from "../hooks/use_page_state"
-import { usePlayerData } from "../hooks/use_player_data"
+import { usePlayerAtts } from "shared/signals/player_attributes"
 
 
 const items = [
@@ -33,7 +33,7 @@ export function LeftButtons() {
     const ref1 = useRef<UIScale>()
     const ref2 = useRef<UIScale>()
     const { setPage } = usePageState()
-    const { cash, gems } = usePlayerData()
+    const { cash, gems } = usePlayerAtts()
 
     const { size } = useSceenSize()
     const isDesk = size.Y > 430
@@ -113,7 +113,7 @@ export function LeftButtons() {
 
     const gemsInfo = formatNumber(gems)
     const y = isDesk ? 0.35 : 0.15
-    
+
     return (
         <LBox Pos={new UDim2(0, 10, y, 0)} Size={new UDim2(0.22, 0, 0.7, 0)} Trans AnchorPoint={new Vector2(0, 0)}
             Vert Padding={new UDim(0.01, 0)} VAlign='Top' MinSize={new Vector2(130, 100)} MaxSize={new Vector2(250, 100000)}   >
@@ -137,26 +137,18 @@ export function LeftButtons() {
             <LBox Size={new UDim2(1, 0, 0.2, 0)} Vert MaxSize={new Vector2(1000, 130)} Trans >
                 <LBox Size={new UDim2(1, 0, 0.5, 0)} Trans Center >
                     <LBox Size={new UDim2(1, 0, 1, 0)} Trans Padding={new UDim(0, 10)}   >
-                        <LImage Image={GPT_ICONS.diamond} Aspect Size={new UDim2(1, 0, 1, 0)} MinSize={new Vector2(20, 20)} />
-                        <LText Text={gemsInfo} Var="blue" StrokeThickness={3}
-                            Size={new UDim2(0.6, 0, 1, 0)} Align={'Left'} />
+                        <CostUI isGems size={new UDim2(1, 0, 1, 0)} Align="Left" cost={gems} />
                         <uiscale ref={ref1} Scale={1} />
                     </LBox>
                 </LBox >
                 <LPusher gapS={0.05} />
                 <LBox Size={new UDim2(1, 0, 0.5, 0)} Trans >
-                    {/* <LBox Size={new UDim2(1, 0, 1, 0)} Trans Padding={new UDim(0, 10)}   >
-                                <LImage Image={icons.ToolsCoins} Aspect Size={new UDim2(1, 0, 1, 0)} MinSize={new Vector2(20, 20)} />
-                                <LText Text={cash} Var='white' StrokeThickness={3}
-                                    Size={new UDim2(0.6, 0, 1, 0)} Align={'Left'} />
-                                <uiscale Ref={this.ref2} Scale={1} />
-                            </LBox> */}
                     <LBox Size={new UDim2(1, 0, 1, 0)} Trans >
                         <CostUI size={new UDim2(1, 0, 1, 0)} Align="Left" cost={cash} />
                         <uiscale ref={ref2} Scale={1} />
                     </LBox>
                 </LBox >
-            </LBox >
+            </LBox>
         </LBox>
     )
 }

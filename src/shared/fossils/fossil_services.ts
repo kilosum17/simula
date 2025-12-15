@@ -23,6 +23,10 @@ export class FossilService {
                 warn("Not valid fosil or pet", fossilBody, petBody)
                 return
             }
+            if (fossilBody.Position.sub(petBody.Position).Magnitude > 50) {
+                warn("Pet and fossil distance too big", fossilBody, petBody)
+                return
+            }
             const stageNo = fossilBody.GetAttribute('stageNo') as number
             const stage = this.stages[stageNo]
             const fossil = stage.fossils.find(f => f.body === fossilBody)

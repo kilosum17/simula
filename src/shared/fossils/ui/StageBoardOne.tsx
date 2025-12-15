@@ -1,32 +1,29 @@
 import React from "@rbxts/react"
 import { useEffect } from "@rbxts/react"
 import { RunService } from "@rbxts/services"
-import { getStageBoardPart } from "shared/help/assist"
+import { col, getStageBoardPart } from "shared/help/assist"
 import { shouldRebirth } from "shared/help/CONF"
 import { getStageCostV2, icons } from "shared/help/DATA"
-import { formatNumber } from "shared/help/helpers"
+import { usePlayerAtts } from "shared/signals/player_attributes"
+import { LRecButton } from "shared/ui/comps/base_comps"
 import { CostUI } from "shared/ui/comps/CostUI"
-import { LBox, LImage, LPusher, LText, NButton, OldLButton } from "shared/ui/comps/Wrappers"
-import { usePlayerData } from "shared/ui/hooks/use_player_data"
+import { LBox, LImage, LPusher, LText, NButton } from "shared/ui/comps/Wrappers"
 
 export const StageBoardOne = ({ stageNo }: {
     stageNo: number
 }) => {
     const board = getStageBoardPart(stageNo)
-    const { rebirth, progStage } = usePlayerData()
+    const { rebirth, progStage } = usePlayerAtts()
     const cost = getStageCostV2(stageNo, rebirth)
-    const amount = formatNumber(cost)
     const open = stageNo > progStage
 
     const MouseClicked = () => {
-        // miner.buyStage(nextStage)
+        warn("Clicked buy", stageNo)
     }
 
     useEffect(() => {
         board.CanCollide = open
         if (RunService.IsStudio()) board.CanCollide = false
-        board.CanQuery = false
-        board.CanTouch = false
         board.Transparency = open ? 0.1 : 1
     }, [progStage])
 
@@ -56,14 +53,16 @@ export const StageBoardOne = ({ stageNo }: {
             <LBox Size={new UDim2(1, 0, 1, 0)} Vert Center Trans SpaceX={new UDim(0.2, 0)}
                 AnchorPoint={new Vector2(0.5, 0.5)} MaxSize={new Vector2(600, 400)} Pos={new UDim2(0.5, 0, 0.5, 0)} >
                 <LPusher gapS={0.05} />
-                <LText Text={`Area ${stageNo}`
-                } Size={new UDim2(1, 0, 0.25, 0)} Var="white" StrokeThickness={2} />
+                <LText Text={`Area ${stageNo}`} Size={new UDim2(1, 0, 0.25, 0)} Var="white" StrokeThickness={3} />
                 <LPusher gapS={0.05} />
                 <CostUI size={new UDim2(1, 0, 0.3, 0)} cost={cost} short />
                 <LPusher gapS={0.05} />
                 {/* <LButton Text="Buy Now" MouseClicked={MouseClicked} /> */}
-                <OldLButton Text="Buy Now" onClick={MouseClicked} Size={new UDim2(0.8, 0, 0.3, 0)} />
-            </LBox>
+                {/* <OldLButton Text="Buy Now" onClick={MouseClicked} Size={new UDim2(0.8, 0, 0.3, 0)} /> */}
+                <LRecButton color="green" Size={new UDim2(0.5, 0, 0.3, 0)} onClick={MouseClicked} >
+                    <LText StrokeThickness={3} Text="Buy" Color={col('white')} Size={new UDim2(0.8, 0, 0.8, 0)} />
+                </LRecButton>
+            </LBox >
         )
     }
 }

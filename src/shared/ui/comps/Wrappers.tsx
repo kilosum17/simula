@@ -90,28 +90,35 @@ export const LHover = ({
 }) => {
     const scalerRef = useRef<UIScale>()
 
-    const playHover = (entered: boolean) => {
+    const playScale = (entered: boolean, isClick = false) => {
         const scaler = scalerRef.current!
+        if (!scaler) return
         const ti = new TweenInfo(
-            0.05,
+            0.05 * (isClick ? 0.8 : 1),
             Enum.EasingStyle.Linear,
             Enum.EasingDirection.InOut
         )
         const tween = TweenService.Create(scaler, ti, {
-            Scale: entered ? Scale : 1
+            Scale: entered ? Scale : (isClick ? 0.9 : 1)
         })
         tween.Play()
         getPlayer().GetMouse().Icon = entered ? cursors.hand : cursors.arrow
+        return tween
     }
 
     return (
         <LBox Trans Size={Size} Pos={Pos} Aspect={Aspect} LayoutOrder={LayoutOrder} AnchorPoint={AnchorPoint} Center >
             <imagebutton
                 Event={{
-                    MouseEnter: () => playHover(true),
-                    MouseLeave: () => playHover(false),
-                    MouseButton1Click: () => onClick?.()
-
+                    MouseEnter: () => playScale(true),
+                    MouseLeave: () => playScale(false),
+                    MouseButton1Click: () => {
+                        const tween = playScale(false, true)
+                        tween?.Completed.Connect(() => {
+                            playScale(true, true)
+                        })
+                        onClick?.()
+                    }
                 }}
                 Size={new UDim2(1, 0, 1, 0)}
                 BackgroundTransparency={1}
@@ -426,12 +433,12 @@ export const LSelect = ({ Size, defOption = '', options = [], onChange }: {
 /*/
 
 export const LCenter = (props: {
-    Size?: UDim2, Position?: UDim2, Background?: Color3,
+    Size?: UDim2, Pos?: UDim2, Background?: Color3,
     children: ReactNode,
 }) => {
-    const { Size, Position, Background } = props
+    const { Size = new UDim2(1, 0, 1, 0), Pos, Background } = props
     return (
-        <frame Size={Size} Position={Position} BackgroundColor3={Background} BackgroundTransparency={Background ? 0 : 1} >
+        <frame Size={Size} Position={Pos} BackgroundColor3={Background} BackgroundTransparency={Background ? 0 : 1} >
             {props.children}
             <uilistlayout VerticalAlignment={'Center'} HorizontalAlignment={'Center'} />
         </frame>

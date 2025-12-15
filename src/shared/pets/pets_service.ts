@@ -9,10 +9,10 @@ export class PetsService {
         this.petMan = new PetsManager(this)
 
         const petIds = [
-            // "1"
+            // "1",
             // '1', '2',
             '1', '2', '3',
-            '1', '2', '3', '4',
+            '11', '12', '13', '14',
         ]
         this.petMan.updateEquipedPets(petIds)
         warn("STARTING WITH", petIds)

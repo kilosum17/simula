@@ -35,6 +35,7 @@ interface ICProps {
     size?: UDim2,
     short?: boolean,
     cost: number,
+    isGems?: boolean,
     Align?: 'Center' | 'Left' | 'Right',
 }
 
@@ -44,6 +45,17 @@ export function CostUI(props: ICProps) {
     const data = getData(cost)
     const maxLen = props.short ? 1 : 2
     const validData = reverseList(data.filter(d => d.valid), maxLen)
+    if (props.isGems) {
+        const cashInfo = formatNumber(props.cost)
+        return (
+            <LBox Center AutoSize="X" Size={new UDim2(0, 0, 1, 0)} Trans >
+                <LImage Size={new UDim2(0, 1000, 0.97, 0)} Image={GPT_ICONS.diamond} Aspect />
+                <LPusher gapS={0.05} />
+                <LText Text={cashInfo} Size={new UDim2(0, 0, 0.9, 0)} Align="Left" Var='white'
+                    StrokeThickness={2} AutoSize="X" />
+            </LBox>
+        )
+    }
     return (
         <LBox Visible={vis} Size={size} Trans VAlign="Center" HAlign={Align || 'Center'} >
             {validData.map((d, i) => {

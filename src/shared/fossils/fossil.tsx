@@ -1,12 +1,8 @@
-import { chooseRandom, ensureInstance, getFosOfType2, getFossilsFolder, getHealthMult } from "shared/help/assist";
+import { chooseRandom, getFosOfType2, getFossilsFolder, getHealthMult } from "shared/help/assist";
 import { Stage } from "./Stage";
 import { STAGE_CONF } from "shared/help/CONF";
 import { TweenService } from "@rbxts/services";
 import Signal from "@rbxts/signal";
-import { createPortal, createRoot } from "@rbxts/react-roblox";
-import { StrictMode } from "@rbxts/react";
-import { FossilHealthUi } from "./fossil_health_ui";
-import React from "@rbxts/react";
 import { FossilMiningSpots } from "./fossil_mining_spots";
 
 export class Fossil {
@@ -16,7 +12,6 @@ export class Fossil {
     health: number
     body: BasePart
     last_mine_time = -1000
-    killed = false
     changeSig = new Signal()
     spots: FossilMiningSpots
 
@@ -27,16 +22,6 @@ export class Fossil {
         this.maxHealth = 100 * getHealthMult(stage.stageNo)
         this.health = this.maxHealth
         this.body = this.popupFossil()
-
-        this.mountHealthUI()
-    }
-
-    mountHealthUI() {
-        // Fossil-health-ui
-        const root = createRoot(new Instance("Folder"));
-        root.render(<StrictMode>
-            {createPortal(<FossilHealthUi fos={this} />, this.body)}
-        </StrictMode>);
     }
 
     fosVer = ""
@@ -93,7 +78,21 @@ export class Fossil {
     }
 
     takeDamage(damage: number) {
-        warn("Taking damage", this.body, damage)
+        // warn("Taking damage", this.body, damage)
+        this.health = math.max(this.health - damage, 0)
+        this._updateAttributes()
+        if (this.health === 0) {
+            // this.stage.removeFossil(this)
+            // this.kill()
+        }
     }
-    
+
+    kill() {
+        this.body.Destroy()
+    }
+
+    _updateAttributes() {
+        this.body.SetAttribute('maxHealth', this.maxHealth)
+        this.body.SetAttribute('health', this.health)
+    }
 }

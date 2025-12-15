@@ -73,7 +73,6 @@ export class PetClient {
                 const petPosXZ = new Vector3(pet.Position.X, 0, pet.Position.Z)
                 const spotPosXZ = new Vector3(this.mineSpot.Position.X, 0, this.mineSpot.Position.Z)
                 if (petPosXZ.sub(spotPosXZ).Magnitude < 0.2) {
-                    warn("pet reached mine pos", this.mineSpot)
                     this.status = "MINING"
                 }
                 return

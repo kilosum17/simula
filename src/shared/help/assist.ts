@@ -209,11 +209,18 @@ export const ensureInstance = ({ path, root = game.Workspace, create = true }: {
     const parts = path.split(".")
     let parent = root
     for (const part of parts) {
-        if (!parent.FindFirstChild(part) && create) {
-            const fold = new Instance("Folder", parent)
-            fold.Name = part
+        let child = parent.FindFirstChild(part)!
+        if (!child) {
+            if (create) {
+                const fold = new Instance("Folder", parent)
+                fold.Name = part
+                child = fold
+
+            } else {
+                child = parent.WaitForChild(part)!
+            }
         }
-        parent = parent.FindFirstChild(part)!
+        parent = child
     }
     return parent
 }
@@ -569,11 +576,15 @@ export function scaleUDim2(udim2: UDim2, scale: number): UDim2 {
 }
 
 export const getFossilsFolder = (stageNo: number) => {
-    return ensureInstance({ path: `Targets.Fossils.${stageNo}` })
+    return ensureInstance({ path: `Targets.Fossils.${stageNo}`, create: false })
 }
 
 export const DEV_PLAYER_ID = 4771575111
 
 export const getStageBoardPart = (stageNo: number) => {
     return Workspace.Game.Zones.WaitForChild(tostring(stageNo))! as BasePart
+}
+
+export const getAtt = <T>(part: Instance, name: string, def: T) => {
+    return (part.GetAttribute(name) ?? def) as T
 }
