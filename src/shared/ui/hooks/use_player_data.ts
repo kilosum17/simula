@@ -1,7 +1,7 @@
 import { useEventListener } from "@rbxts/pretty-react-hooks"
 import { useState } from "@rbxts/react"
 import { getPlayer } from "shared/help/assist"
-import { PLAYER_DATA_DEF, TPlayerData } from "shared/signals/player_attributes"
+import { PLAYER_DATA_DEF } from "shared/signals/player_attributes"
 
 const player = getPlayer()
 

@@ -34,17 +34,13 @@ interface ICProps {
     vis?: boolean,
     size?: UDim2,
     short?: boolean,
-    getCost: () => number,
+    cost: number,
     Align?: 'Center' | 'Left' | 'Right',
 }
 
-interface ICState { cash: number, updates: number }
 export function CostUI(props: ICProps) {
-    const cash = 0
-    const [state, setState] = useState({ cash, updates: 0 } as ICState)
-
     const { vis, size, Align } = props
-    const cost = props.getCost()
+    const cost = props.cost
     const data = getData(cost)
     const maxLen = props.short ? 1 : 2
     const validData = reverseList(data.filter(d => d.valid), maxLen)

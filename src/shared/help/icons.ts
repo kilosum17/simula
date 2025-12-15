@@ -1,10 +1,14 @@
-import { objKeys, objValues } from "./assist";
-import { GPT_ICONS, icons } from "./DATA"
+import { objValues } from "./assist";
+import { GPT_ICONS, icons } from "./DATA";
 import { randSample } from "./math";
 
 export const ICON_DATA = {
     "rand": "",
     "square_red_close_but": "rbxassetid://72476785430277",
+    "red_circle": "rbxassetid://88354314926840",
+    "green_rec": "rbxassetid://71277374381740",
+    "bonus_text": "rbxassetid://82390280512523",
+
     "inv_pets": GPT_ICONS.nav_dinopaw,
     "gray_lock": "rbxassetid://647920916",
     "gray_windows": "rbxassetid://119595512677097",

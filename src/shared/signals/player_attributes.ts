@@ -1,13 +1,15 @@
 import { getPlayer } from "shared/help/assist"
 
 export type TPlayerData = {
-    balance: number,
+    cash: number,
+    gems: number,
     progStage: number,
     rebirth: number,
 }
 
 export const PLAYER_DATA_DEF = {
-    balance: 0,
+    cash: 0,
+    gems: 0,
     progStage: 0,
     rebirth: 0,
 } as TPlayerData
