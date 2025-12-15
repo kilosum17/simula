@@ -41,7 +41,7 @@ export const FossilHealthUi = ({ fos }: { fos: Fossil }) => {
         })
     }, [])
 
-    const enabled = fos.mesh.Transparency < 0.5
+    const enabled = fos.body.Transparency < 0.5
     return (
         <billboardgui Size={new UDim2(10, 0, 0.65, 0)} ExtentsOffset={new Vector3(0, 0.5, 0)} AlwaysOnTop MaxDistance={1000}
             Enabled={enabled} >

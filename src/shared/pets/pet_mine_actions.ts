@@ -1,6 +1,8 @@
 import { randInt } from "shared/help/math";
 import { PetClient } from "./pet_client";
 import { TweenService } from "@rbxts/services";
+import { fossilDamageSig } from "shared/signals/server_signals";
+import { Remotes } from "shared/signals/remotes";
 
 const HIT_OFFSET_STUD = 2.0;
 const WIGGLE_ANGLE_DEG = 15;
@@ -39,6 +41,7 @@ const JUMP_TWEEN_INFO = new TweenInfo(
 export class PetMineActions {
     petClient: PetClient;
     isMining = false;
+    mineCount = 0
 
     constructor(petClient: PetClient) {
         this.petClient = petClient;
@@ -57,6 +60,7 @@ export class PetMineActions {
     }
 
     _runMine() {
+        this.mineCount++
         const part = this.petClient._body;
         const mineSpot = this.petClient.mineSpot!;
         const petIdx = this.petClient._body.GetAttribute("idx") as number
@@ -77,9 +81,14 @@ export class PetMineActions {
                 part.BodyPosition.Position = originalCFrame.Position;
                 part.BodyPosition.P = originalBodyPosP;
                 part.BodyGyro.P = originalBodyGyroP;
-                delay(randInt(50, 100) / 100, () => {
+                const dt = randInt(50, 100) / 100
+                delay(dt, () => {
                     this.isMining = false;
-                });
+                })
+                if (this.mineCount % 2 === 0) {
+                    Remotes.Client.Get("SendFossilDamage")
+                        .SendToServer(this.petClient.mineSpot!.Parent! as BasePart, this.petClient._body)
+                }
             });
         };
 
@@ -91,7 +100,6 @@ export class PetMineActions {
 
             lungeTween.Completed.Connect(restorePhysics);
             lungeTween.Play();
-
         } else if (animationType === 1) {
             const targetWiggleLeft = originalCFrame.mul(CFrame.Angles(0, math.rad(-WIGGLE_ANGLE_DEG), 0));
             const tweenLeft = TweenService.Create(part, WIGGLE_TWEEN_INFO_STEP1, { CFrame: targetWiggleLeft });

@@ -14,7 +14,7 @@ export class Fossil {
     pos: Vector3
     maxHealth: number
     health: number
-    mesh: BasePart
+    body: BasePart
     last_mine_time = -1000
     killed = false
     changeSig = new Signal()
@@ -26,7 +26,7 @@ export class Fossil {
         this.spots = new FossilMiningSpots(this)
         this.maxHealth = 100 * getHealthMult(stage.stageNo)
         this.health = this.maxHealth
-        this.mesh = this.popupFossil()
+        this.body = this.popupFossil()
 
         this.mountHealthUI()
     }
@@ -35,7 +35,7 @@ export class Fossil {
         // Fossil-health-ui
         const root = createRoot(new Instance("Folder"));
         root.render(<StrictMode>
-            {createPortal(<FossilHealthUi fos={this} />, this.mesh)}
+            {createPortal(<FossilHealthUi fos={this} />, this.body)}
         </StrictMode>);
     }
 
@@ -57,16 +57,18 @@ export class Fossil {
     part_no = 0
     private setNewMesh(part: BasePart, no: number) {
         this.part_no = no
-        this.mesh = part
+        this.body = part
         part.Position = this.pos
         part.CanCollide = false
         part.Anchored = true
         part.Name = `fos ${this.stage.stageNo}-${part.Name}`
         part.Parent = getFossilsFolder(this.stage.stageNo)
         part.AddTag('fossil');
+        part.SetAttribute("stageNo", this.stage.stageNo)
     }
+
     private repositionMesh(rotate = true) {
-        const mesh = this.mesh
+        const mesh = this.body
         const center = this.stage.center
         mesh.Position = new Vector3(mesh.Position.X,
             center.Y + mesh.Size.Y / 2 - center.Y / 2 - 0.2,
@@ -81,13 +83,17 @@ export class Fossil {
     }
 
     private bounceMesh(pace: 'normal' | 'fast') {
-        const Size = this.mesh.Size
+        const Size = this.body.Size
         const isFast = pace === 'fast'
-        this.mesh.Size = isFast ? this.mesh.Size.mul(0.5) : Vector3.zero
+        this.body.Size = isFast ? this.body.Size.mul(0.5) : Vector3.zero
         const time = isFast ? 0.15 : 0.3
         const tweenInfo = new TweenInfo(time, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out);
-        const tween = TweenService.Create(this.mesh, tweenInfo, { Size });
+        const tween = TweenService.Create(this.body, tweenInfo, { Size });
         tween.Play()
     }
 
+    takeDamage(damage: number) {
+        warn("Taking damage", this.body, damage)
+    }
+    
 }

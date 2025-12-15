@@ -5,6 +5,7 @@ export class PlayerData {
 
     constructor(ps: PlayerService) {
         this._ps = ps
+        this._ps.player.SetAttribute("balance", 0)
     }
 
     loadData() {

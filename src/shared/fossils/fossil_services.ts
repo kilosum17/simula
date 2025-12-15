@@ -1,5 +1,6 @@
-import { enteredAreaSig } from "shared/signals/server_signals";
+import { enteredAreaSig, fossilDamageSig } from "shared/signals/server_signals";
 import { Stage } from "./Stage";
+import { getPetConf } from "shared/help/pet_catalog";
 
 const STAGE_COUNT = 90
 
@@ -16,6 +17,27 @@ export class FossilService {
         enteredAreaSig.Connect((_, stageNo) => {
             this.playerEntered(stageNo)
         })
+
+        fossilDamageSig.Connect((player, fossilBody, petBody) => {
+            if (!fossilBody.IsA("BasePart") || !petBody.IsA("BasePart")) {
+                warn("Not valid fosil or pet", fossilBody, petBody)
+                return
+            }
+            const stageNo = fossilBody.GetAttribute('stageNo') as number
+            const stage = this.stages[stageNo]
+            const fossil = stage.fossils.find(f => f.body === fossilBody)
+            if (!fossil) {
+                warn("Not a valid fossil", fossilBody, stageNo)
+                return
+            }
+            const petConf = getPetConf(petBody.GetAttribute('id') as number)
+            if (!petConf) {
+                warn("No pet ", petBody)
+                return
+            }
+            fossil.takeDamage(petConf.damage)
+        })
+
     }
 
     playerEntered(stageNo: number) {

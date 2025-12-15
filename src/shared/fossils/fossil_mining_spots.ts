@@ -13,7 +13,7 @@ export class FossilMiningSpots {
 
     add_mining_spots() {
         const center = this.fossil.pos
-        const mesh = this.fossil.mesh
+        const mesh = this.fossil.body
 
         for (const c of mesh.GetChildren()) {
             if (c.HasTag("spot") && c.IsA("Part")) {

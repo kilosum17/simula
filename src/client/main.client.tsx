@@ -1,6 +1,7 @@
 import "./dev";
 
 import React from "@rbxts/react";
+import { FossilServiceClient } from "shared/fossils/fossil_service_client";
 import { MineServiceClient } from "shared/mine/mine_service_client";
 import { PetsServiceClient } from "shared/pets/pets_service_client";
 import { mountFrame } from "shared/ui/create_root";
@@ -15,3 +16,4 @@ mountFrame(<NTooltipFrame />)
 
 new PetsServiceClient()
 new MineServiceClient()
+new FossilServiceClient()
