@@ -95,7 +95,7 @@ export class PetMineActions {
                 delay(dt, () => {
                     this.isMining = false;
                 })
-                if (this.mineCount % 2 === 0) {
+                if (this.mineCount % 1 === 0) {
                     Remotes.Client.Get("SendFossilDamage")
                         .SendToServer(this.petClient.mineSpot!.Parent! as BasePart, this.petClient._body)
                 }

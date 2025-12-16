@@ -75,6 +75,7 @@ export const getFossilBody = ({ dropType, stage }: {
     root.Color = col('random')
     root.CanCollide = false
     root.Anchored = true
+    root.CanQuery = false
     root.SetAttribute("count", drops.size())
     root.PivotOffset = new CFrame(new Vector3(0, -root.Size.Y / 2, 0))
     root.PivotTo(new CFrame())
@@ -110,5 +111,6 @@ export const getFossilBody = ({ dropType, stage }: {
     }
     // root.Transparency = 0.6
     root.Transparency = 1
+
     return root
 }

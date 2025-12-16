@@ -35,7 +35,7 @@ export class FossilBoards {
                 maxDistance: 800,
                 comp: <FossilBoardOne fos={fos} />
             })
-            print("added fossil board to", fos)
+            // print("added fossil board to", fos)
         }
     }
 }
