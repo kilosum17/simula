@@ -52,9 +52,6 @@ const getFosItems = (fos: string, stage: number): [BasePart[], Folder] => {
     const folder = ReplicatedStorage.WaitForChild('public').WaitForChild('plots').WaitForChild(fos) as Folder
     const cubes = ReplicatedStorage.WaitForChild('public').WaitForChild('cubes') as Folder
     const types = folder.GetChildren() as BasePart[]
-    if (types.size() !== 4) {
-        warn('Got less ', fos, types)
-    }
     if (fos === 'crate') {
         // stage = math.max(0, stage)
         const conf = CRATE_CONFIG.find(c => c[0] <= stage && stage <= c[1])!
@@ -96,29 +93,6 @@ export const getFosOfType2 = (fos: string, ratio: number, clone: (no: number) =>
         }
         cur_ratio += inc
         no++
-    }
-}
-
-
-export class Updater {
-    last_update = os.time()
-
-    constructor(intervals: number, callBack: () => void, paused = () => false) {
-        callBack()
-        game.GetService('RunService').Heartbeat.Connect(() => {
-            if (intervals === 0) {
-                callBack()
-                return
-            }
-            if (paused()) {
-                return
-            }
-            const elapsed = os.time() - this.last_update
-            if (elapsed >= intervals) {
-                callBack()
-                this.last_update = os.time()
-            }
-        })
     }
 }
 

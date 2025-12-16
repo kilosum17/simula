@@ -24,11 +24,11 @@ export class Fossil {
         this.body = this.popupFossil()
     }
 
-    fosVer = ""
+    fosType = ""
     private popupFossil() {
         const conf = STAGE_CONF[this.stage.stageNo]
         const fos = chooseRandom(conf.fossils)
-        this.fosVer = fos
+        this.fosType = fos
         // print('fos', fos, conf.fossils)
         const [no, part] = getFosOfType2(fos, this.health / this.maxHealth, () => true, this.stage.stageNo)!
         this.setNewMesh(part, no)
