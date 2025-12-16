@@ -39,7 +39,7 @@ export class FossilMiningSpots {
             const spotPosition = center.add(new Vector3(offsetX, 0, offsetZ));
             const part = new Instance("Part");
             part.Name = `MiningSpot${i}`;
-            part.Size = new Vector3(0.5, 0.5, 0.5); // Small marker size
+            part.Size = new Vector3(0.5, 0.5, 0.5);
             part.CanCollide = false;
             part.Anchored = true
             part.Transparency = 1;

@@ -1,7 +1,7 @@
 import { DEF_AREA_CACHE } from "shared/help/DATA"
 import { Fossil } from "./fossil"
 import { STAGE_CONF } from "shared/help/CONF"
-import { chooseRandom, ensureInstance } from "shared/help/assist"
+import { chooseRandom, col, ensureInstance, getFossilsFolder } from "shared/help/assist"
 
 export class Stage {
     stageNo: number
@@ -17,6 +17,14 @@ export class Stage {
     }
 
     entered() {
+        const part = new Instance('Part')
+        part.Size = new Vector3(0.5, 0.5, 0.5)
+        part.Color = col('random')
+        part.CanCollide = false
+        part.Anchored = true
+        part.Position = this.center
+        part.Parent = game.Workspace.Targets
+        part.Transparency = 1
         this.showFossils()
     }
 
@@ -59,6 +67,7 @@ export class Stage {
                 this.taken_pos.push(pos)
                 this.addFossilAt(pos)
             }
+            // if (i > 10) break
         }
         const accuracy = 100 - math.ceil(fails / conf.no * 100)
         print(`stage ${this.stageNo} placed accuracy: `, accuracy, '%', 'fails:', fails)

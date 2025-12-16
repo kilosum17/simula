@@ -1,7 +1,6 @@
+import { playVFX } from "shared/effects/vfx/vfx";
 import { Remotes } from "shared/signals/remotes";
 
-const MakeHello = Remotes.Client.Get("MakeHello")
-
-MakeHello.CallServerAsync("Roblox").then((message: string) => {
-    print(message);
-});
+Remotes.Client.Get('SendPlayVFX').Connect((pos, kind) => {
+    playVFX(kind, pos)
+})

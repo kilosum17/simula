@@ -6,3 +6,4 @@ export const enteredAreaSig = new Signal<(player: Player, areaNo: number, val: n
 export const enteredMineSig = new Signal<(player: Player, areaNo: number, val: boolean) => void>()
 
 export const fossilDamageSig = new Signal<(player: Player, fossil: BasePart, petBody: TPetBody) => void>()
+

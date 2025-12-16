@@ -556,7 +556,7 @@ export const getFossilsFolder = (stageNo: number) => {
 export const DEV_PLAYER_ID = 4771575111
 
 export const getStageBoardPart = (stageNo: number) => {
-    return Workspace.Game.Zones.WaitForChild(tostring(stageNo))! as BasePart
+    return ensureInstance({ path: `Game.Zones.${stageNo}`, create: false }) as BasePart
 }
 
 export const getAtt = <T>(part: Instance, name: string, def: T) => {

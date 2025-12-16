@@ -19,7 +19,7 @@ export class FossilService {
         })
 
         fossilDamageSig.Connect((player, fossilBody, petBody) => {
-            if (!fossilBody.IsA("BasePart") || !petBody.IsA("BasePart")) {
+            if (!fossilBody || !fossilBody.IsA("BasePart") || !petBody.IsA("BasePart")) {
                 warn("Not valid fosil or pet", fossilBody, petBody)
                 return
             }

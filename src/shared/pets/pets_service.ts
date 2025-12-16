@@ -12,7 +12,7 @@ export class PetsService {
             // "1",
             // '1', '2',
             '1', '2', '3',
-            '11', '12', '13', '14',
+            // '11', '12', '13', '14',
         ]
         this.petMan.updateEquipedPets(petIds)
         warn("STARTING WITH", petIds)

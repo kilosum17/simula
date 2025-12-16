@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from "@rbxts/react"
 
 export type TFossilAtts = {
     health: number,
+    killed: boolean,
     maxHealth: number,
 }
 
 export const FOSSIL_ATTS_DEF = {
     maxHealth: 100,
     health: 100,
+    killed: false,
 } as TFossilAtts
 
 export const getFossilAtts = (fossil: BasePart) => {

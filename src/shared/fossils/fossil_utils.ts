@@ -60,8 +60,8 @@ const getDropsFolder = (dropType: TDropType, stage: number): Folder => {
     }
 }
 
-export const getFosOfType2 = ({ dropType, stage, parent }: {
-    dropType: TDropType, stage: number, parent: Instance
+export const getFossilBody = ({ dropType, stage }: {
+    dropType: TDropType, stage: number
 }) => {
     const folder = getDropsFolder(dropType, stage).Clone()
     const mult = FOS_MODs[dropType] || 1
@@ -74,26 +74,41 @@ export const getFosOfType2 = ({ dropType, stage, parent }: {
     root.Size = new Vector3(0.5, 0.5, 0.5)
     root.Color = col('random')
     root.CanCollide = false
-    root.Anchored = false
+    root.Anchored = true
     root.SetAttribute("count", drops.size())
+    root.PivotOffset = new CFrame(new Vector3(0, -root.Size.Y / 2, 0))
+    root.PivotTo(new CFrame())
 
+    let maxSize = new Vector3()
     for (const drop of drops) {
         drop.Size = drop.Size.mul(mult)
         drop.PivotOffset = new CFrame(new Vector3(0, -drop.Size.Y / 2, 0))
         drop.CanCollide = false;
         drop.Anchored = false;
         drop.Massless = true
-        drop.Position = root.Position
         drop.Parent = root
-        const dropNo = drop.Name.split(dropType)[1]
+        const dropNo = (drops.size() + 1) - (tonumber(drop.Name.split(dropType)[1]) || 1)
         drop.SetAttribute("no", dropNo)
-
+        drop.AddTag(tostring(dropNo))
+        drop.AddTag('drop')
+        // drop.Transparency = 1
+        maxSize = new Vector3(
+            math.max(maxSize.X, drop.Size.X),
+            math.max(maxSize.Y, drop.Size.Y),
+            math.max(maxSize.Z, drop.Size.Z)
+        );
+    }
+    root.Size = maxSize
+    root.PivotOffset = new CFrame(new Vector3(0, -root.Size.Y / 2, 0))
+    root.PivotTo(new CFrame())
+    for (const drop of drops) {
+        drop.PivotTo(root.GetPivot())
         const weld = new Instance("WeldConstraint");
         weld.Part0 = root;
         weld.Part1 = drop;
         weld.Parent = root;
     }
-
-    root.Parent = parent
+    // root.Transparency = 0.6
+    root.Transparency = 1
     return root
 }

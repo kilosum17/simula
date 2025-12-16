@@ -62,8 +62,12 @@ export class PetMineActions {
 
     _runMine() {
         const mineSpot = this.petClient.mineSpot!;
+        if (!mineSpot || !mineSpot.Parent) { // fossil is killed
+            this.petClient.startMining()
+            return
+        }
         const fosAtts = getFossilAtts(mineSpot.Parent! as BasePart)
-        if (fosAtts.health === 0) {
+        if (fosAtts.health === 0) {  // fossil is killed
             this.petClient.startMining()
             return
         }
