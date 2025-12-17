@@ -1,6 +1,7 @@
 import "./dev";
 
 import React from "@rbxts/react";
+import { DropServiceClient } from "shared/drops/drops_service_client";
 import { FossilServiceClient } from "shared/fossils/fossil_service_client";
 import { MineServiceClient } from "shared/mine/mine_service_client";
 import { PetsServiceClient } from "shared/pets/pets_service_client";
@@ -19,3 +20,4 @@ new PetsServiceClient()
 new MineServiceClient()
 new FossilServiceClient()
 new PlayerServiceClient()
+new DropServiceClient()

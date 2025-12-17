@@ -470,7 +470,11 @@ export function scaleUDim2(udim2: UDim2, scale: number): UDim2 {
 }
 
 export const getFossilsFolder = (stageNo: number) => {
-    return ensureInstance({ path: `Targets.Fossils.${stageNo}`, create: false })
+    return ensureInstance({ path: `Targets.Fossils.${stageNo}`, create: false }) as Folder
+}
+
+export function getDropsFolder(stageNo: number) {
+    return ensureInstance({ path: `Targets.Drops.${stageNo}`, create: false }) as Folder
 }
 
 export const DEV_PLAYER_ID = 4771575111

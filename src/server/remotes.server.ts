@@ -6,6 +6,11 @@ Remotes.Server.Get('SetAttribute').Connect((_player, part, name, value) => {
     part.SetAttribute(name, value)
 });
 
+
+Remotes.Server.Get('SetNetOwner').Connect((_player, part) => {
+    part.SetNetworkOwner(_player)
+});
+
 Remotes.Server.Get('SendFossilDamage').Connect((player, fossil, pet) => {
     // part.SetAttribute(name, value)
     fossilDamageSig.Fire(player, fossil, pet)

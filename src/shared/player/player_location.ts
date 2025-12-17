@@ -3,6 +3,7 @@ import { getHRP, getPlayer } from "shared/help/assist"
 import { DEF_AREA_CACHE } from "shared/help/DATA"
 import { RunService } from "@rbxts/services"
 import { enteredAreaSig, enteredMineSig } from "shared/signals/server_signals"
+import { getStageFromPos } from "shared/help/area_check_utils"
 
 export class PlayerLocation {
     _player: Player
@@ -17,29 +18,17 @@ export class PlayerLocation {
 
     private _checkPosition() {
         const hrpPos = getHRP(this._player).Position
-        let minDist = math.huge
-        let closeStageNo = 0
-        for (const [strStageNo, posList] of pairs(DEF_AREA_CACHE)) {
-            const stageNo = tonumber(strStageNo) || 1
-            if (stageNo === 0) continue
-            const stagePos = new Vector3(posList[0], posList[1], posList[2])
-            const dist = stagePos.sub(hrpPos).Magnitude
-            if (dist >= minDist) continue
-            minDist = dist
-            closeStageNo = stageNo - 1
-            if (dist < 80) break
+        const res = getStageFromPos(hrpPos)
+        if (this.inStage !== res.closeStageNo) {
+            this.inStage = res.closeStageNo
+            enteredAreaSig.Fire(this._player, res.closeStageNo, this.inStage)
         }
-        if (this.inStage !== closeStageNo) {
-            this.inStage = closeStageNo
-            enteredAreaSig.Fire(this._player, closeStageNo, this.inStage)
+        if (this.inMineZone !== res.inMine) {
+            this.inMineZone = res.inMine
+            enteredMineSig.Fire(this._player, res.closeStageNo, this.inMineZone)
         }
-        const newInMineZone = minDist < 60
-        if (this.inMineZone !== newInMineZone) {
-            this.inMineZone = newInMineZone
-            enteredMineSig.Fire(this._player, closeStageNo, this.inMineZone)
-        }
-        this._player.SetAttribute("inMine", newInMineZone)
-        this._player.SetAttribute("inStageNo", closeStageNo)
+        this._player.SetAttribute("inMine", res.inMine)
+        this._player.SetAttribute("inStageNo", res.closeStageNo)
     }
 
 }

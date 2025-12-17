@@ -30,8 +30,12 @@ export class PetClient {
         this.petBouncher = new PetBouncer()
         this.petMineActions = new PetMineActions(this)
 
+        let i = 0
         RunService.RenderStepped.Connect(() => {
-            this.update()
+            i++
+            if (i % 6 === 0) {
+                this.update()
+            }
         })
     }
 

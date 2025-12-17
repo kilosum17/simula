@@ -14,6 +14,7 @@ export class Stage {
         const _pos = DEF_AREA_CACHE[tostring(stageNo + 1)]
         this.center = new Vector3(_pos[0], _pos[1], _pos[2])
         ensureInstance({ path: `Targets.Fossils.${stageNo}` })
+        ensureInstance({ path: `Targets.Drops.${stageNo}` })
     }
 
     entered() {

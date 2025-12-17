@@ -1,7 +1,8 @@
 import { TweenService, ReplicatedStorage } from "@rbxts/services";
-import { getIgnoreFold } from "shared/help/assist";
+import { getDropsFolder } from "shared/help/assist";
 import { icon } from "shared/help/icons";
 import { DropsService } from "./DropsService";
+import { getStageFromPos } from "shared/help/area_check_utils";
 
 export type TDropKind = 'coin' | 'bag';
 
@@ -13,15 +14,19 @@ export class DropOne {
     billboard?: BillboardGui
     dropTime = os.time()
     dropServ: DropsService
+    stageNo = 0
 
     constructor(pos: Vector3, kind: TDropKind, dropServ: DropsService) {
         this.kind = kind;
         this.dropServ = dropServ
+        this.stageNo = getStageFromPos(pos).closeStageNo
         this.body = this.createVisuals(pos);
+        this.body.SetAttribute('kind', kind)
         this.applyJump();
     }
 
     private createVisuals(pos: Vector3): BasePart {
+        const dropFold = getDropsFolder(this.stageNo)
         if (this.kind === 'coin') {
             const part = new Instance("Part");
             part.Size = new Vector3(1, 1, 1);
@@ -30,7 +35,7 @@ export class DropOne {
             part.Position = pos;
             part.CollisionGroup = 'PET'
             part.AddTag('drop')
-            part.Parent = getIgnoreFold();
+            part.Parent = dropFold
             this.creatBillboardUI(part, icon('gold_coin'))
             return part;
         } else {
@@ -39,7 +44,7 @@ export class DropOne {
             bag.CollisionGroup = 'PET'
             bag.AddTag('drop')
             bag.Position = pos;
-            bag.Parent = getIgnoreFold()
+            bag.Parent = dropFold
             return bag
         }
     }
@@ -64,10 +69,10 @@ export class DropOne {
         const connection = this.body.Touched.Connect(() => {
             this.body.AssemblyLinearVelocity = this.body.AssemblyLinearVelocity.mul(new Vector3(0.5, 1.5, 0.5));
             connection.Disconnect(); // Only bounce once
-            task.wait(2)
-            if (!this.body.Parent) return
-            this.body.Anchored = true
-            this.body.CanCollide = false
+            // task.wait(2)
+            // if (!this.body.Parent) return
+            // this.body.Anchored = true
+            // this.body.CanCollide = false
         });
     }
 
@@ -97,7 +102,7 @@ export class DropOne {
     creatBillboardUI(part: BasePart, img: string) {
         const billbord = new Instance('BillboardGui', part) as BillboardGui & { image: ImageLabel }
         billbord.ExtentsOffset = new Vector3(0, 2, 0)
-        billbord.Size = new UDim2(10, 0, 10, 0)
+        billbord.Size = new UDim2(8, 0, 8, 0)
         billbord.AlwaysOnTop = false
         billbord.MaxDistance = 200;
         const image = new Instance('ImageLabel', billbord)
