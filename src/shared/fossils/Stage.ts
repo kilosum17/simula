@@ -7,7 +7,7 @@ export class Stage {
     stageNo: number
     center: Vector3
     fossils = [] as Fossil[]
-
+    hidePart = new Instance('Part')
 
     constructor(stageNo: number) {
         this.stageNo = stageNo
@@ -25,18 +25,28 @@ export class Stage {
         part.Position = this.center
         part.Parent = game.Workspace.Targets
         part.Transparency = 1
-        this.showFossils()
+        this.createFossils()
     }
 
-    private taken_pos = [] as Vector3[]
-    private used_zones = [] as number[]
+    hideFossils() {
+        if (this.fossils.size()) print("Hiding fossils for", this.stageNo)
+        this.fossils.forEach(fos => fos.hide())
+    }
+
     showFossils() {
+        if (this.fossils.size()) print("Showing fossils for", this.stageNo)
+        this.fossils.forEach(fos => fos.show())
+    }
+
+    _taken_pos = [] as Vector3[]
+    _used_zones = [] as number[]
+    createFossils() {
         if (this.fossils.size() > 0) {
             warn('Stage already loaded')
             return
         }
-        this.taken_pos = []
-        this.used_zones = []
+        this._taken_pos = []
+        this._used_zones = []
         const conf = STAGE_CONF[this.stageNo]
         let fails = 0
         const zones = this.getSquares(this.center, 50)
@@ -45,12 +55,12 @@ export class Stage {
         for (let i = 0; i < fosNo; i++) {
             const possible_zones = [] as Vector3[]
             for (let z = 0; z < zones.size(); z++) {
-                if (this.used_zones.includes(z)) continue
+                if (this._used_zones.includes(z)) continue
                 let passed = true
-                for (const taken of this.taken_pos) {
+                for (const taken of this._taken_pos) {
                     if (zones[z].sub(taken).Magnitude < 12) {
                         passed = false
-                        this.used_zones.push(z)
+                        this._used_zones.push(z)
                         break
                     }
                 }
@@ -64,7 +74,7 @@ export class Stage {
                 break
             } else {
                 const pos = chooseRandom(possible_zones)
-                this.taken_pos.push(pos)
+                this._taken_pos.push(pos)
                 this.addFossilAt(pos)
             }
             // if (i > 10) break

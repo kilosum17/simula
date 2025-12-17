@@ -83,7 +83,6 @@ export class PetClient {
 
             const frontPos = this.mineSpot.Position.add(this.mineSpot.CFrame.LookVector.mul(100))
             let pos = this.mineSpot.Position
-            // pos = this._raycastPos(pet, pos)
             pos = this.petBouncher.update(pos, petIdx * 10000)
             pet.BodyPosition.Position = pos
             pet.BodyGyro.CFrame = new CFrame(pos, frontPos)

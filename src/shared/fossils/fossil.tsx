@@ -7,6 +7,7 @@ import { FossilMiningSpots } from "./fossil_mining_spots";
 import { getFossilBody, TDropType } from "./fossil_utils";
 import { Remotes } from "shared/signals/remotes";
 import { randInt } from "shared/help/math";
+import { addDropsSig } from "shared/signals/server_signals";
 
 export class Fossil {
     stage: Stage
@@ -33,6 +34,14 @@ export class Fossil {
 
     }
 
+    hide() {
+        this.body.Parent = undefined
+    }
+
+    show() {
+        this.body.Parent = getFossilsFolder(this.stage.stageNo)
+    }
+
     dropType = "crate" as TDropType
     _addFossilBody() {
         const conf = STAGE_CONF[this.stage.stageNo]
@@ -48,7 +57,7 @@ export class Fossil {
         body.Name = `fos ${this.stage.stageNo}-${body.Name}`
         body.SetAttribute("stageNo", this.stage.stageNo)
 
-        const activePart = this._updateBody()
+        const { activePart } = this._updateBody()
         this.activePart = activePart
         this.spots.add_mining_spots()
         this.bounceMesh('normal')
@@ -62,6 +71,7 @@ export class Fossil {
         if (ratio < 0.5) no = 3
         if (ratio < 0.25) no = 4
         const newActive = this.body.GetChildren().find(c => c.HasTag(tostring(no)))! as BasePart
+        let changed = false
         if (newActive && newActive !== this.activePart) {
             for (const drop of this.body.GetChildren() as BasePart[]) {
                 if (drop.HasTag('drop') && drop !== newActive) {
@@ -70,10 +80,13 @@ export class Fossil {
             }
             newActive.Transparency = 0;
             this.highlight.Parent = newActive
-            // print('change part', this.activePart?.GetAttribute('no'), no)
+            if (this.activePart) {
+                changed = true
+                // print('change part', this.activePart?.GetAttribute('no'), no)
+            }
         }
         this.activePart = newActive
-        return newActive
+        return { activePart: newActive, changed }
     }
 
     _setUpClickerAndHighlight() {
@@ -141,14 +154,19 @@ export class Fossil {
         // warn("Taking damage", this.body, damage)
         this.health = math.max(this.health - damage, 0)
         this._updateAttributes()
-        this._updateBody()
+        const { changed } = this._updateBody()
+        let createDrops = changed
         if (this.health === 0) {
+            createDrops = true
             this.kill()
             Remotes.Server.Get('SendPlayVFX').SendToAllPlayers(this.pos, 'bigBurst')
             task.spawn(() => {
                 task.wait(randInt(30, 50) / 10)
                 this._addFossilBody()
             })
+        }
+        if (createDrops) {
+            addDropsSig.Fire(this.body.GetPivot().Position)
         }
     }
 

@@ -13,6 +13,7 @@ export const ICON_DATA = {
     "gray_lock": "rbxassetid://647920916",
     "gray_windows": "rbxassetid://119595512677097",
     "gray_delete": "rbxassetid://111286515130677",
+    "gold_coin": "rbxassetid://93184839578373",
 
 }
 

@@ -7,3 +7,5 @@ export const enteredMineSig = new Signal<(player: Player, areaNo: number, val: b
 
 export const fossilDamageSig = new Signal<(player: Player, fossil: BasePart, petBody: TPetBody) => void>()
 
+export const addDropsSig = new Signal<(pos: Vector3) => void>()
+

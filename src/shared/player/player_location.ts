@@ -1,5 +1,5 @@
 import { PlayerService } from "./player_service"
-import { getHRP } from "shared/help/assist"
+import { getHRP, getPlayer } from "shared/help/assist"
 import { DEF_AREA_CACHE } from "shared/help/DATA"
 import { RunService } from "@rbxts/services"
 import { enteredAreaSig, enteredMineSig } from "shared/signals/server_signals"
@@ -38,6 +38,8 @@ export class PlayerLocation {
             this.inMineZone = newInMineZone
             enteredMineSig.Fire(this._player, closeStageNo, this.inMineZone)
         }
+        this._player.SetAttribute("inMine", newInMineZone)
+        this._player.SetAttribute("inStageNo", closeStageNo)
     }
 
 }

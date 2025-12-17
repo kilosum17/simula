@@ -7,6 +7,8 @@ export type TPlayerAtts = {
     gems: number,
     progStage: number,
     rebirth: number,
+    inMine: boolean,
+    inStageNo: number,
 }
 
 export const PLAYER_ATTS_DEF = {
@@ -14,6 +16,8 @@ export const PLAYER_ATTS_DEF = {
     gems: 0,
     progStage: 0,
     rebirth: 0,
+    inMine: false,
+    inStageNo: 0,
 } as TPlayerAtts
 
 export const getPlayerAtts = () => {

@@ -1,4 +1,5 @@
 import { PhysicsService, Players } from "@rbxts/services";
+import { DropsService } from "shared/drops/DropsService";
 import { FossilService } from "shared/fossils/fossil_services";
 import { PetsService } from "shared/pets/pets_service";
 import { PlayerService } from "shared/player/player_service";
@@ -30,4 +31,4 @@ Players.PlayerRemoving.Connect(player => {
 })
 
 const fossilService = new FossilService()
-
+const dropsService = new DropsService()
