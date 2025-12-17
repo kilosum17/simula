@@ -31,7 +31,7 @@ export class PetClient {
         this.petMineActions = new PetMineActions(this)
 
         let i = 0
-        RunService.RenderStepped.Connect(() => {
+        RunService.Heartbeat.Connect(() => {
             i++
             if (i % 6 === 0) {
                 this.update()

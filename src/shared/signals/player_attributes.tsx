@@ -3,7 +3,7 @@ import { useState } from "@rbxts/react"
 import { getPlayer } from "shared/help/assist"
 
 export type TPlayerAtts = {
-    cash: number,
+    coins: number,
     gems: number,
     progStage: number,
     rebirth: number,
@@ -12,7 +12,7 @@ export type TPlayerAtts = {
 }
 
 export const PLAYER_ATTS_DEF = {
-    cash: 0,
+    coins: 0,
     gems: 0,
     progStage: 0,
     rebirth: 0,
@@ -20,8 +20,8 @@ export const PLAYER_ATTS_DEF = {
     inStageNo: 0,
 } as TPlayerAtts
 
-export const getPlayerAtts = () => {
-    const data = getPlayer().GetAttributes() as unknown as TPlayerAtts
+export const getPlayerAtts = (player?: Player) => {
+    const data = (player || getPlayer()).GetAttributes() as unknown as TPlayerAtts
     return { ...PLAYER_ATTS_DEF, ...data }
 }
 

@@ -12,7 +12,7 @@ export class PetPositions {
         this.pos = []
         this._setPositions()
 
-        RunService.RenderStepped.Connect(() => {
+        RunService.Heartbeat.Connect(() => {
             this._setPositions()
         })
     }

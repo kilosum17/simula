@@ -33,7 +33,7 @@ export function LeftButtons() {
     const ref1 = useRef<UIScale>()
     const ref2 = useRef<UIScale>()
     const { setPage } = usePageState()
-    const { cash, gems } = usePlayerAtts()
+    const { coins: cash, gems } = usePlayerAtts()
 
     const { size } = useSceenSize()
     const isDesk = size.Y > 430

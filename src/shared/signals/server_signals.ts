@@ -9,3 +9,5 @@ export const fossilDamageSig = new Signal<(player: Player, fossil: BasePart, pet
 
 export const addDropsSig = new Signal<(pos: Vector3) => void>()
 
+export const collectDropsSig = new Signal<(player: Player, drop: BasePart) => void>()
+

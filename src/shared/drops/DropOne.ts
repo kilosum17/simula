@@ -8,8 +8,13 @@ export type TDropKind = 'coin' | 'bag';
 
 const BAG = ReplicatedStorage.public.models.WaitForChild('moneybag2') as BasePart
 
+export type TDropBody = BasePart & {
+    AlignOrientation: AlignOrientation,
+    AlignPosition: AlignPosition,
+}
+
 export class DropOne {
-    body: BasePart;
+    body: TDropBody;
     kind: TDropKind;
     billboard?: BillboardGui
     dropTime = os.time()
@@ -20,12 +25,13 @@ export class DropOne {
         this.kind = kind;
         this.dropServ = dropServ
         this.stageNo = getStageFromPos(pos).closeStageNo
-        this.body = this.createVisuals(pos);
+        this.body = this.createBody(pos) as TDropBody;
+        this.configureDrop();
         this.body.SetAttribute('kind', kind)
         this.applyJump();
     }
 
-    private createVisuals(pos: Vector3): BasePart {
+    private createBody(pos: Vector3): BasePart {
         const dropFold = getDropsFolder(this.stageNo)
         if (this.kind === 'coin') {
             const part = new Instance("Part");
@@ -49,6 +55,33 @@ export class DropOne {
         }
     }
 
+    configureDrop() {
+        const attachment = new Instance("Attachment");
+        attachment.Parent = this.body;
+
+        const alignOri = new Instance("AlignOrientation");
+        alignOri.Mode = Enum.OrientationAlignmentMode.OneAttachment;
+        alignOri.Attachment0 = attachment;
+        alignOri.MaxTorque = math.huge;
+        alignOri.Responsiveness = 200;
+
+        // CFrame.lookAlong defines the "Forward" and "Up" vectors. 
+        // Vector3.yAxis (0, 1, 0) ensures it stays vertical.
+        alignOri.CFrame = CFrame.lookAlong(Vector3.zero, Vector3.zAxis, Vector3.yAxis);
+        alignOri.Parent = this.body;
+        alignOri.Enabled = true
+
+        const alignPos = new Instance("AlignPosition");
+        alignPos.Mode = Enum.PositionAlignmentMode.OneAttachment;
+        alignPos.Attachment0 = attachment;
+        alignPos.MaxVelocity = 50;
+        alignPos.MaxForce = math.huge;
+        alignPos.Responsiveness = 200;
+        alignPos.Position = this.body.Position;
+        alignPos.Parent = this.body;
+        alignPos.Enabled = false
+    }
+
     private applyJump() {
         // 1. Random Horizontal Direction
         const angle = math.rad(math.random(0, 360));
@@ -69,10 +102,6 @@ export class DropOne {
         const connection = this.body.Touched.Connect(() => {
             this.body.AssemblyLinearVelocity = this.body.AssemblyLinearVelocity.mul(new Vector3(0.5, 1.5, 0.5));
             connection.Disconnect(); // Only bounce once
-            // task.wait(2)
-            // if (!this.body.Parent) return
-            // this.body.Anchored = true
-            // this.body.CanCollide = false
         });
     }
 

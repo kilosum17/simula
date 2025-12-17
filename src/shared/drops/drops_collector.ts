@@ -8,7 +8,7 @@ export class DropCollector {
     constructor() {
 
         let i = 0
-        RunService.RenderStepped.Connect(() => {
+        RunService.Heartbeat.Connect(() => {
             i++
             if (i % 12 === 0) {
                 this.collectDrops()
@@ -17,14 +17,15 @@ export class DropCollector {
     }
 
     collectDrops() {
+        const { inStageNo, inMine } = getPlayerAtts()
+        if (!inMine) return
         const hrpPos = getHRP().Position
-        const stageNo = getPlayerAtts().inStageNo
-        const dropsFold = getDropsFolder(stageNo)
+        const dropsFold = getDropsFolder(inStageNo)
         const drops = dropsFold.GetChildren() as BasePart[]
         let no = 0
         for (const drop of drops) {
             if (drop.Position.sub(hrpPos).Magnitude < 30) {
-                if (!drop.HasTag('collected')) {
+                if (drop.Parent && !drop.HasTag('collected')) {
                     drop.AddTag('collected')
                     Remotes.Client.Get('SetAttribute').SendToServer(drop, 'collected', true)
                     new DropCollectorOne(drop)
@@ -32,7 +33,7 @@ export class DropCollector {
                 }
             }
         }
-        print('collect drops in ', stageNo, dropsFold.GetChildren().size(), 'near', no)
+        // print('collect drops in ', stageNo, dropsFold.GetChildren().size(), 'near', no)
     }
 
 }

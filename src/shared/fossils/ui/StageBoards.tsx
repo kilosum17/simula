@@ -16,10 +16,10 @@ export class StageBoards {
             this.mountStageBoard(areaNo + 2)
         })
 
-        this.mountStageBoard(1)
     }
 
     mountStageBoard(stageNo: number) {
+        if (stageNo === 1) return
         if (this.mountedStages.includes(stageNo)) return
         this.mountedStages.push(stageNo)
 
