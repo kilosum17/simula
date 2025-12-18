@@ -29,16 +29,6 @@ export class Stage {
         this.createFossils()
     }
 
-    hideFossils() {
-        if (this.fossils.size()) print("Hiding fossils for", this.stageNo)
-        this.fossils.forEach(fos => fos.hide())
-    }
-
-    showFossils() {
-        if (this.fossils.size()) print("Showing fossils for", this.stageNo)
-        this.fossils.forEach(fos => fos.show())
-    }
-
     _taken_pos = [] as Vector3[]
     _used_zones = [] as number[]
     createFossils() {
@@ -109,16 +99,14 @@ export class Stage {
         return vals
     }
 
-    removeFossil(fossil: Fossil) {
-        this.fossils = this.fossils.filter(f => f !== fossil)
-        this.addFossilAt(fossil.pos, 4)
-    }
+    // removeFossil(fossil: Fossil) {
+    //     this.fossils = this.fossils.filter(f => f !== fossil)
+    //     this.addFossilAt(fossil.pos, 4)
+    // }
 
-    addFossilAt(pos: Vector3, waitTime = 0) {
-        delay(waitTime, () => {
-            const fos = new Fossil(this, pos)
-            this.fossils.push(fos)
-        })
+    addFossilAt(pos: Vector3) {
+        const fos = new Fossil(this, pos)
+        this.fossils.push(fos)
     }
 
 }

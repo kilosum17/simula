@@ -3,17 +3,21 @@ import { LBox, LCenter, LHover, LImage } from "./Wrappers"
 import { icon } from "shared/help/icons"
 
 export const LRecButton = ({
-    color, Size, Pos, onClick, children,
+    color, Size, Pos, onClick, children, disabled,
 }: {
     Size?: UDim2, Pos?: UDim2, color: 'green' | 'red',
-    children: React.JSX.Element,
+    children: React.JSX.Element, disabled?: boolean
     onClick?: () => void,
 }) => {
-    const img = color === "green" ? icon('green_rec') : icon('rand')
+
+    const getImg = () => {
+        if (disabled) return icon('gray_rec_but')
+        return color === "green" ? icon('green_rec_but') : icon('rand')
+    }
 
     return <LHover Size={Size} Pos={Pos} onClick={onClick} >
         <LBox Size={new UDim2(1, 0, 1, 0)} NoList Trans >
-            <LImage Image={img} Size={new UDim2(1, 0, 1, 0)} />
+            <LImage Image={getImg()} Size={new UDim2(1, 0, 1, 0)} />
             <LCenter>
                 {children}
             </LCenter>

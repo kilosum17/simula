@@ -4,7 +4,7 @@ import { RunService } from "@rbxts/services"
 import { col, getStageBoardPart } from "shared/help/assist"
 import { shouldRebirth } from "shared/help/CONF"
 import { getStageCostV2, icons } from "shared/help/DATA"
-import { usePlayerAtts } from "shared/signals/player_attributes"
+import { getPlayerAtts, usePlayerAtts } from "shared/signals/player_attributes"
 import { LRecButton } from "shared/ui/comps/base_comps"
 import { CostUI } from "shared/ui/comps/CostUI"
 import { LBox, LImage, LPusher, LText, NButton } from "shared/ui/comps/Wrappers"
@@ -13,12 +13,15 @@ export const StageBoardOne = ({ stageNo }: {
     stageNo: number
 }) => {
     const board = getStageBoardPart(stageNo)
-    const { rebirth, progStage } = usePlayerAtts()
+    const { rebirth, progStage, coins } = usePlayerAtts()
     const cost = getStageCostV2(stageNo, rebirth)
     const open = stageNo > progStage
 
-    const MouseClicked = () => {
+    const onBuyStage = () => {
         warn("Clicked buy", stageNo)
+        if (coins < cost) {
+            
+        }
     }
 
     useEffect(() => {
@@ -30,7 +33,8 @@ export const StageBoardOne = ({ stageNo }: {
 
     const [showRebirth, newRebirthNo] = shouldRebirth(stageNo, rebirth)
     const rebirthNo = `Rebirth ${newRebirthNo}`
-    print("Show board", stageNo, showRebirth)
+    // print("Render board", stageNo, showRebirth)
+
     if (showRebirth) {
         {/* REBIRTH UI */ }
         return (
@@ -43,7 +47,7 @@ export const StageBoardOne = ({ stageNo }: {
                     <LText Text={`Tons of Rewards!`} Size={new UDim2(1, 0, 0.3, 0)} Var="yellow" StrokeThickness={3} />
                     <LPusher gapS={0.01} />
                     <NButton Text={'Rebirth!'} Var="green" Size={new UDim2(0.6, 0, 0.2, 0)}
-                        onClick={MouseClicked} corner={4} Small MinSize={new Vector2(70, 25)} />
+                        onClick={onBuyStage} corner={4} Small MinSize={new Vector2(70, 25)} />
                 </LBox>
             </LBox>
         )
@@ -59,7 +63,7 @@ export const StageBoardOne = ({ stageNo }: {
                 <LPusher gapS={0.05} />
                 {/* <LButton Text="Buy Now" MouseClicked={MouseClicked} /> */}
                 {/* <OldLButton Text="Buy Now" onClick={MouseClicked} Size={new UDim2(0.8, 0, 0.3, 0)} /> */}
-                <LRecButton color="green" Size={new UDim2(0.5, 0, 0.3, 0)} onClick={MouseClicked} >
+                <LRecButton disabled={coins < cost} color="green" Size={new UDim2(0.5, 0, 0.3, 0)} onClick={onBuyStage} >
                     <LText StrokeThickness={3} Text="Buy" Color={col('white')} Size={new UDim2(0.8, 0, 0.8, 0)} />
                 </LRecButton>
             </LBox >

@@ -9,11 +9,13 @@ import { Remotes } from "shared/signals/remotes";
 import { randInt } from "shared/help/math";
 import { addDropsSig } from "shared/signals/server_signals";
 
+let FOS_CREATE_COUNT = 0
+
 export class Fossil {
     stage: Stage
     pos: Vector3
-    maxHealth: number
-    health: number
+    maxHealth = 0
+    health = 0
     body: BasePart
     activePart: BasePart
     last_mine_time = -1000
@@ -25,21 +27,21 @@ export class Fossil {
         this.spots = new FossilMiningSpots(this)
         this.stage = stage
         this.pos = pos
-        this.maxHealth = 100 * getHealthMult(stage.stageNo)
+        const res = this.resetFossil()
+        this.body = res.body
+        this.activePart = res.activePart
+        this.highlight = res.highlight
+    }
+
+    resetFossil() {
+        this.maxHealth = 100 * getHealthMult(this.stage.stageNo)
         this.health = this.maxHealth
         const res = this._addFossilBody()
         this.body = res.body
         this.activePart = res.activePart
         this.highlight = res.highlight
-
-    }
-
-    hide() {
-        this.body.Parent = undefined
-    }
-
-    show() {
-        this.body.Parent = getFossilsFolder(this.stage.stageNo)
+        this._updateAttributes()
+        return res
     }
 
     dropType = "crate" as TDropType
@@ -54,7 +56,7 @@ export class Fossil {
         const cframe = new CFrame(this.pos, this.stage.center)
         body.PivotTo(cframe.add(new Vector3(0, -0.5, 0)))
         body.AddTag('fossil');
-        body.Name = `fos ${this.stage.stageNo}-${body.Name}`
+        body.Name = `fos-${this.stage.stageNo}-${FOS_CREATE_COUNT++}`
         body.SetAttribute("stageNo", this.stage.stageNo)
 
         const { activePart } = this._updateBody()
@@ -151,7 +153,7 @@ export class Fossil {
     }
 
     takeDamage(damage: number) {
-        // warn("Taking damage", this.body, damage)
+        if (this.health === 0) return
         this.health = math.max(this.health - damage, 0)
         this._updateAttributes()
         const { changed } = this._updateBody()
@@ -162,7 +164,7 @@ export class Fossil {
             Remotes.Server.Get('SendPlayVFX').SendToAllPlayers(this.pos, 'bigBurst')
             task.spawn(() => {
                 task.wait(randInt(30, 50) / 10)
-                this._addFossilBody()
+                this.resetFossil()
             })
         }
         if (createDrops) {

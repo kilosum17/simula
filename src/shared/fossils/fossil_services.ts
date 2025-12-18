@@ -21,7 +21,7 @@ export class FossilService {
 
         fossilDamageSig.Connect((_player, fossilBody, petBody) => {
             if (!fossilBody || !fossilBody.IsA("BasePart") || !petBody.IsA("BasePart")) {
-                warn("Not valid fosil or pet", fossilBody, petBody)
+                warn("Not fosil/pet", fossilBody, petBody)
                 return
             }
             if (fossilBody.Position.sub(petBody.Position).Magnitude > 50) {
@@ -32,7 +32,8 @@ export class FossilService {
             const stage = this.stages[stageNo]
             const fossil = stage.fossils.find(f => f.body === fossilBody)
             if (!fossil) {
-                // warn("Not a valid fossil", fossilBody, stageNo)
+                const fosNames = stage.fossils.map(f => f.body.Name)
+                warn("Not a valid fossil", fossilBody, stageNo, fosNames)
                 return
             }
             const petConf = getPetConf(petBody.GetAttribute('id') as number)

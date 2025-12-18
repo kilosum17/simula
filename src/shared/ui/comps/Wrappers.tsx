@@ -24,6 +24,7 @@ type TLBoxProps = {
     AutoCanvasSize?: "X" | "Y" | "XY",
     TrackWidth?: number,
     HoverEffect?: boolean,
+    BgPatterns?: boolean,
 }
 
 export const LBox = (props: TLBoxProps) => {
@@ -31,7 +32,7 @@ export const LBox = (props: TLBoxProps) => {
         VAlign, HAlign, Padding, Center, Visible, Background, AnchorPoint, MaxSize, TransVal, Wraps,
         SpaceY, SpaceX, SpaceL, SpaceR, SpaceB, SpaceT, NoList = false, MinSize, BorderSizePixel, ZIndex, CornerRadius2,
         isScroll, SortOrder, LayoutOrder, ScrollThickness, RandomBG, Spacing, Ref,
-        HoverEffect,
+        HoverEffect, BgPatterns,
     } = props
 
     const alignV = VAlign ? VAlign : (Center ? 'Center' : undefined)

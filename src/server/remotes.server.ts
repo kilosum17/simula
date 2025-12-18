@@ -8,6 +8,10 @@ Remotes.Server.Get('SetAttribute').Connect((_player, part, name, value) => {
 
 
 Remotes.Server.Get('SetNetOwner').Connect((_player, part) => {
+    if (!part.Parent) {
+        warn('Set network owner for destroyed', part)
+        return
+    }
     part.SetNetworkOwner(_player)
 });
 
