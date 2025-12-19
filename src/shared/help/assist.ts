@@ -477,6 +477,10 @@ export function getDropsFolder(stageNo: number) {
     return ensureInstance({ path: `Targets.Drops.${stageNo}`, create: false }) as Folder
 }
 
+export function getEggsFolder() {
+    return ensureInstance({ path: `Targets.Eggs`, create: false }) as Folder
+}
+
 export const DEV_PLAYER_ID = 4771575111
 
 export const getStageBoardPart = (stageNo: number) => {
