@@ -4,11 +4,13 @@ import { ITEMS_CONFING } from "shared/help/DATA";
 import { randSample } from "shared/help/math";
 import { LBox, LHover, LImage, LLine, LPusher, LText, LTooltip } from "shared/ui/comps/Wrappers";
 import { Workspace } from "@rbxts/services";
-import { usePets } from "shared/ui/hooks/use_pets";
 import { NTooltip } from "shared/ui/nitifications/NTooltip";
+import { petsAtom } from "shared/signals/client_signals";
+
+const usePets = petsAtom.getHook()
 
 export function InvPetsFrame() {
-    const [_pets] = usePets()
+    const _pets = usePets()
     const petIcons = ITEMS_CONFING.filter(t => t.type === 'PETS').map(p => p.icon)
     const model = Workspace.Arena.WaitForChild("BoxPets").WaitForChild('ant') as Model
 

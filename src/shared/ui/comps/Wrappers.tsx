@@ -6,7 +6,7 @@ import { col, getMousePos, getPlayer } from "shared/help/assist"
 import { BUY_IMG, colors, GPT_ICONS, icons } from "shared/help/DATA"
 import { playSoundType } from "shared/help/play_sound"
 import motion from "@rbxts/react-motion"
-import { cursors } from "shared/help/icons"
+import { cursors, icon } from "shared/help/icons"
 
 export type TChildren = '_jsx_children'
 
@@ -37,8 +37,10 @@ export const LBox = (props: TLBoxProps) => {
 
     const alignV = VAlign ? VAlign : (Center ? 'Center' : undefined)
     const alignH = HAlign ? HAlign : (Center ? 'Center' : undefined)
-    const pt = Spacing || SpaceY || SpaceT; const pb = Spacing || SpaceY || SpaceB;
-    const pl = Spacing || SpaceX || SpaceL; const pr = Spacing || SpaceX || SpaceR;
+    const pt = Spacing || SpaceY || SpaceT;
+    const pb = Spacing || SpaceY || SpaceB;
+    const pl = Spacing || SpaceX || SpaceL;
+    const pr = Spacing || SpaceX || SpaceR;
     const scaleRef = useRef<UIScale>()
 
     const scrollProps = {
@@ -71,11 +73,21 @@ export const LBox = (props: TLBoxProps) => {
             {children}
         </scrollingframe>
     }
+    const frameProps = {
+        Size: Size, Position: Pos, BackgroundTransparency: bgTrans,
+        Visible: Visible, BackgroundColor3: bg, AnchorPoint: AnchorPoint, BorderSizePixel: BorderSizePixel,
+        ZIndex: ZIndex, AutomaticSize: AutoSize, LayoutOrder: LayoutOrder,
+    }
+
+    if (BgPatterns) {
+        return (
+            <imagelabel {...frameProps} ref={Ref as Ref<ImageLabel>} Image={icon('bg_patterns')} >
+                {children}
+            </imagelabel >
+        )
+    }
     return (
-        <frame Size={Size} Position={Pos} BackgroundTransparency={bgTrans}
-            Visible={Visible} BackgroundColor3={bg} AnchorPoint={AnchorPoint} BorderSizePixel={BorderSizePixel}
-            ZIndex={ZIndex} AutomaticSize={AutoSize} LayoutOrder={LayoutOrder} ref={Ref}
-        >
+        <frame {...frameProps} ref={Ref}>
             {children}
         </frame >
     )
@@ -619,9 +631,9 @@ export const LButton = ({ Var, Size, Pos, KeepAspect = false, ZIndex, onClick, V
 
 export const LHiders = ({ Size, Corners, Color, colors }: {
     Size: UDim2, Corners: ('BL' | 'BR' | 'TR' | 'TL')[], Color: Color3,
-    colors?: { [key: string]: Color3 },
+    colors?: { 'TL'?: Color3, 'TR'?: Color3, 'BL'?: Color3, 'BR'?: Color3 },
 }) => {
-    const getColor = (dir: string) => {
+    const getColor = (dir: 'BL' | 'BR' | 'TR' | 'TL') => {
         if (colors && colors[dir]) {
             return colors[dir]
         }
@@ -629,10 +641,10 @@ export const LHiders = ({ Size, Corners, Color, colors }: {
     }
     return (
         <>
-            {Corners.includes('TL') && <frame Size={Size} Position={new UDim2(0, 0, 0, 0)} BackgroundColor3={getColor('TL')} BorderSizePixel={0} />}
-            {Corners.includes('TR') && <frame Size={Size} Position={new UDim2(1, -Size.X.Offset, 0, 0,)} BackgroundColor3={getColor('TR')} BorderSizePixel={0} />}
-            {Corners.includes('BL') && <frame Size={Size} Position={new UDim2(0, 0, 1, -Size.Y.Offset)} BackgroundColor3={getColor('BL')} BorderSizePixel={0} />}
-            {Corners.includes('BR') && <frame Size={Size} Position={new UDim2(1, -Size.X.Offset, 1, -Size.Y.Offset)} BackgroundColor3={getColor('BR')} BorderSizePixel={0} />}
+            {Corners.includes('TL') && <frame Size={Size} Position={new UDim2(0, 0, 0, 0)} AnchorPoint={new Vector2(0, 0)} BackgroundColor3={getColor('TL')} BorderSizePixel={0} />}
+            {Corners.includes('TR') && <frame Size={Size} Position={new UDim2(1, 0, 0, 0,)} AnchorPoint={new Vector2(1, 0)} BackgroundColor3={getColor('TR')} BorderSizePixel={0} />}
+            {Corners.includes('BL') && <frame Size={Size} Position={new UDim2(0, 0, 1, 0,)} AnchorPoint={new Vector2(0, 1)} BackgroundColor3={getColor('BL')} BorderSizePixel={0} />}
+            {Corners.includes('BR') && <frame Size={Size} Position={new UDim2(1, 0, 1, 0)} AnchorPoint={new Vector2(1, 1)} BackgroundColor3={getColor('BR')} BorderSizePixel={0} />}
         </>
     )
 }

@@ -1,3 +1,6 @@
+import { Workspace } from "@rbxts/services"
+import CameraShaker from "@rbxts/camera-shaker";
+import { playSound } from "../sfx/sfx";
 
 export type TVfxTypes = "bigBurst" | "littleBurst" | 'explosion'
 
@@ -29,5 +32,20 @@ export const playVFX = (name: TVfxTypes, pos: Vector3, destroy = 5) => {
             task.wait(destroy)
             part.Destroy()
         })
+    })
+}
+
+export const breakStageBoard = (stageNo: number) => {
+    const camera = Workspace.Camera
+    const camShake = new CameraShaker(
+        Enum.RenderPriority.Camera.Value,
+        shakeCFrame => camera.CFrame = camera.CFrame.mul(shakeCFrame)
+    );
+    camShake.Start();
+    camShake.Shake(CameraShaker.Presets.Earthquake);
+    playSound({ ver: 'NAMED', name: "unlock", kind: 'sfx' })
+    task.spawn(() => {
+        task.wait(3)
+        camShake.Stop()
     })
 }

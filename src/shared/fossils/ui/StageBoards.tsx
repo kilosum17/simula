@@ -13,7 +13,9 @@ export class StageBoards {
 
         enteredAreaSig.Connect((_, areaNo) => {
             print("Enter", areaNo)
-            this.mountStageBoard(areaNo + 2)
+            for (let i = 0; i < 3; i++) {
+                this.mountStageBoard((areaNo + 2) + i)
+            }
         })
 
     }

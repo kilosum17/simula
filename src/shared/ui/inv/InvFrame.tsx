@@ -20,7 +20,7 @@ export function InvFrame() {
             AnchorPoint={new Vector2(0.5, 0.5)}
         >
             <LBox Size={new UDim2(1, 0, 1, 0)} CornerRadius2={new UDim(0.04, 0)}
-                Background={col('white')} StokeColor={col('black')} StrokeThickness={5} NoList  >
+                BgPatterns StokeColor={col('black')} StrokeThickness={5} NoList  >
                 <InvPetsFrame />
                 <InvHeader />
             </LBox>

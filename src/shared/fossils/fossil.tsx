@@ -161,7 +161,7 @@ export class Fossil {
         if (this.health === 0) {
             createDrops = true
             this.kill()
-            Remotes.Server.Get('SendPlayVFX').SendToAllPlayers(this.pos, 'bigBurst')
+            Remotes.Server.Get('PlayVFX').SendToAllPlayers(this.pos, 'bigBurst')
             task.spawn(() => {
                 task.wait(randInt(30, 50) / 10)
                 this.resetFossil()

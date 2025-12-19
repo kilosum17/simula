@@ -11,3 +11,4 @@ export const addDropsSig = new Signal<(pos: Vector3) => void>()
 
 export const collectDropsSig = new Signal<(player: Player, drop: BasePart) => void>()
 
+export const buyStageSig = new Signal<(player: Player, stageNo: number) => void>()

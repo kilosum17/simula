@@ -2,15 +2,17 @@ import Signal from "@rbxts/signal"
 import { PlayerData } from "./player_data"
 import { PlayerLocation } from "./player_location"
 import { getCharacter } from "shared/help/assist"
-import { collectDropsSig } from "shared/signals/server_signals"
+import { buyStageSig, collectDropsSig } from "shared/signals/server_signals"
 import { RunService } from "@rbxts/services"
 import { PlayerRewards } from "./player_rewards"
+import { randInt } from "shared/help/math"
 
 export class PlayerService {
     player: Player
     psData: PlayerData
     psLocation: PlayerLocation
     psRewards: PlayerRewards
+    killed = false
 
     constructor(player: Player) {
         this.player = player
@@ -28,15 +30,24 @@ export class PlayerService {
             this.psRewards.collectDrop(drop)
         })
 
+        buyStageSig.Connect((player, stageNo) => {
+            if (player !== this.player) return
+            if (!typeIs(stageNo, 'number')) return
+            this.psRewards.buyStage(stageNo)
+        })
+
         task.spawn(() => {
             while (true) {
                 // save data
-                task.wait(4)
+                task.wait(randInt(40, 60) * 60)
+                if (this.killed) break
+                this.psData.saveData()
             }
         })
     }
 
     playerRemoving() {
+        this.killed = true
         this.psData.saveData()
     }
 

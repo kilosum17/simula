@@ -1,5 +1,5 @@
 import { Remotes } from "shared/signals/remotes";
-import { collectDropsSig, fossilDamageSig } from "shared/signals/server_signals";
+import { buyStageSig, collectDropsSig, fossilDamageSig } from "shared/signals/server_signals";
 
 
 Remotes.Server.Get('SetAttribute').Connect((_player, part, name, value) => {
@@ -22,6 +22,10 @@ Remotes.Server.Get('SendFossilDamage').Connect((player, fossil, pet) => {
 
 Remotes.Server.Get('CollectDrop').Connect((player, drop) => {
     collectDropsSig.Fire(player, drop)
+});
+
+Remotes.Server.Get('BuyStage').Connect((player, stageNo) => {
+    buyStageSig.Fire(player, stageNo)
 });
 
 

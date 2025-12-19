@@ -24,6 +24,7 @@
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
+		"@rbxts/camera-shaker": "^1.0.8",
 		"@rbxts/flipper": "^2.0.1",
 		"@rbxts/net": "^3.0.10",
 		"@rbxts/pretty-react-hooks": "^0.4.1",

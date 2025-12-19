@@ -7,7 +7,8 @@ export const ICON_DATA = {
     "square_red_close_but": "rbxassetid://72476785430277",
     "bonus_text": "rbxassetid://82390280512523",
     "red_circle": "rbxassetid://88354314926840",
-
+    'bg_patterns': 'rbxassetid://103724644688898',
+    
     "green_rec_but": "rbxassetid://76946062015574",
     "red_rec_but": "rbxassetid://114548731985066",
     "gray_rec_but": "rbxassetid://103053408350795",

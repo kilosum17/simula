@@ -1,6 +1,8 @@
 import { getPlayerAtts } from "shared/signals/player_attributes"
 import { PlayerService } from "./player_service"
 import { getCoinMult } from "shared/help/assist"
+import { getStageCostV2 } from "shared/help/DATA"
+import { Remotes } from "shared/signals/remotes"
 
 export class PlayerRewards {
     psServ: PlayerService
@@ -27,6 +29,15 @@ export class PlayerRewards {
         const gems = this.psServ.psData.store.gems + newGems
         this.psServ.psData.update({ gems, coins })
         drop.Destroy()
+    }
+
+    buyStage(stageNo: number) {
+        const store = this.psServ.psData.store
+        const cost = getStageCostV2(stageNo, store.rebirth)
+        if (store.coins < cost) return
+        const coins = store.coins - cost
+        this.psServ.psData.update({ coins, progStage: stageNo })
+        Remotes.Server.Get('BreakStageBoard').SendToPlayer(this.psServ.player, stageNo)
     }
 
 }

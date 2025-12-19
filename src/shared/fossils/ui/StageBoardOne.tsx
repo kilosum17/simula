@@ -4,7 +4,9 @@ import { RunService } from "@rbxts/services"
 import { col, getStageBoardPart } from "shared/help/assist"
 import { shouldRebirth } from "shared/help/CONF"
 import { getStageCostV2, icons } from "shared/help/DATA"
-import { getPlayerAtts, usePlayerAtts } from "shared/signals/player_attributes"
+import { canNotBuyAtom } from "shared/signals/atoms"
+import { usePlayerAtts } from "shared/signals/player_attributes"
+import { Remotes } from "shared/signals/remotes"
 import { LRecButton } from "shared/ui/comps/base_comps"
 import { CostUI } from "shared/ui/comps/CostUI"
 import { LBox, LImage, LPusher, LText, NButton } from "shared/ui/comps/Wrappers"
@@ -15,21 +17,27 @@ export const StageBoardOne = ({ stageNo }: {
     const board = getStageBoardPart(stageNo)
     const { rebirth, progStage, coins } = usePlayerAtts()
     const cost = getStageCostV2(stageNo, rebirth)
-    const open = stageNo > progStage
+    const showBoard = stageNo >= (progStage + 2)
 
     const onBuyStage = () => {
         warn("Clicked buy", stageNo)
         if (coins < cost) {
-            
+            canNotBuyAtom.update({ open: true })
+            return
         }
+        Remotes.Client.Get('BuyStage').SendToServer(stageNo - 1)
+    }
+
+    const onRebirthClicked = () => {
+        warn("Clicked rebirth", stageNo)
+
     }
 
     useEffect(() => {
-        board.CanCollide = open
+        board.CanCollide = showBoard
         if (RunService.IsStudio()) board.CanCollide = false
-        board.Transparency = open ? 0.1 : 1
+        board.Transparency = showBoard ? 0.1 : 1
     }, [progStage])
-
 
     const [showRebirth, newRebirthNo] = shouldRebirth(stageNo, rebirth)
     const rebirthNo = `Rebirth ${newRebirthNo}`
@@ -38,7 +46,7 @@ export const StageBoardOne = ({ stageNo }: {
     if (showRebirth) {
         {/* REBIRTH UI */ }
         return (
-            <LBox Size={new UDim2(1, 0, 1, 0)} Trans SpaceX={new UDim(0.2, 0)} NoList
+            <LBox Size={new UDim2(1, 0, 1, 0)} Trans SpaceX={new UDim(0.2, 0)} NoList Visible={showBoard}
                 AnchorPoint={new Vector2(0.5, 0.5)} MaxSize={new Vector2(600, 400)} Pos={new UDim2(0.5, 0, 0.5, 0)} >
                 <LImage Image={icons.Tel_Rebirth} Size={new UDim2(1, 0, 0.8, 0)} Aspect />
                 <LBox Trans Pos={new UDim2(0.5, 0, 0.5, 0)} AnchorPoint={new Vector2(0.5, 0)} Size={new UDim2(0.6, 0, 0.4, 0)} Vert HAlign="Center" >
@@ -47,14 +55,14 @@ export const StageBoardOne = ({ stageNo }: {
                     <LText Text={`Tons of Rewards!`} Size={new UDim2(1, 0, 0.3, 0)} Var="yellow" StrokeThickness={3} />
                     <LPusher gapS={0.01} />
                     <NButton Text={'Rebirth!'} Var="green" Size={new UDim2(0.6, 0, 0.2, 0)}
-                        onClick={onBuyStage} corner={4} Small MinSize={new Vector2(70, 25)} />
+                        onClick={onRebirthClicked} corner={4} Small MinSize={new Vector2(70, 25)} />
                 </LBox>
             </LBox>
         )
     } else {
         {/* BUY UI */ }
         return (
-            <LBox Size={new UDim2(1, 0, 1, 0)} Vert Center Trans SpaceX={new UDim(0.2, 0)}
+            <LBox Size={new UDim2(1, 0, 1, 0)} Vert Center Trans SpaceX={new UDim(0.2, 0)} Visible={showBoard}
                 AnchorPoint={new Vector2(0.5, 0.5)} MaxSize={new Vector2(600, 400)} Pos={new UDim2(0.5, 0, 0.5, 0)} >
                 <LPusher gapS={0.05} />
                 <LText Text={`Area ${stageNo}`} Size={new UDim2(1, 0, 0.25, 0)} Var="white" StrokeThickness={3} />

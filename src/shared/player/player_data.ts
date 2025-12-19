@@ -1,17 +1,22 @@
 import { DataStoreService } from "@rbxts/services";
 import { PlayerService } from "./player_service"
 
+const MAX_RETRIES = 3
+
 type TPlayerData = {
     name: string,
     coins: number,
     gems: number,
+    progStage: number,
+    rebirth: number,
 }
 
 const PLAYER_DATA_DEF = {
     name: '',
     coins: 0,
     gems: 0,
-
+    progStage: 0,
+    rebirth: 0,
 } satisfies TPlayerData as TPlayerData
 
 const dataStore = DataStoreService.GetDataStore("PlayerData");
@@ -25,34 +30,37 @@ export class PlayerData {
         this.ps = ps
         this.ps.player.SetAttribute("balance", 0)
         this.loadData()
-        
+
     }
 
     loadData(retries = 0) {
         try {
             this.isLoading = true
-            let [dsData, _] = dataStore.GetAsync(this.getStoreKey())
+            warn(`Loading player data for ${this.ps.player.Name}`, this.store);
+            const [dsData, _] = dataStore.GetAsync(this.getStoreKey())
             if (dsData) {
                 this.store = { ...this.store, ...dsData }
                 warn(`loaded data for ${this.ps.player.Name}`)
             }
         } catch (e) {
-            warn('failed to load data')
-            if (retries < 5) {
+            warn('failed to load data', e)
+            if (retries < MAX_RETRIES) {
                 this.loadData(retries + 1)
             }
         }
+        this.updatePlayerAtts()
         this.isLoading = false
     }
 
     saveData(retries = 0) {
         if (this.isLoading) return
         try {
+            warn(`Saving player data for ${this.ps.player.Name}`, this.store);
             dataStore.SetAsync(this.getStoreKey(), this.store)
             warn(`Saved data for ${this.ps.player.Name}`, this.store);
         } catch (e) {
             warn(`Failed to save data for ${this.ps.player.Name}`, e);
-            if (retries < 5) {
+            if (retries < MAX_RETRIES) {
                 this.saveData(retries + 1)
             }
         }
@@ -72,6 +80,12 @@ export class PlayerData {
         if (this.isLoading) return
         this.store[key] = val
         this.ps.player.SetAttribute(key, val)
+        this.updatePlayerAtts()
     }
 
+    updatePlayerAtts() {
+        for (const [key, val] of pairs(this.store)) {
+            this.ps.player.SetAttribute(key, val)
+        }
+    }
 }

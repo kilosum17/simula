@@ -8,8 +8,10 @@ export const Remotes = Net.Definitions.Create({
     SetNetOwner: Net.Definitions.ClientToServerEvent<[part: BasePart]>(),
     SendFossilDamage: Net.Definitions.ClientToServerEvent<[part: BasePart, pet: TPetBody]>(),
     CollectDrop: Net.Definitions.ClientToServerEvent<[part: BasePart]>(),
+    BuyStage: Net.Definitions.ClientToServerEvent<[stageNo: number]>(),
 
-    SendPlayVFX: Net.Definitions.ServerToClientEvent<[pos: Vector3, type: TVfxTypes]>(),
+    PlayVFX: Net.Definitions.ServerToClientEvent<[pos: Vector3, type: TVfxTypes]>(),
+    BreakStageBoard: Net.Definitions.ServerToClientEvent<[stageNo: number]>(),
 
     MakeHello: Net.Definitions.ServerAsyncFunction<(message: string) => string>(),
 

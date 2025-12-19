@@ -12,7 +12,7 @@ export const LRecButton = ({
 
     const getImg = () => {
         if (disabled) return icon('gray_rec_but')
-        return color === "green" ? icon('green_rec_but') : icon('rand')
+        return color === "green" ? icon('green_rec_but') : icon('red_rec_but')
     }
 
     return <LHover Size={Size} Pos={Pos} onClick={onClick} >
@@ -24,3 +24,5 @@ export const LRecButton = ({
         </LBox>
     </LHover>
 }
+
+
