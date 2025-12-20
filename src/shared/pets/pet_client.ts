@@ -9,7 +9,7 @@ import { PetMineActions } from "./pet_mine_actions"
 import { Remotes } from "shared/signals/remotes"
 
 const rayParams = new RaycastParams()
-const RAY_DIST = 20
+const RAY_DIST = 15
 
 export class PetClient {
     petsMover: PetsMover
@@ -114,9 +114,9 @@ export class PetClient {
         rayParams.FilterType = Enum.RaycastFilterType.Exclude
         const petsFolder = Workspace.FindFirstChild("PetStorage") || new Instance("Folder")
         rayParams.FilterDescendantsInstances = [pet, Workspace.Targets, petsFolder]
-        const origin = targetPos.add(new Vector3(0, RAY_DIST, 0))
+        const origin = new CFrame(targetPos.add(new Vector3(0, RAY_DIST, 0)))
         const dir = new Vector3(0, -2 * RAY_DIST, 0)
-        const raycastRes = Workspace.Raycast(origin, dir, rayParams)
+        const raycastRes = Workspace.Blockcast(origin, new Vector3(2.8, 2.8, 2.8), dir, rayParams)
         let resultPos = targetPos
         if (raycastRes) {
             resultPos = raycastRes.Position

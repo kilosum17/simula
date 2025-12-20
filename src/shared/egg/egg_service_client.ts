@@ -1,7 +1,7 @@
 import { col, ensureInstance } from "shared/help/assist";
 import { EggOne } from "./egg_one";
 
-const EGGS_PER_ROW = 8
+const EGGS_PER_ROW = 12
 
 const Shelf = ensureInstance({ path: "Game.Shelf", create: false }) as Model
 const step1 = Shelf.WaitForChild("step1") as BasePart
@@ -18,6 +18,7 @@ export class EggServiceClient {
 
     addEggsToShelf() {
         const steps = [step1, step2, step3, step4]
+        let no = 0
         for (let i = 0; i < steps.size(); i++) {
             const step = steps[i]
             const size = new Vector3(step.Size.X / EGGS_PER_ROW, step.Size.Y, step.Size.Z)
@@ -34,8 +35,10 @@ export class EggServiceClient {
                 part.Anchored = true
                 part.Color = col('random')
                 part.Parent = Shelf
-                const egg = new EggOne(pos, step.Position.add(step.CFrame.LookVector.mul(10000)))
+                const frontPos = step.Position.add(step.CFrame.LookVector.mul(10000))
+                const egg = new EggOne(pos, frontPos, no)
                 this.eggs.push(egg)
+                no++
             }
         }
     }

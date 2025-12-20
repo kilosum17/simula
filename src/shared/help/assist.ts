@@ -490,3 +490,23 @@ export const getStageBoardPart = (stageNo: number) => {
 export const getAtt = <T>(part: Instance, name: string, def: T) => {
     return (part.GetAttribute(name) ?? def) as T
 }
+
+export const encodedAttribute = (val: unknown): AttributeValue => {
+    if (typeIs(val, "table")) {
+        return HttpService.JSONEncode(val);
+    }
+    return val as AttributeValue;
+};
+
+export const decodeAttribute = <T>(val: unknown): T => {
+    if (typeIs(val, "string")) {
+        if (val.sub(1, 1) === "{" || val.sub(1, 1) === "[") {
+            try {
+                return HttpService.JSONDecode(val) as T;
+            } catch {
+                return val as unknown as T;
+            }
+        }
+    }
+    return val as unknown as T;
+};

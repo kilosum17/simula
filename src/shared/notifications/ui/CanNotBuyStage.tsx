@@ -1,16 +1,15 @@
 import React, { useEffect } from "@rbxts/react";
 import { col } from "shared/help/assist";
 import { icon } from "shared/help/icons";
+import { useAtom } from "shared/signals/atom";
 import { canNotBuyAtom } from "shared/signals/atoms";
 import { LRecButton } from "shared/ui/comps/base_comps";
 import { LBox, LHiders, LHover, LImage, LPusher, LText } from "shared/ui/comps/Wrappers";
 
 const TOP_COLOR = Color3.fromHex('4eddff')
 
-const useData = canNotBuyAtom.getHook()
-
 export function CanNotBuyStage() {
-    const { open } = useData()
+    const { open } = useAtom(canNotBuyAtom)
 
     useEffect(() => {
         warn('open', open)

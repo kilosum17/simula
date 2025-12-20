@@ -2,10 +2,10 @@ import React from "@rbxts/react"
 import { LBox, LHover, LImage, LPusher, LText, LTextbox } from "../comps/Wrappers"
 import { icon } from "shared/help/icons"
 import { col } from "shared/help/assist"
-import { usePageState } from "../hooks/use_page_state"
+import { useFrameState } from "shared/signals/use_frame_state"
 
 export function InvHeader() {
-    const { setPage } = usePageState()
+    const { closeFrame } = useFrameState()
 
     const icons = [
         { name: "lock", icon: icon('rand') },
@@ -44,7 +44,7 @@ export function InvHeader() {
                         Color={col('gray')} />
                 </LBox>
                 <LHover Pos={new UDim2(1, 0, 0.5, 0)} Size={new UDim2(2, 0, 1, 0)} Aspect={1} AnchorPoint={new Vector2(0.5, 0.5)}
-                    onClick={() => setPage("")} >
+                    onClick={() => closeFrame("INV")} >
                     <LImage Size={new UDim2(1, 0, 1, 0)} Aspect Image={icon("square_red_close_but")} />
                 </LHover>
             </LBox>

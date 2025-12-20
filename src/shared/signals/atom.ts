@@ -1,44 +1,49 @@
 import React, { useState, useEffect } from "@rbxts/react";
 
 export class Atom<T> {
-    private value: T;
-    private listeners: Set<(newValue: T) => void> = new Set();
+    _value: T;
+    _listeners: Set<(newValue: T) => void> = new Set();
 
     constructor(defaultValue: T) {
-        this.value = defaultValue;
+        this._value = defaultValue;
     }
 
     public get(): T {
-        return this.value;
+        return this._value;
     }
 
     public update(newValue: T | ((prev: T) => T)): void {
         if (typeIs(newValue, "function")) {
-            this.value = (newValue as (prev: T) => T)(this.value);
+            this._value = (newValue as (prev: T) => T)(this._value);
         } else {
-            this.value = newValue;
+            this._value = newValue;
         }
 
         // Notify all hooks to trigger a re-render
-        for (const listener of this.listeners) {
-            listener(this.value);
+        for (const listener of this._listeners) {
+            listener(this._value);
         }
     }
 
-    public getHook(): () => T {
+    // public getHook(): () => T {
+    //     return () => useAtom(this)
+    // }
+
+}
+
+export const useAtom = <T>(atom: Atom<T>) => {
+    const [state, setState] = useState(atom._value)
+
+    useEffect(() => {
+        const callback = (val: T) => {
+            setState(val);
+        }
+
+        atom._listeners.add(callback);
         return () => {
-            const [state, setState] = useState(this.value);
-
-            useEffect(() => {
-                const callback = (val: T) => setState(val);
-                this.listeners.add(callback);
-
-                return () => {
-                    this.listeners.delete(callback);
-                };
-            }, []);
-
-            return state;
+            atom._listeners.delete(callback);
         };
-    }
+    }, []);
+
+    return state;
 }

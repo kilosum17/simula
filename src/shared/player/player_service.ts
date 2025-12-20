@@ -2,10 +2,11 @@ import Signal from "@rbxts/signal"
 import { PlayerData } from "./player_data"
 import { PlayerLocation } from "./player_location"
 import { getCharacter } from "shared/help/assist"
-import { buyStageSig, collectDropsSig } from "shared/signals/server_signals"
+import { buyStageSig, collectDropsSig, unlockEggSig } from "shared/signals/server_signals"
 import { RunService } from "@rbxts/services"
 import { PlayerRewards } from "./player_rewards"
 import { randInt } from "shared/help/math"
+import { getEggState } from "shared/egg/egg_utils"
 
 export class PlayerService {
     player: Player
@@ -35,6 +36,14 @@ export class PlayerService {
             if (!typeIs(stageNo, 'number')) return
             this.psRewards.buyStage(stageNo)
         })
+
+        unlockEggSig.Connect((player, eggNo) => {
+            if (player !== this.player) return
+            const { available } = getEggState(eggNo, player)
+            if (!available) return
+            this.psRewards.unlockEgg(eggNo)
+        })
+
 
         task.spawn(() => {
             while (true) {

@@ -1,6 +1,7 @@
 import { useEventListener } from "@rbxts/pretty-react-hooks"
 import { useState } from "@rbxts/react"
-import { getPlayer } from "shared/help/assist"
+import { number } from "@rbxts/react/src/prop-types"
+import { decodeAttribute, getPlayer } from "shared/help/assist"
 
 export type TPlayerAtts = {
     coins: number,
@@ -9,6 +10,7 @@ export type TPlayerAtts = {
     rebirth: number,
     inMine: boolean,
     inStageNo: number,
+    eggs: number[],
 }
 
 export const PLAYER_ATTS_DEF = {
@@ -18,18 +20,25 @@ export const PLAYER_ATTS_DEF = {
     rebirth: 0,
     inMine: false,
     inStageNo: 0,
+    eggs: [1],
 } as TPlayerAtts
 
 export const getPlayerAtts = (player?: Player) => {
     const data = (player || getPlayer()).GetAttributes() as unknown as TPlayerAtts
-    return { ...PLAYER_ATTS_DEF, ...data }
+    const decData = {} as Record<string, unknown>
+    for (const [key, val] of pairs(data)) {
+        decData[key] = decodeAttribute(val)
+    }
+    return { ...PLAYER_ATTS_DEF, ...decData } as TPlayerAtts
 }
 
 export const usePlayerAtts = () => {
     const [data, setData] = useState(getPlayerAtts())
 
     useEventListener(getPlayer().AttributeChanged, () => {
-        setData(getPlayerAtts())
+        const newData = getPlayerAtts()
+        setData(newData)
+        // print('got data', newData)
     })
 
     return data

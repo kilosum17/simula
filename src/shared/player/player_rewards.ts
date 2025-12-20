@@ -40,4 +40,11 @@ export class PlayerRewards {
         Remotes.Server.Get('BreakStageBoard').SendToPlayer(this.psServ.player, stageNo)
     }
 
+    unlockEgg(eggNo: number) {
+        const store = this.psServ.psData.store
+        if (store.eggs.includes(eggNo)) return
+        const eggs = [...store.eggs, eggNo]
+        this.psServ.psData.update({ eggs })
+    }
+    
 }

@@ -2,17 +2,16 @@ import React from "@rbxts/react";
 import { col } from "shared/help/assist";
 import { ITEMS_CONFING } from "shared/help/DATA";
 import { randSample } from "shared/help/math";
-import { LBox, LHover, LImage, LLine, LPusher, LText, LTooltip } from "shared/ui/comps/Wrappers";
-import { Workspace } from "@rbxts/services";
+import { LBox, LHover, LImage, LLine, LPusher, LText } from "shared/ui/comps/Wrappers";
 import { NTooltip } from "shared/ui/nitifications/NTooltip";
 import { petsAtom } from "shared/signals/client_signals";
+import { useAtom } from "shared/signals/atom";
 
-const usePets = petsAtom.getHook()
 
 export function InvPetsFrame() {
-    const _pets = usePets()
+    const _pets = useAtom(petsAtom)
+
     const petIcons = ITEMS_CONFING.filter(t => t.type === 'PETS').map(p => p.icon)
-    const model = Workspace.Arena.WaitForChild("BoxPets").WaitForChild('ant') as Model
 
     const pets2 = [
         ..._pets, ..._pets, ..._pets, ..._pets, ..._pets, ..._pets, ..._pets, ..._pets,

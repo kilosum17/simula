@@ -7,12 +7,12 @@ import { useEventListener } from "@rbxts/pretty-react-hooks"
 import { randInt } from "shared/help/math"
 import React from "@rbxts/react"
 import { getPlayer, shakeUI } from "shared/help/assist"
-import { useSceenSize } from "../hooks/use_screensize"
 import { LBox, LHover, LImage, LPusher, LText } from "../comps/Wrappers"
 import { CostUI } from "../comps/CostUI"
 import { NTooltip } from "../nitifications/NTooltip"
-import { usePageState } from "../hooks/use_page_state"
 import { usePlayerAtts } from "shared/signals/player_attributes"
+import { useFrameState } from "shared/signals/use_frame_state"
+import { useSceenSize } from "shared/signals/use_screensize"
 
 
 const items = [
@@ -32,7 +32,7 @@ let last_call = os.time()
 export function LeftButtons() {
     const ref1 = useRef<UIScale>()
     const ref2 = useRef<UIScale>()
-    const { setPage } = usePageState()
+    const { toggleFrame } = useFrameState()
     const { coins: cash, gems } = usePlayerAtts()
 
     const { size } = useSceenSize()
@@ -60,7 +60,6 @@ export function LeftButtons() {
         }
     }))
 
-
     const clicked = (name: string) => {
         const actions = {
             "Teleport": () => {
@@ -73,7 +72,7 @@ export function LeftButtons() {
             "Auto Hatch": () => { },
             "Auto Farm": () => { },
             "Inventory": () => {
-                setPage("INV")
+                toggleFrame("INV")
             },
             "Shop": () => {
                 // MainPager.togglePage('SHOP')

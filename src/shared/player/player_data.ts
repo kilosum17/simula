@@ -1,5 +1,6 @@
 import { DataStoreService } from "@rbxts/services";
 import { PlayerService } from "./player_service"
+import { encodedAttribute } from "shared/help/assist";
 
 const MAX_RETRIES = 3
 
@@ -9,6 +10,7 @@ type TPlayerData = {
     gems: number,
     progStage: number,
     rebirth: number,
+    eggs: number[],
 }
 
 const PLAYER_DATA_DEF = {
@@ -17,6 +19,7 @@ const PLAYER_DATA_DEF = {
     gems: 0,
     progStage: 0,
     rebirth: 0,
+    eggs: [],
 } satisfies TPlayerData as TPlayerData
 
 const dataStore = DataStoreService.GetDataStore("PlayerData");
@@ -79,13 +82,12 @@ export class PlayerData {
     updateOne<T extends keyof TPlayerData>(key: T, val: TPlayerData[T]) {
         if (this.isLoading) return
         this.store[key] = val
-        this.ps.player.SetAttribute(key, val)
         this.updatePlayerAtts()
     }
 
     updatePlayerAtts() {
         for (const [key, val] of pairs(this.store)) {
-            this.ps.player.SetAttribute(key, val)
+            this.ps.player.SetAttribute(key, encodedAttribute(val))
         }
     }
 }
