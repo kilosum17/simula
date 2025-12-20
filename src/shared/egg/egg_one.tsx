@@ -8,9 +8,12 @@ import { Atom } from "shared/signals/atom";
 import { EggPrompUI } from "./ui/egg_prompt_ui";
 import { getCostUiData } from "shared/ui/comps/CostUI";
 import { formatNumber } from "shared/help/helpers";
+import { EggPetListUi } from "./ui/egg_pets_list";
+import { randInt } from "shared/help/math";
 
 export type TEggBody = Model & {
     Egg: BasePart,
+    EggWhite: BasePart,
     Part: BasePart,
     Base: BasePart,
     Screen: Part & {
@@ -37,15 +40,16 @@ export class EggOne {
         this.proximityPrompt = res.prompt
 
         // update priceui
-        this.updatePriceUI()
+        this.updateEgg()
         getPlayer().AttributeChanged.Connect(() => {
-            this.updatePriceUI()
+            this.updateEgg()
         })
 
         // rotate egg
+        const rotationSpeed = math.rad(randInt(60, 70));
         RunService.Heartbeat.Connect((dt: number) => {
-            const part = eggStand.Egg
-            const rotationSpeed = math.rad(90);
+            const part = this.currentEgg
+            if (!part) return
             part.CFrame = part.CFrame.mul(CFrame.Angles(0, rotationSpeed * dt, 0));
         });
 
@@ -90,6 +94,11 @@ export class EggOne {
             size: new UDim2(0, 80, 0, 80), comp: <EggPrompUI egg={this} />
         })
 
+        mountBillboardGui({
+            part: stand.Part, alwaysOnTop: true, extendsOffset: new Vector3(0, 2, 0),
+            size: new UDim2(0, 400, 0, 80), comp: <EggPetListUi egg={this} />
+        })
+
         return { stand, prompt }
     }
 
@@ -103,9 +112,14 @@ export class EggOne {
         }
     }
 
-    updatePriceUI() {
+    currentEggName = ''
+    currentEgg?: BasePart
+    updateEgg() {
+        const { available, unlocked, cost, modelName } = getEggState(this.eggNo)
+        this.proximityPrompt.Enabled = available
+
+        // ui
         const frame = this.stand.Screen.SurfaceGui.Frame
-        const { available, unlocked, cost } = getEggState(this.eggNo)
         let background = new Color3()
         let text = ''
         let showCostUi = false
@@ -127,6 +141,29 @@ export class EggOne {
             frame.image.Image = costData[0].img
         } else {
             frame.text.Text = text
+        }
+
+        this.stand.Egg.Transparency = !available ? 0 : 1
+        this.stand.EggWhite.Transparency = (available && !unlocked) ? 0 : 1
+        if (available && unlocked) {
+            if (this.currentEggName !== modelName) {
+                const curModel = this.stand.FindFirstChild(this.currentEggName)
+                if (curModel) {
+                    curModel.Destroy()
+                }
+                this.currentEggName = modelName
+                const eggsFold = ReplicatedStorage.instance.models.WaitForChild('Eggs')
+                const eggPart = eggsFold.WaitForChild(modelName) as BasePart
+                eggPart.Size = this.stand.Egg.Size
+                eggPart.CFrame = this.stand.Egg.CFrame
+                eggPart.Parent = this.stand.Egg
+                eggPart.Anchored = true
+                this.currentEgg = eggPart
+                const weld = new Instance('WeldConstraint')
+                weld.Part0 = this.stand.Egg
+                weld.Part1 = eggPart
+                weld.Parent = this.stand.Egg
+            }
         }
     }
 

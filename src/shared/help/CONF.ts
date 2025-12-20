@@ -104,34 +104,8 @@ export const DEV_PRODUCTS = {
     120: 2673407706,
 
 }
+
 export type TDEV_PROD = 'slot' | 'shop' | 'pet_limit'
-
-
-export const EGG_PETS = [] as [[IItemConfig, number, number], [IItemConfig, number, number], [IItemConfig, number, number]][]
-const PETS = ITEMS_CONFING.filter(t => t.type === 'PETS')
-math.randomseed(100)
-let j = 0
-let pos = 0
-for (let i = 0; i < 200; i++) {
-    let a = j
-    let b = j + 1
-    let c = j + 2
-    let ra = 78 + math.random(-5, 5)
-    let rb = 12 + math.random(-3, 3)
-    let rc = 100 - ra - rb
-    EGG_PETS.push([
-        [PETS[a], ra, ra],
-        [PETS[b], rb, ra + rb],
-        [PETS[c], rc, ra + rb + rc],
-    ])
-    pos += 2
-    const NO = 1
-    if (pos > NO) {
-        pos = 0
-        j = math.min(PETS.size() - 3, j + 3)
-    }
-}
-math.randomseed(os.time())
 
 export const ANIM_CONF = {
     '01_sabertooth': {

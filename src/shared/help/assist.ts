@@ -254,6 +254,10 @@ export const trottled = (rate: number, callback: () => void) => {
     }
 }
 
+export const colHex = (hex: string) => {
+    return Color3.fromHex(hex)
+}
+
 export const col = (ver: 'white' | 'red' | "blue" | "black" | "green" | "yellow" | "gray" | "random") => {
     let col = BrickColor.White().Color
     switch (ver) {

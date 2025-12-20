@@ -32,9 +32,9 @@ export function EggPrompUI({ egg }: {
         <LHover onClick={() => egg.eggClicked()} >
             <LBox Visible={vis} Size={new UDim2(1, 0, 1, 0)}
                 Background={col('white')} CornerRadius2={new UDim(0.2, 0)}
-                StrokeThickness={4} StokeColor={col('black')}
+                StrokeThickness={4} StokeColor={col('black')} Center
             >
-                <LText Text="E" Size={new UDim2(1, 0, 1, 0)}
+                <LText Text="E" Size={new UDim2(0.8, 0, 0.8, 0)}
                     Color={col('black')} StrokeThickness={0}
                 />
                 <uiscale ref={scalerRef} />

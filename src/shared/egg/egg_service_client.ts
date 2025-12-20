@@ -1,5 +1,6 @@
 import { col, ensureInstance } from "shared/help/assist";
 import { EggOne } from "./egg_one";
+import { EggCracker } from "./egg_cracker";
 
 const EGGS_PER_ROW = 12
 
@@ -10,9 +11,11 @@ const step3 = Shelf.WaitForChild("step3") as BasePart
 const step4 = Shelf.WaitForChild("step4") as BasePart
 
 export class EggServiceClient {
+    eggCracker: EggCracker
     eggs = [] as EggOne[]
 
     constructor() {
+        this.eggCracker = new EggCracker()
         this.addEggsToShelf()
     }
 

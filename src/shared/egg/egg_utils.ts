@@ -5,11 +5,24 @@ export const isEggAvailable = (eggNo: number) => {
     return eggNo < 5
 }
 
+
+
 export const getEggState = (eggNo: number, player?: Player) => {
     const available = isEggAvailable(eggNo)
     const unlockedEggs = [...getPlayerAtts(player).eggs, 0, 1]
     const unlocked = unlockedEggs.includes(eggNo)
     const cost = getNewEggPrice(eggNo)
-    return { available, unlocked, cost }
+    const EGGS_NO = 17
+    const eggIdx = eggNo % EGGS_NO
+    const modelName = `Tier ${eggIdx + 1}`
+
+    const petsList = [
+        { id: 1, perc: 25 },
+        { id: 2, perc: 25 },
+        { id: 3, perc: 25 },
+        { id: 4, perc: 25 },
+    ]
+
+    return { available, unlocked, cost, modelName, petsList }
 }
 
