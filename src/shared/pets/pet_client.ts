@@ -22,6 +22,7 @@ export class PetClient {
     status = "FOLLOW" as "FOLLOW" | "GOMINE" | "MINING"
     goingToMine = false
     isMining = false
+    connection: RBXScriptConnection
 
     constructor(petsMover: PetsMover, body: TPetBody) {
         this.petsMover = petsMover
@@ -31,7 +32,11 @@ export class PetClient {
         this.petMineActions = new PetMineActions(this)
 
         let i = 0
-        RunService.Heartbeat.Connect(() => {
+        this.connection = RunService.Heartbeat.Connect(() => {
+            if (!body.Parent) {
+                this.killPet()
+                return
+            }
             i++
             if (i % 1 === 0) {
                 this.update()
@@ -129,6 +134,11 @@ export class PetClient {
             pet.AssemblyLinearVelocity = new Vector3(currentVelocity.X, -40, currentVelocity.Z)
         }
         return resultPos
+    }
+
+    killPet() {
+        this.petsMover.removePetClient(this._body)
+        this.connection.Disconnect()
     }
 
 }

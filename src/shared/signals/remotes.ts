@@ -10,9 +10,11 @@ export const Remotes = Net.Definitions.Create({
     CollectDrop: Net.Definitions.ClientToServerEvent<[part: BasePart]>(),
     BuyStage: Net.Definitions.ClientToServerEvent<[stageNo: number]>(),
     UnlockEgg: Net.Definitions.ClientToServerEvent<[eggNo: number]>(),
+    BuyEgg: Net.Definitions.ClientToServerEvent<[eggNo: number, count: number]>(),
 
     PlayVFX: Net.Definitions.ServerToClientEvent<[pos: Vector3, type: TVfxTypes]>(),
     BreakStageBoard: Net.Definitions.ServerToClientEvent<[stageNo: number]>(),
+    HatchedNewPets: Net.Definitions.ServerToClientEvent<[petIds: number[]]>(),
 
     MakeHello: Net.Definitions.ServerAsyncFunction<(message: string) => string>(),
 

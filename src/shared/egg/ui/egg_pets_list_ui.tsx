@@ -13,7 +13,7 @@ export function EggPetListUi({ egg }: {
     egg: EggOne,
 }) {
     const { open } = useAtom(egg.atom)
-    const { petsList } = getEggState(egg.eggNo)
+    const { petsWeights: petsList } = getEggState(egg.eggNo)
     const [vis, setVis] = useState(false)
     const scalerRef = useRef<UIScale>()
 

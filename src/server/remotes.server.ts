@@ -1,6 +1,6 @@
 import { getEggState } from "shared/egg/egg_utils";
 import { Remotes } from "shared/signals/remotes";
-import { buyStageSig, collectDropsSig, fossilDamageSig, unlockEggSig } from "shared/signals/server_signals";
+import { buyEggSig, buyStageSig, collectDropsSig, fossilDamageSig, unlockEggSig } from "shared/signals/server_signals";
 
 
 Remotes.Server.Get('SetAttribute').Connect((_player, part, name, value) => {
@@ -33,4 +33,7 @@ Remotes.Server.Get('UnlockEgg').Connect((player, eggNo) => {
     unlockEggSig.Fire(player, eggNo)
 });
 
+Remotes.Server.Get('BuyEgg').Connect((player, eggNo, eggCount) => {
+    buyEggSig.Fire(player, eggNo, eggCount)
+});
 

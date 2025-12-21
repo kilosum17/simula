@@ -514,3 +514,11 @@ export const decodeAttribute = <T>(val: unknown): T => {
     }
     return val as unknown as T;
 };
+
+export const tableSize = (map: Record<string | number, unknown>) => {
+    let no = 0
+    for (const _ of pairs(map)) {
+        no++
+    }
+    return no
+}

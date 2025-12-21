@@ -1,54 +1,103 @@
-import { RunService, Workspace } from "@rbxts/services"
-import { col, getHRP } from "shared/help/assist"
-import { getCameraWorldBounds, getEggModel, getEggState } from "./egg_utils"
+import { RunService, TweenService, UserInputService, Workspace } from "@rbxts/services"
+import { getCameraWorldBounds, getEggModel, getEggState, getRelativeCenter, GridMaps } from "./egg_utils"
 import { createEggPopTween } from "shared/signals/animations"
+import { icon } from "shared/help/icons"
+import { hatchedDropperAtom } from "shared/signals/atoms"
+import { randInt } from "shared/help/math"
+import { buyEggSig } from "shared/signals/server_signals"
+import { getPlayerAtts } from "shared/signals/player_attributes"
+import { getPlayer } from "shared/help/assist"
+import { Remotes } from "shared/signals/remotes"
 
-const gridMaps = {
-    1: [[0.5, 0.5]],
-    2: [[0.25, 0.5], [0.75, 0.5]],
-    3: [[0.25, 0.25], [0.75, 0.25], [0.5, 0.75]],
-    4: [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]],
-}
+const MAX_CLICKS = 3
+const faces = [Enum.NormalId.Front, Enum.NormalId.Back, Enum.NormalId.Left, Enum.NormalId.Right]
 
 export class EggCracker {
     camera: Camera
+    clicks = 0
 
     constructor() {
         this.camera = Workspace.Camera
 
+        UserInputService.InputBegan.Connect((inp, gpe) => {
+            if (gpe) return
+            const isPrimaryInput =
+                inp.UserInputType === Enum.UserInputType.MouseButton1 ||
+                inp.UserInputType === Enum.UserInputType.Touch;
+            if (isPrimaryInput) {
+                this.onClickEggs()
+            }
+        })
+
+        buyEggSig.Connect((_player, eggNo, count) => {
+            this.startCracking(eggNo, count as 1)
+        })
+
     }
 
+    onClickEggs() {
+        if (!this.eggs) return
+        if (this.clicks < MAX_CLICKS) {
+            this.playCrackAnimation();
+            this.popEggSize();
+            const trans = 1 - (this.clicks) / MAX_CLICKS
+            this.eggs.forEach(egg => {
+                egg.GetDescendants().forEach(c => {
+                    if (c.IsA('Decal')) c.Transparency = trans;
+                })
+            })
+        } else {
+            const petIds = this.cords.map(() => 1)
+            hatchedDropperAtom.update({ cords: this.cords, petIds, open: false })
+            Remotes.Client.Get('BuyEgg').SendToServer(this.eggNo, this.eggCount)
+            this.stopCracking()
+        }
+        this.clicks++
+    }
+
+    targetSize = new Vector3()
     connection?: RBXScriptConnection
     eggs?: BasePart[]
-    startCracking(eggNo: number, count: keyof typeof gridMaps) {
-        this.destroy()
+    cords = [] as number[][]
+    eggNo = 0
+    eggCount = 0
+    startCracking(eggNo: number, count: keyof typeof GridMaps) {
+        this.stopCracking()
+        this.clicks = 0
+        this.eggNo = eggNo
+        this.eggCount = count
+        getPlayer().SetAttribute('isCrackingEgg', true)
         const { modelName } = getEggState(eggNo)
         const eggPart = getEggModel(modelName)
-        const points = gridMaps[count]
-        const eggs = points.map(p => {
+        this.cords = GridMaps[count]
+        this.eggs = this.cords.map(p => {
             const part = eggPart.Clone()
-            // const part = new Instance('Part')
-            // part.Shape = Enum.PartType.Ball
-            // part.Size = new Vector3(1, 1, 1)
             part.Parent = game.Workspace
             part.CanCollide = false
             part.Anchored = true
+            for (const face of faces) {
+                const crack1 = new Instance("Decal");
+                crack1.AddTag('crack')
+                crack1.Texture = icon('egg_crack')
+                crack1.Face = face
+                crack1.Transparency = 1;
+                crack1.Parent = part;
+            }
             const { size } = getCameraWorldBounds(5)
             const maxCord = math.min(size.X, size.Y)
             const cols = math.ceil(math.sqrt(count))
-            const targetSize = new Vector3(maxCord, maxCord, maxCord).div(cols).mul(0.8)
-            const popAnim = createEggPopTween(part, targetSize, new Vector3(0, 0, 0))
+            this.targetSize = new Vector3(maxCord, maxCord, maxCord).div(cols).mul(0.8)
+            const popAnim = createEggPopTween(part, this.targetSize, new Vector3(0, 0, 0))
             popAnim.Play()
             return part
         })
-        this.eggs = eggs
 
-        const SPIN_SPEED = math.rad(45)
+        const SPIN_SPEED = math.rad(20)
         let currentRotation = 0
         this.connection = RunService.RenderStepped.Connect((dt) => {
-            for (let i = 0; i < points.size(); i++) {
+            for (let i = 0; i < this.cords!.size(); i++) {
                 const camera = Workspace.CurrentCamera!;
-                const [point, egg] = [points[i], eggs[i]]
+                const [cord, egg] = [this.cords![i], this.eggs![i]]
                 let { center, size } = getCameraWorldBounds(5)
 
                 const hX = (size.X * 0.95) / 2;
@@ -62,42 +111,64 @@ export class EggCracker {
                     .add(camCF.RightVector.mul(hX))
                     .add(camCF.UpVector.mul(-hY)).Position;
 
-                const pos = getRelativeCenter(topLeft, bottomRight, new Vector2(point[0], point[1]))
+                const pos = getRelativeCenter(topLeft, bottomRight, new Vector2(cord[0], cord[1]))
                 currentRotation += SPIN_SPEED * dt;
-                egg.CFrame = new CFrame(pos).mul(CFrame.Angles(0, currentRotation, 0));
+                const baseCF = new CFrame(pos).mul(CFrame.Angles(0, currentRotation, 0));
+                egg.CFrame = baseCF.mul(this.shakeOffset);
             }
         })
     }
 
-    destroy() {
+    isPopping = false
+    popEggSize() {
+        if (this.isPopping) return
+        this.isPopping = true
+        if (!this.eggs) return
+        const tweens = [] as Tween[]
+        for (const egg of this.eggs) {
+            const punchSize = this.targetSize.mul(1.2);
+            const info = new TweenInfo(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.Out, 0, true);
+            const tween = TweenService.Create(egg, info, { Size: punchSize });
+            tweens.push(tween)
+        }
+        tweens[0].Completed.Connect(() => {
+            this.isPopping = false
+        })
+        tweens.forEach(tween => {
+            tween.Play()
+        })
+    };
+
+    // Define this outside your loop
+    shakeOffset = new CFrame();
+    isCracking = false
+    playCrackAnimation() {
+        if (this.isCracking) return
+        this.isCracking = true
+        const info = new TweenInfo(0.03, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, true);
+
+        const tempValue = new Instance("NumberValue");
+        const tween = TweenService.Create(tempValue, info, { Value: math.rad(15) });
+
+        const connection = tempValue.GetPropertyChangedSignal("Value").Connect(() => {
+            this.shakeOffset = CFrame.Angles(0, 0, tempValue.Value).mul(CFrame.Angles(math.random() * 0.1, 0, 0));
+        });
+        tween.Completed.Connect(() => {
+            connection.Disconnect();
+            this.shakeOffset = new CFrame();
+            tempValue.Destroy();
+            this.isCracking = false
+        });
+        tween.Play();
+    }
+
+    stopCracking() {
+        getPlayer().SetAttribute('isCrackingEgg', false)
         this.connection?.Disconnect()
-        this.eggs?.forEach(egg => egg.Destroy())
+        this.eggs?.forEach(egg => {
+            egg.Destroy()
+        })
+        this.eggs = undefined
     }
 
 }
-
-export function getRelativeCenter(
-    topLeft: Vector3,
-    bottomRight: Vector3,
-    scale: Vector2
-): Vector3 {
-    const camera = Workspace.CurrentCamera!;
-    const camCF = camera.CFrame;
-
-    // 1. Calculate the total width and height in world units
-    // We use the dot product to find the distance along the camera's local axes
-    const fullWidth = bottomRight.sub(topLeft).Dot(camCF.RightVector);
-    const fullHeight = bottomRight.sub(topLeft).Dot(camCF.UpVector);
-
-    // 2. Calculate the offset from Top-Left
-    // Scale X moves along the RightVector
-    const xOffset = camCF.RightVector.mul(fullWidth * scale.X);
-
-    // Scale Y moves along the UpVector (multiplied by scale.Y)
-    // Since scale.Y = 1 is "bottom", we move in the direction of fullHeight
-    const yOffset = camCF.UpVector.mul(fullHeight * scale.Y);
-
-    // 3. Combine
-    return topLeft.add(xOffset).add(yOffset);
-}
-

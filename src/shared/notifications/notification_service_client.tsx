@@ -1,10 +1,9 @@
 import { mountFrame } from "shared/ui/create_root";
-import { CanNotBuyStage } from "./ui/CanNotBuyStage";
 import React from "@rbxts/react";
-
+import { CanNotBuyUI } from "./ui/CanNotBuyUI";
 
 export class NotificationServiceClient {
     constructor() {
-        mountFrame(<CanNotBuyStage />, 10)
+        mountFrame(<CanNotBuyUI />, 10)
     }
 }

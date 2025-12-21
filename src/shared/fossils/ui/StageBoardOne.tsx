@@ -22,7 +22,7 @@ export const StageBoardOne = ({ stageNo }: {
     const onBuyStage = () => {
         warn("Clicked buy", stageNo)
         if (coins < cost) {
-            canNotBuyAtom.update({ open: true })
+            canNotBuyAtom.update({ open: true, kind: "STAGE" })
             return
         }
         Remotes.Client.Get('BuyStage').SendToServer(stageNo - 1)

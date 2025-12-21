@@ -8,8 +8,11 @@ import { Atom } from "shared/signals/atom";
 import { EggPrompUI } from "./ui/egg_prompt_ui";
 import { getCostUiData } from "shared/ui/comps/CostUI";
 import { formatNumber } from "shared/help/helpers";
-import { EggPetListUi } from "./ui/egg_pets_list";
+import { EggPetListUi } from "./ui/egg_pets_list_ui";
 import { randInt } from "shared/help/math";
+import { buyEggSig } from "shared/signals/server_signals";
+import { getPlayerAtts } from "shared/signals/player_attributes";
+import { canNotBuyAtom } from "shared/signals/atoms";
 
 
 
@@ -76,17 +79,12 @@ export class EggOne {
         prompt.Style = Enum.ProximityPromptStyle.Custom;
         prompt.RequiresLineOfSight = false
 
-        // Listeners
         prompt.PromptShown.Connect(() => {
-            print("Player entered range", this.stand.Name);
-            this.showPromptUI()
+            this.showUI()
         });
-
         prompt.PromptHidden.Connect(() => {
-            print("Player left range", this.stand.Name);
-            this.hidePromptUI()
+            this.hideUI()
         });
-
         prompt.Triggered.Connect(() => {
             this.eggClicked()
         })
@@ -106,18 +104,26 @@ export class EggOne {
 
     eggClicked() {
         print("Pressed", this.stand.Name);
-        const { available, unlocked } = getEggState(this.eggNo)
+        const { eggCost, available, unlocked } = getEggState(this.eggNo)
         if (!available) return
         if (!unlocked) {
             Remotes.Client.Get('UnlockEgg').SendToServer(this.eggNo)
             return
+        }
+        const eggCount = 1
+        const { coins } = getPlayerAtts()
+        if ((eggCost * eggCount) > coins) {
+            canNotBuyAtom.update({ open: true, kind: "EGG" })
+        } else {
+            this.hideUI()
+            buyEggSig.Fire(getPlayer(), this.eggNo, eggCount)
         }
     }
 
     currentEggName = ''
     currentEgg?: BasePart
     updateEgg() {
-        const { available, unlocked, cost, modelName } = getEggState(this.eggNo)
+        const { available, unlocked, eggCost: cost, modelName } = getEggState(this.eggNo)
         this.proximityPrompt.Enabled = available
 
         // ui
@@ -168,11 +174,12 @@ export class EggOne {
         }
     }
 
-    showPromptUI() {
+    showUI() {
+        if (getPlayerAtts().isCrackingEgg) return
         this.atom.update({ open: true })
     }
 
-    hidePromptUI() {
+    hideUI() {
         this.atom.update({ open: false })
     }
 

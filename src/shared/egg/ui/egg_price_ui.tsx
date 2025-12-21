@@ -10,7 +10,7 @@ export function EggPriceUI({ egg }: {
     egg: EggOne
 }) {
     const { eggs } = usePlayerAtts()
-    const { available, unlocked, cost } = getEggState(egg.eggNo)
+    const { available, unlocked, eggCost: cost } = getEggState(egg.eggNo)
     let background = new Color3()
     let text = ''
     let showCostUi = false

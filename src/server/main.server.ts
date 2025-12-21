@@ -16,11 +16,12 @@ const playerServices = {} as Record<number, PlayerService>
 const petsServices = {} as Record<number, PetsService>
 
 Players.PlayerAdded.Connect(player => {
+    const petServ = new PetsService(player)
+    petsServices[player.UserId] = petServ
+
     const ps = new PlayerService(player)
     playerServices[player.UserId] = ps
 
-    const petServ = new PetsService(player)
-    petsServices[player.UserId] = petServ
 })
 
 Players.PlayerRemoving.Connect(player => {

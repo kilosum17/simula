@@ -14,3 +14,7 @@ export const collectDropsSig = new Signal<(player: Player, drop: BasePart) => vo
 export const buyStageSig = new Signal<(player: Player, stageNo: number) => void>()
 
 export const unlockEggSig = new Signal<(player: Player, eggNo: number) => void>()
+
+export const buyEggSig = new Signal<(player: Player, eggNo: number, count: number) => void>()
+
+export const updateEquipedPets = new Signal<(player: Player, petsIds: Record<string, number>) => void>()

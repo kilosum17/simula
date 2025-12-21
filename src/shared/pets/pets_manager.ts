@@ -1,5 +1,4 @@
 import { Pet } from "./pet";
-import { PetPositions } from "./pet_positions";
 import { PetsService } from "./pets_service";
 import { listToCountMap } from "shared/help/math";
 
@@ -11,9 +10,9 @@ export class PetsManager {
         this.petsServ = petsServ
     }
 
-    updateEquipedPets(ids: string[]) {
+    updateEquipedPets(ids: Record<string, number>) {
         const existCounts = listToCountMap(this.pets.map(p => p.id))
-        const newCounts = listToCountMap(ids)
+        const newCounts = ids
         const addCounts = {} as Record<string, number>
         for (const [id, count] of pairs(existCounts)) {
             const newCount = newCounts[id] || 0

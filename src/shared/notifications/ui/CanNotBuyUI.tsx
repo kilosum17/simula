@@ -8,16 +8,20 @@ import { LBox, LHiders, LHover, LImage, LPusher, LText } from "shared/ui/comps/W
 
 const TOP_COLOR = Color3.fromHex('4eddff')
 
-export function CanNotBuyStage() {
-    const { open } = useAtom(canNotBuyAtom)
+export function CanNotBuyUI() {
+    const { open, kind } = useAtom(canNotBuyAtom)
 
     useEffect(() => {
         warn('open', open)
     }, [open])
 
     const onClose = () => {
-        canNotBuyAtom.update({ open: false })
+        canNotBuyAtom.update({ open: false, kind })
     }
+
+    const message = kind === 'STAGE' ?
+        "You cannot afford this \n area!" :
+        "You cannot afford this \n egg!"
 
     return (
         <LBox BgPatterns NoList StrokeThickness={5} Size={new UDim2(0.9, 0, 0.8, 0)} Pos={new UDim2(0.5, 0, 0.5, 0)}
@@ -32,7 +36,7 @@ export function CanNotBuyStage() {
                 </LBox>
                 <LBox Trans Vert Center Size={new UDim2(1, 0, 0.85, 0,)} >
                     <LPusher gapS={0.05} />
-                    <LText Size={new UDim2(1, 0, 0.3, 0)} Text="You cannot afford this \n area!"
+                    <LText Size={new UDim2(1, 0, 0.3, 0)} Text={message}
                         StrokeThickness={0} Color={col('black')} StrokeColor={col('black')} />
                     <LImage Size={new UDim2(1, 0, 0.3, 0)} Aspect Image={icon('inv_pets')} />
                     <LBox Size={new UDim2(1, 0, 0.3, 0)} Center Trans >

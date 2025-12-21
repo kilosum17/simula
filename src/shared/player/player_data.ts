@@ -1,6 +1,7 @@
 import { DataStoreService } from "@rbxts/services";
 import { PlayerService } from "./player_service"
-import { encodedAttribute } from "shared/help/assist";
+import { encodedAttribute, tableSize } from "shared/help/assist";
+import { updateEquipedPets } from "shared/signals/server_signals";
 
 const MAX_RETRIES = 3
 
@@ -11,6 +12,7 @@ type TPlayerData = {
     progStage: number,
     rebirth: number,
     eggs: number[],
+    petIds: Record<string, number>
 }
 
 const PLAYER_DATA_DEF = {
@@ -20,6 +22,7 @@ const PLAYER_DATA_DEF = {
     progStage: 0,
     rebirth: 0,
     eggs: [],
+    petIds: {},
 } satisfies TPlayerData as TPlayerData
 
 const dataStore = DataStoreService.GetDataStore("PlayerData");
@@ -34,16 +37,23 @@ export class PlayerData {
         this.ps.player.SetAttribute("balance", 0)
         this.loadData()
 
+        task.spawn(() => {
+            task.wait(0.1)
+            if (tableSize(this.store.petIds) === 0) {
+                updateEquipedPets.Fire(this.ps.player, { '1': 1, '2': 1 })
+            } else {
+                updateEquipedPets.Fire(this.ps.player, this.store.petIds)
+            }
+        })
     }
 
     loadData(retries = 0) {
         try {
             this.isLoading = true
-            warn(`Loading player data for ${this.ps.player.Name}`, this.store);
             const [dsData, _] = dataStore.GetAsync(this.getStoreKey())
             if (dsData) {
                 this.store = { ...this.store, ...dsData }
-                warn(`loaded data for ${this.ps.player.Name}`)
+                warn(`loaded data for ${this.ps.player.Name}`, dsData)
             }
         } catch (e) {
             warn('failed to load data', e)
@@ -58,7 +68,6 @@ export class PlayerData {
     saveData(retries = 0) {
         if (this.isLoading) return
         try {
-            warn(`Saving player data for ${this.ps.player.Name}`, this.store);
             dataStore.SetAsync(this.getStoreKey(), this.store)
             warn(`Saved data for ${this.ps.player.Name}`, this.store);
         } catch (e) {

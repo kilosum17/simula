@@ -1,6 +1,5 @@
 import { useEventListener } from "@rbxts/pretty-react-hooks"
 import { useState } from "@rbxts/react"
-import { number } from "@rbxts/react/src/prop-types"
 import { decodeAttribute, getPlayer } from "shared/help/assist"
 
 export type TPlayerAtts = {
@@ -11,6 +10,9 @@ export type TPlayerAtts = {
     inMine: boolean,
     inStageNo: number,
     eggs: number[],
+
+    isCrackingEgg: boolean,
+
 }
 
 export const PLAYER_ATTS_DEF = {
@@ -21,6 +23,7 @@ export const PLAYER_ATTS_DEF = {
     inMine: false,
     inStageNo: 0,
     eggs: [1],
+    isCrackingEgg: false,
 } as TPlayerAtts
 
 export const getPlayerAtts = (player?: Player) => {

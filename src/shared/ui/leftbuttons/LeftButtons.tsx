@@ -1,16 +1,14 @@
 import { GPT_ICONS, icons } from "shared/help/DATA"
-import { formatNumber } from "shared/help/helpers"
 import { PolicyService, UserInputService } from "@rbxts/services"
 import { useEffect, useRef } from "@rbxts/react"
 import { mineActionSignal } from "shared/signals/client_signals"
 import { useEventListener } from "@rbxts/pretty-react-hooks"
-import { randInt } from "shared/help/math"
 import React from "@rbxts/react"
 import { getPlayer, shakeUI } from "shared/help/assist"
-import { LBox, LHover, LImage, LPusher, LText } from "../comps/Wrappers"
+import { LBox, LHover, LImage, LPusher } from "../comps/Wrappers"
 import { CostUI } from "../comps/CostUI"
 import { NTooltip } from "../nitifications/NTooltip"
-import { usePlayerAtts } from "shared/signals/player_attributes"
+import { getPlayerAtts, usePlayerAtts } from "shared/signals/player_attributes"
 import { useFrameState } from "shared/signals/use_frame_state"
 import { useSceenSize } from "shared/signals/use_screensize"
 
@@ -34,19 +32,21 @@ export function LeftButtons() {
     const ref2 = useRef<UIScale>()
     const { toggleFrame } = useFrameState()
     const { coins: cash, gems } = usePlayerAtts()
-
     const { size } = useSceenSize()
-    const isDesk = size.Y > 430
 
+    const isDesk = size.Y > 430
+    const y = isDesk ? 0.35 : 0.15
     let shakeTween1 = undefined as Tween | undefined
     let shakeTween2 = undefined as Tween | undefined
 
     useEffect(() => {
-        mineActionSignal.Connect(() => {
-            shakeTween1 = shakeUI(ref1.current, {})
-            shakeTween2 = shakeUI(ref2.current, {})
-            shakeTween1?.Play()
-            shakeTween2?.Play()
+        getPlayer().AttributeChanged.Connect((name) => {
+            if (name === 'coins') {
+                shakeTween1 = shakeUI(ref1.current, {})
+                shakeTween2 = shakeUI(ref2.current, {})
+                shakeTween1?.Play()
+                shakeTween2?.Play()
+            }
         })
     }, [])
 
@@ -109,10 +109,9 @@ export function LeftButtons() {
             actions[name]()
         }
     }
-
-    const gemsInfo = formatNumber(gems)
-    const y = isDesk ? 0.35 : 0.15
-
+    if (getPlayerAtts().isCrackingEgg) {
+        return <></>
+    }
     return (
         <LBox Pos={new UDim2(0, 10, y, 0)} Size={new UDim2(0.22, 0, 0.7, 0)} Trans AnchorPoint={new Vector2(0, 0)}
             Vert Padding={new UDim(0.01, 0)} VAlign='Top' MinSize={new Vector2(130, 100)} MaxSize={new Vector2(250, 100000)}   >

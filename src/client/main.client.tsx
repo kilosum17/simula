@@ -14,11 +14,13 @@ import { NTooltipFrame } from "shared/ui/nitifications/NTooltip";
 import { NotificationServiceClient } from "shared/notifications/notification_service_client";
 import { EggServiceClient } from "shared/egg/egg_service_client";
 import { EggCracker } from "shared/egg/egg_cracker";
+import { randInt } from "shared/help/math";
+import { EggPetsRevealUI } from "shared/egg/ui/egg_pets_reveal_ui";
 
 mountFrame(<LeftButtons />)
 mountFrame(<InvFrame />)
 mountFrame(<NTooltipFrame />)
-
+mountFrame(<EggPetsRevealUI />)
 
 new PetsServiceClient()
 new MineServiceClient()
@@ -35,11 +37,11 @@ if (RunService.IsStudio()) {
     UserInputService.InputBegan.Connect((inp, gpe) => {
         if (gpe) return
         if (inp.KeyCode === Enum.KeyCode.F) {
-            cracker.startCracking(0, 4)
+            cracker.startCracking(randInt(0, 18), 4)
             print('created eggs', cracker)
         }
         if (inp.KeyCode === Enum.KeyCode.R) {
-            cracker.destroy()
+            cracker.stopCracking()
             print('Destrroyed eggs', cracker)
         }
     })

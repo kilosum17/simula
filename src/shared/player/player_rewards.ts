@@ -3,6 +3,8 @@ import { PlayerService } from "./player_service"
 import { getCoinMult } from "shared/help/assist"
 import { getStageCostV2 } from "shared/help/DATA"
 import { Remotes } from "shared/signals/remotes"
+import { choosePetFromWeights, getEggState } from "shared/egg/egg_utils"
+import { updateEquipedPets } from "shared/signals/server_signals"
 
 export class PlayerRewards {
     psServ: PlayerService
@@ -46,5 +48,27 @@ export class PlayerRewards {
         const eggs = [...store.eggs, eggNo]
         this.psServ.psData.update({ eggs })
     }
-    
+
+    buyEggs(eggNo: number, count: number) {
+        print('buy eggs', eggNo, count)
+        const { eggCost, petsWeights } = getEggState(eggNo, this.psServ.player)
+        const costTotal = eggCost * count
+        const store = this.psServ.psData.store
+        print('buy eggs', eggNo, count, costTotal > store.coins)
+        if (costTotal > store.coins) return
+
+        const petIdsMap = store.petIds
+        const newPetIds = [] as number[]
+        for (let i = 0; i < count; i++) {
+            const id = choosePetFromWeights(petsWeights)
+            const petId = tostring(id)
+            petIdsMap[petId] = (petIdsMap[petId] || 0) + 1
+            newPetIds.push(id)
+        }
+        const coins = store.coins - costTotal
+        this.psServ.psData.update({ petIds: petIdsMap, coins })
+        updateEquipedPets.Fire(this.psServ.player, petIdsMap)
+        Remotes.Server.Get('HatchedNewPets').SendToPlayer(this.psServ.player, newPetIds)
+    }
+
 }
