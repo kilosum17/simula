@@ -1,6 +1,6 @@
 import { ReplicatedStorage, RunService } from "@rbxts/services";
 import { ensureInstance, getEggsFolder, getPlayer } from "shared/help/assist";
-import { getEggState } from "./egg_utils";
+import { getEggModel, getEggState } from "./egg_utils";
 import { Remotes } from "shared/signals/remotes";
 import { mountBillboardGui } from "shared/ui/create_root";
 import React from "@rbxts/react";
@@ -10,6 +10,8 @@ import { getCostUiData } from "shared/ui/comps/CostUI";
 import { formatNumber } from "shared/help/helpers";
 import { EggPetListUi } from "./ui/egg_pets_list";
 import { randInt } from "shared/help/math";
+
+
 
 export type TEggBody = Model & {
     Egg: BasePart,
@@ -152,8 +154,7 @@ export class EggOne {
                     curModel.Destroy()
                 }
                 this.currentEggName = modelName
-                const eggsFold = ReplicatedStorage.instance.models.WaitForChild('Eggs')
-                const eggPart = eggsFold.WaitForChild(modelName) as BasePart
+                const eggPart = getEggModel(modelName).Clone()
                 eggPart.Size = this.stand.Egg.Size
                 eggPart.CFrame = this.stand.Egg.CFrame
                 eggPart.Parent = this.stand.Egg

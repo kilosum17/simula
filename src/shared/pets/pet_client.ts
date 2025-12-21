@@ -33,7 +33,7 @@ export class PetClient {
         let i = 0
         RunService.Heartbeat.Connect(() => {
             i++
-            if (i % 6 === 0) {
+            if (i % 1 === 0) {
                 this.update()
             }
         })
@@ -114,9 +114,9 @@ export class PetClient {
         rayParams.FilterType = Enum.RaycastFilterType.Exclude
         const petsFolder = Workspace.FindFirstChild("PetStorage") || new Instance("Folder")
         rayParams.FilterDescendantsInstances = [pet, Workspace.Targets, petsFolder]
-        const origin = new CFrame(targetPos.add(new Vector3(0, RAY_DIST, 0)))
+        const origin = targetPos.add(new Vector3(0, RAY_DIST, 0))
         const dir = new Vector3(0, -2 * RAY_DIST, 0)
-        const raycastRes = Workspace.Blockcast(origin, new Vector3(2.8, 2.8, 2.8), dir, rayParams)
+        const raycastRes = Workspace.Raycast(origin, dir, rayParams)
         let resultPos = targetPos
         if (raycastRes) {
             resultPos = raycastRes.Position

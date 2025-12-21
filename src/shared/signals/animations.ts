@@ -18,3 +18,13 @@ export function createCloseTween({ scaler, small }: { scaler: UIScale, small?: b
     );
     return TweenService.Create(scaler, info, { Scale: 0 });
 }
+
+export function createEggPopTween(part: BasePart, targetSize: Vector3, startSize = Vector3.zero): Tween {
+    part.Size = startSize;
+    const info = new TweenInfo(
+        0.2,
+        Enum.EasingStyle.Back,
+        Enum.EasingDirection.Out
+    );
+    return TweenService.Create(part, info, { Size: targetSize });
+}

@@ -11,11 +11,11 @@ const step3 = Shelf.WaitForChild("step3") as BasePart
 const step4 = Shelf.WaitForChild("step4") as BasePart
 
 export class EggServiceClient {
-    eggCracker: EggCracker
+    // eggCracker: EggCracker
     eggs = [] as EggOne[]
 
     constructor() {
-        this.eggCracker = new EggCracker()
+        // this.eggCracker = new EggCracker()
         this.addEggsToShelf()
     }
 
