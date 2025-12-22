@@ -1,4 +1,5 @@
 import { HttpService, Players, ReplicatedStorage, RunService, TweenService, Workspace } from "@rbxts/services"
+import { colors } from "./colors"
 
 
 export const chooseRandom = <T>(_list: T[], defItem?: T) => {
@@ -258,35 +259,13 @@ export const colHex = (hex: string) => {
     return Color3.fromHex(hex)
 }
 
-export const col = (ver: 'white' | 'red' | "blue" | "black" | "green" | "yellow" | "gray" | "random") => {
-    let col = BrickColor.White().Color
-    switch (ver) {
-        case "white":
-            col = BrickColor.White().Color
-            break
-        case "red":
-            col = BrickColor.Red().Color
-            break
-        case "blue":
-            col = BrickColor.Blue().Color
-            break
-        case "black":
-            col = BrickColor.Black().Color
-            break
-        case "green":
-            col = BrickColor.Green().Color
-            break
-        case "yellow":
-            col = BrickColor.Yellow().Color
-            break
-        case "gray":
-            col = BrickColor.Gray().Color
-            break
-        case "random":
-            col = BrickColor.random().Color
-            break
+export const col = (ver: keyof typeof colors) => {
+    if (colors[ver]) {
+        const res = colors[ver]
+        if (typeIs(res, 'string')) return Color3.fromHex(res)
+        return res
     }
-    return col
+    return BrickColor.White().Color
 }
 
 export const getWaitManager = (dur: number, start = os.time() - dur) => {

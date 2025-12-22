@@ -49,7 +49,7 @@ export function MainFrame({
 
     return (
         <LBox NoList Size={new UDim2(0.9, 0, 0.6, 0)} Pos={new UDim2(0.5, 0, 0.5, 0)}
-            MaxSize={new Vector2(800, 600)} Trans Aspect={1.5}
+            MaxSize={new Vector2(1200, 600)} Trans Aspect={2}
             AnchorPoint={new Vector2(0.5, 0.5)} Visible={visible}
         >
             <LBox Size={new UDim2(1, 0, 1, 0)} CornerRadius2={new UDim(0.04, 0)}
@@ -58,7 +58,7 @@ export function MainFrame({
                 <MainFrameHeader atom={atom} />
             </LBox>
             {state.showSidebar && <MainFrameSidebar atom={atom} />}
-            <uiscale ref={scaleRef} />
+            <uiscale ref={scaleRef}  />
         </LBox>
     )
 }

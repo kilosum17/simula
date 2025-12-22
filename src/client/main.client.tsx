@@ -18,10 +18,13 @@ import { randInt } from "shared/help/math";
 import { EggPetsRevealUI } from "shared/egg/ui/egg_pets_reveal_ui";
 import { buyEggSig } from "shared/signals/server_signals";
 import { getPlayer } from "shared/help/assist";
+import { TeleportFrame } from "shared/ui/teleport/TeleportFrame";
 
 mountFrame(<LeftButtons />)
 mountFrame(<InvFrame />)
-mountFrame(<NTooltipFrame />)
+mountFrame(<TeleportFrame />)
+
+mountFrame(<NTooltipFrame />, 3)
 mountFrame(<EggPetsRevealUI />)
 
 new PetsServiceClient()

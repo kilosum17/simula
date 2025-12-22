@@ -122,7 +122,7 @@ export const DEFAULA_SLOT_DATA = {
 } as ISlotData
 
 export interface IStageItem { no: number, name: string }
-export const STAGE_NAMES = [
+export const STAGE_TELEPORT_DATA = [
     { "no": 0, "name": "Spawn" },
     { "no": 1, "name": "Fossil Plains" },
     { "no": 2, "name": "Rocky Ridge" },

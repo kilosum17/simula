@@ -5,7 +5,7 @@ import { mineActionSignal } from "shared/signals/client_signals"
 import { useEventListener } from "@rbxts/pretty-react-hooks"
 import React from "@rbxts/react"
 import { getPlayer, shakeUI } from "shared/help/assist"
-import { LBox, LHover, LImage, LPusher } from "../comps/Wrappers"
+import { LBox, LEmpty, LHover, LImage, LPusher } from "../comps/Wrappers"
 import { CostUI } from "../comps/CostUI"
 import { NTooltip } from "../nitifications/NTooltip"
 import { getPlayerAtts, usePlayerAtts } from "shared/signals/player_attributes"
@@ -63,7 +63,7 @@ export function LeftButtons() {
     const clicked = (name: string) => {
         const actions = {
             "Teleport": () => {
-                // MainPager.togglePage('TELEPORT')
+                toggleFrame('TELEPORT')
             },
             "Hoverboard": () => {
                 // MainPager.setPage('CLOSED', false)
@@ -110,7 +110,7 @@ export function LeftButtons() {
         }
     }
     if (getPlayerAtts().isCrackingEgg) {
-        return <></>
+        return <LEmpty />
     }
     return (
         <LBox Pos={new UDim2(0, 10, y, 0)} Size={new UDim2(0.22, 0, 0.7, 0)} Trans AnchorPoint={new Vector2(0, 0)}

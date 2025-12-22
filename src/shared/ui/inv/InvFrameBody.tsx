@@ -8,7 +8,7 @@ import { petsAtom } from "shared/signals/client_signals";
 import { useAtom } from "shared/signals/atom";
 
 
-export function InvPetsFrame() {
+export function InvFrameBody() {
     const _pets = useAtom(petsAtom)
 
     const petIcons = ITEMS_CONFING.filter(t => t.type === 'PETS').map(p => p.icon)

@@ -735,17 +735,17 @@ export function LLister<T>(props: IProps) {
 
 export const LImage = ({
     Pos, Size, Aspect, Image, Ref, ScaleType, MinSize, MaxSize, Child, ZIndex, CornerRadius, Rotation, Vis,
-    AnchorPoint, Scale,
+    AnchorPoint, Scale, LayoutOrder,
 }: {
     Pos?: UDim2, Size?: UDim2, Aspect?: boolean, MinSize?: Vector2, MaxSize?: Vector2,
     Image: string, ScaleType?: Enum.ScaleType, Ref?: Ref<ImageLabel>,
     Child?: ReactNode, ZIndex?: number, CornerRadius?: UDim, Rotation?: number, Vis?: boolean,
-    AnchorPoint?: Vector2, Scale?: number,
+    AnchorPoint?: Vector2, Scale?: number, LayoutOrder?: number,
 }) => {
     return (
         <imagelabel Image={Image} Size={Size} Position={Pos} BackgroundTransparency={1} ref={Ref}
             ScaleType={ScaleType} ZIndex={ZIndex} Rotation={Rotation} Visible={Vis}
-            AnchorPoint={AnchorPoint} >
+            AnchorPoint={AnchorPoint} LayoutOrder={LayoutOrder} >
             {Aspect && <uiaspectratioconstraint />}
             <uisizeconstraint MinSize={MinSize} MaxSize={MaxSize} />
             <uicorner CornerRadius={CornerRadius} />

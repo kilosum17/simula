@@ -10,5 +10,28 @@ export function useSceenSize() {
         setSize(camera!.ViewportSize);
     })
 
-    return { size }
+    return { size, width: size.X, height: size.Y }
+}
+
+
+
+export function useFrameSize(ref: React.RefObject<Frame>) {
+    const [size, setSize] = useState(new Vector2(0, 0));
+
+    useEffect(() => {
+        const frame = ref.current;
+        if (!frame) return;
+
+        // 1. Set the initial size
+        setSize(frame.AbsoluteSize);
+
+        // 2. Listen for size changes (AbsoluteSize)
+        const connection = frame.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
+            setSize(frame.AbsoluteSize);
+        });
+
+        return () => connection.Disconnect();
+    }, [ref]); // Re-run if the ref changes
+
+    return { size, width: size.X, height: size.Y };
 }

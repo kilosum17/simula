@@ -1,9 +1,10 @@
+
 import React, { useRef } from "@rbxts/react";
 import { MainFrame, TMainFrameAtom } from "../comps/MainFrame";
 import { Atom } from "shared/signals/atom";
 import { GPT_ICONS } from "shared/help/DATA";
 import { icon } from "shared/help/icons";
-import { InvFrameBody } from "./InvFrameBody";
+import { TeleportFrameBody } from "./TeleportFrameBody";
 
 const sidebarItems = [
     { icon: GPT_ICONS.nav_dinopaw, name: 'Pets', ver: 'pets' },
@@ -19,20 +20,20 @@ const headerIcons = [
     { name: "delete", icon: icon('rand') },
 ]
 
-export function InvFrame() {
+export function TeleportFrame() {
     const atom = useRef(new Atom({
         searchText: '',
-        frameKind: "INV",
-        headerIcon: icon("inv_pets"),
-        headerTitle: 'Inventory!',
+        frameKind: "TELEPORT",
+        headerIcon: icon("tools_teleport"),
+        headerTitle: 'Teleport!',
         showSearch: true,
-        showSidebar: true,
+        showSidebar: false,
         sidebarItems,
     } satisfies TMainFrameAtom as TMainFrameAtom))
 
     return (
         <MainFrame atom={atom.current} >
-            <InvFrameBody />
+            <TeleportFrameBody />
         </MainFrame>
     )
 }

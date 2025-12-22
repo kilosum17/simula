@@ -1,5 +1,5 @@
 import { useEventListener } from "@rbxts/pretty-react-hooks"
-import { useState } from "@rbxts/react"
+import { useEffect, useState } from "@rbxts/react"
 import { decodeAttribute, getPlayer } from "shared/help/assist"
 
 export type TPlayerAtts = {
@@ -38,11 +38,14 @@ export const getPlayerAtts = (player?: Player) => {
 export const usePlayerAtts = () => {
     const [data, setData] = useState(getPlayerAtts())
 
-    useEventListener(getPlayer().AttributeChanged, () => {
-        const newData = getPlayerAtts()
-        setData(newData)
-        // print('got data', newData)
-    })
+    useEffect(() => {
+        const connection = getPlayer().AttributeChanged.Connect(() => {
+            const newData = getPlayerAtts()
+            setData(newData)
+            // print('got data', newData)
+        })
+        return () => connection.Disconnect()
+    }, [])
 
     return data
 }
