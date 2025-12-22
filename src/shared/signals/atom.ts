@@ -12,11 +12,11 @@ export class Atom<T> {
         return this._value;
     }
 
-    public update(newValue: T | ((prev: T) => T)): void {
+    public update(newValue: Partial<T> | ((prev: T) => T)): void {
         if (typeIs(newValue, "function")) {
             this._value = (newValue as (prev: T) => T)(this._value);
         } else {
-            this._value = newValue;
+            this._value = { ...this._value, ...newValue };
         }
 
         // Notify all hooks to trigger a re-render

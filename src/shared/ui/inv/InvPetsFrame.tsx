@@ -18,14 +18,14 @@ export function InvPetsFrame() {
         ..._pets, ..._pets, ..._pets, ..._pets, ..._pets, ..._pets, ..._pets, ..._pets,
         ..._pets, ..._pets, ..._pets, ..._pets, ..._pets, ..._pets, ..._pets, ..._pets,
     ]
-    // const pets = [_pets[0]]
-    const pets = _pets
+    const pets = pets2
+    // const pets = _pets
 
     return (
-        <LBox isScroll Vert Pos={new UDim2(0.5, 0, 0.5, 0)} Size={new UDim2(1, 2, 1, 2)}
-            AnchorPoint={new Vector2(0.5, 0.5)} Trans Spacing={new UDim(0.03, 0)} AutoCanvasSize="Y"
-            TrackWidth={22} >
-            <LPusher gapF={20} />
+        <LBox isScroll Vert Pos={new UDim2(0.5, 0, 0.5, 0)} Size={new UDim2(1, 20, 0.95, 0)}
+            AnchorPoint={new Vector2(0.5, 0.5)} Trans Spacing={new UDim(0, 20)} AutoCanvasSize="Y"
+            TrackWidth={15} >
+            <LPusher gapF={10} />
             <LLine Text={`<font color="#36393C">Your Best Pets </font><font color="#00BFFF">24/24</font>`}
                 TextY={30} />
             <LPusher gapF={30} />
@@ -33,7 +33,7 @@ export function InvPetsFrame() {
                 {pets.map((p, i) => {
                     return (
                         <LHover key={p.petConf.name + i} Size={new UDim2(1 / 7, -3, 0, 500)} Aspect={1} Scale={1.08} >
-                            <NTooltip pet={p.petConf} >
+                            <NTooltip data={{ kind: 'PET', petId: p.petConf.id }} >
                                 <LBox Size={new UDim2(1, 0, 1, 0)} NoList Trans  >
                                     <LImage Size={new UDim2(1, 0, 1, 0)} Image={randSample(petIcons)} />
                                     {/* <ModelViewport Size={new UDim2(1, 0, 1, 0)} model={model} /> */}

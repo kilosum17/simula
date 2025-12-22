@@ -1,34 +1,36 @@
 import React, { ReactNode, useState } from "@rbxts/react"
-import { LBox, LLine, LText } from "../comps/Wrappers"
-import { getRankColor, TPetData } from "shared/help/pet_catalog"
+import { LBox, LEmpty, LLine, LText } from "../comps/Wrappers"
+import { getPetConf, getRankColor, TPetData } from "shared/help/pet_catalog"
 import { col } from "shared/help/assist"
 import { GuiService } from "@rbxts/services"
 import { Sync } from "shared/signals/Sync"
+import { Atom, useAtom } from "shared/signals/atom"
+
+export type TTooltipKind = 'PET' | 'TEXT'
 
 type TTooltip = {
     pos: UDim2,
-    pet?: TPetData,
+    petId?: number,
     open?: boolean,
     text?: string,
     maxSize?: Vector2,
+    kind: TTooltipKind,
 }
 
 const defTooltip = {
     pos: new UDim2(),
 } as TTooltip
 
-const tooltipSync = new Sync(defTooltip)
-
-const useTooltip = tooltipSync.getHook()
+const tooltipAtom = new Atom(defTooltip as TTooltip)
 
 export const NTooltipFrame = () => {
-    const [tooltip] = useTooltip()
-    const { pos, pet, open, text, maxSize = new Vector2(150, 0) } = tooltip
+    const state = useAtom(tooltipAtom)
+    const { kind, pos, petId, open, text, maxSize = new Vector2(150, 0) } = state
+    if (!open) return <LEmpty />
 
-    if (!open) return <frame BackgroundTransparency={1} />
-
+    const pet = getPetConf(petId || -1)
     let body = <LText Text="Unkown" AutoSize="XY" TextSize={32} />
-    if (pet) {
+    if (kind === 'PET' && pet) {
         body = <>
             <LText TextSize={32} AutoSize="XY" Text={pet.name} StrokeThickness={1} />
             <LText TextSize={16} AutoSize="XY" Text={pet.rank} Color={getRankColor(pet.rank)}
@@ -36,7 +38,7 @@ export const NTooltipFrame = () => {
             <LLine />
             <LText TextSize={16} AutoSize="XY" Text={pet.info} StrokeThickness={0} />
         </>
-    } else if (text) {
+    } else if (kind === 'TEXT' && text) {
         body = <LText Text={text} AutoSize="XY" TextSize={32} StrokeThickness={0} />
     }
     return (
@@ -50,24 +52,31 @@ export const NTooltipFrame = () => {
 
 export const NTooltip = ({
     Size = new UDim2(1, 0, 1, 0),
-    Pos, pet, children, text, maxSize,
+    Pos, children,
+    data,
 }: {
-    Size?: UDim2, Pos?: UDim2, text?: string,
-    pet?: TPetData, children: ReactNode, maxSize?: Vector2,
+    Size?: UDim2, Pos?: UDim2,
+    children: ReactNode,
+    data: {
+        text?: string,
+        kind: TTooltipKind,
+        petId?: number,
+        maxSize?: Vector2,
+    }
 }) => {
     return (
         <frame Size={Size} Position={Pos} BackgroundTransparency={1}
             Event={{
                 MouseEnter: () => {
-                    tooltipSync.update({ pet, text, maxSize, open: true })
+                    tooltipAtom.update({ ...data, open: true })
                 },
                 MouseLeave: () => {
-                    tooltipSync.update({ open: false, text: undefined, pet: undefined, maxSize: undefined })
+                    tooltipAtom.update({ open: false, text: undefined, petId: undefined, maxSize: undefined })
                 },
                 MouseMoved: (_, x, y) => {
                     const vec = new Vector2(x + 15, y + 15);
                     const pos = new UDim2(0, vec.X, 0, vec.Y)
-                    tooltipSync.update({ pos, pet, text, maxSize, open: true, })
+                    tooltipAtom.update({ ...data, pos, open: true, })
                     // warn("offset", vec, 'pos', x, y, 'frame')
                 }
             }} >

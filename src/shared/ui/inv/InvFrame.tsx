@@ -1,46 +1,38 @@
-import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { LBox } from "../comps/Wrappers";
-import { col } from "shared/help/assist";
-import { InvSidebar } from "./InvSidebar";
-import { InvHeader } from "./InvHeader";
-import { InvPetsFrame } from "./Inv_pets/InvPetsFrame";
-import { useFrameState } from "shared/signals/use_frame_state";
-import { createCloseTween, createOpenTween } from "shared/signals/animations";
+import React, { useRef } from "@rbxts/react";
+import { InvPetsFrame } from "./InvPetsFrame";
+import { MainFrame, TMainFrameAtom } from "../comps/MainFrame";
+import { Atom } from "shared/signals/atom";
+import { GPT_ICONS } from "shared/help/DATA";
+import { icon } from "shared/help/icons";
+
+const sidebarItems = [
+    { icon: GPT_ICONS.nav_dinopaw, name: 'Pets', ver: 'pets' },
+    { icon: GPT_ICONS.nav_backpack, name: 'Boosts', ver: 'boosts' },
+    { icon: GPT_ICONS.nav_potions, name: 'Potions', ver: 'potions' },
+    // { icon: GPT_ICONS.nav_book, name: 'Enchants', ver: 'books' },
+    { icon: GPT_ICONS.nav_hover, name: 'Hovers', ver: 'hoverboards' },
+]
+
+const headerIcons = [
+    { name: "lock", icon: icon('rand') },
+    { name: "grid", icon: icon('rand') },
+    { name: "delete", icon: icon('rand') },
+]
 
 export function InvFrame() {
-    const [visible, setVisible] = useState(false)
-    const { frame } = useFrameState()
-    const scaleRef = useRef<UIScale>()
-    const open = frame === 'INV'
-
-    useEffect(() => {
-        if (!scaleRef.current) return
-        if (open) {
-            setVisible(true)
-            const anim = createOpenTween({ scaler: scaleRef.current! })
-            anim.Play()
-        } else {
-            const anim = createCloseTween({ scaler: scaleRef.current! })
-            anim.Completed.Connect(() => {
-                setVisible(false)
-            })
-            anim.Play()
-        }
-        warn('Inv open changed!', open)
-    }, [open])
+    const atom = useRef(new Atom({
+        searchText: '',
+        frameKind: "INV",
+        headerIcon: icon("inv_pets"),
+        headerTitle: 'Inventory!',
+        showSearch: true,
+        showSidebar: true,
+        sidebarItems,
+    } satisfies TMainFrameAtom as TMainFrameAtom))
 
     return (
-        <LBox NoList Size={new UDim2(0.9, 0, 0.6, 0)} Pos={new UDim2(0.5, 0, 0.5, 0)}
-            MaxSize={new Vector2(800, 600)} Trans
-            AnchorPoint={new Vector2(0.5, 0.5)} Visible={visible}
-        >
-            <LBox Size={new UDim2(1, 0, 1, 0)} CornerRadius2={new UDim(0.04, 0)}
-                BgPatterns StokeColor={col('black')} StrokeThickness={5} NoList  >
-                <InvPetsFrame />
-                <InvHeader />
-            </LBox>
-            <InvSidebar />
-            <uiscale ref={scaleRef} />
-        </LBox>
+        <MainFrame atom={atom.current} >
+            <InvPetsFrame />
+        </MainFrame>
     )
 }

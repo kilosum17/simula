@@ -122,7 +122,7 @@ export function LeftButtons() {
                     return (
                         <LBox Size={new UDim2(0.3, -5, 0, 100)} Aspect={1} Trans Spacing={new UDim(0.05, 0)}
                             MinSize={new Vector2(45, 45)} MaxSize={new Vector2(75, 75)} >
-                            <NTooltip text={text} maxSize={new Vector2(200, 10000)} >
+                            <NTooltip data={{ kind: 'TEXT', text, maxSize: new Vector2(200, 10000) }}>
                                 <LHover sfx={false} onClick={() => clicked(m.name)} >
                                     <LImage Image={m.icon} Size={new UDim2(1, 0, 1, 0)} Aspect />
                                 </LHover>

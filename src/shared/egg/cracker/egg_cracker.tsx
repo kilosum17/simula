@@ -1,13 +1,15 @@
 import { RunService, TweenService, UserInputService, Workspace } from "@rbxts/services"
-import { getCameraWorldBounds, getEggModel, getEggState, getRelativeCenter, GridMaps } from "./egg_utils"
+import { getCameraWorldBounds, getEggModel, getEggState, getRelativeCenter, GridMaps } from "../egg_utils"
 import { createEggPopTween } from "shared/signals/animations"
 import { icon } from "shared/help/icons"
 import { hatchedDropperAtom } from "shared/signals/atoms"
-import { randInt } from "shared/help/math"
 import { buyEggSig } from "shared/signals/server_signals"
-import { getPlayerAtts } from "shared/signals/player_attributes"
 import { getPlayer } from "shared/help/assist"
 import { Remotes } from "shared/signals/remotes"
+import { Atom } from "shared/signals/atom"
+import { mountFrame } from "shared/ui/create_root"
+import { EggCrackerInfo } from "./egg_cracker_info_ui"
+import React from "@rbxts/react"
 
 const MAX_CLICKS = 3
 const faces = [Enum.NormalId.Front, Enum.NormalId.Back, Enum.NormalId.Left, Enum.NormalId.Right]
@@ -15,6 +17,7 @@ const faces = [Enum.NormalId.Front, Enum.NormalId.Back, Enum.NormalId.Left, Enum
 export class EggCracker {
     camera: Camera
     clicks = 0
+    atom = new Atom({ open: false })
 
     constructor() {
         this.camera = Workspace.Camera
@@ -32,7 +35,7 @@ export class EggCracker {
         buyEggSig.Connect((_player, eggNo, count) => {
             this.startCracking(eggNo, count as 1)
         })
-
+        mountFrame(<EggCrackerInfo cracker={this} />, 2)
     }
 
     onClickEggs() {
@@ -66,6 +69,7 @@ export class EggCracker {
         this.clicks = 0
         this.eggNo = eggNo
         this.eggCount = count
+        this.atom.update({ open: true })
         getPlayer().SetAttribute('isCrackingEgg', true)
         const { modelName } = getEggState(eggNo)
         const eggPart = getEggModel(modelName)
@@ -148,7 +152,8 @@ export class EggCracker {
         const info = new TweenInfo(0.03, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, true);
 
         const tempValue = new Instance("NumberValue");
-        const tween = TweenService.Create(tempValue, info, { Value: math.rad(15) });
+        const Value = math.rad(15 + (this.clicks + 1) * 5)
+        const tween = TweenService.Create(tempValue, info, { Value });
 
         const connection = tempValue.GetPropertyChangedSignal("Value").Connect(() => {
             this.shakeOffset = CFrame.Angles(0, 0, tempValue.Value).mul(CFrame.Angles(math.random() * 0.1, 0, 0));
@@ -163,6 +168,7 @@ export class EggCracker {
     }
 
     stopCracking() {
+        this.atom.update({ open: false })
         getPlayer().SetAttribute('isCrackingEgg', false)
         this.connection?.Disconnect()
         this.eggs?.forEach(egg => {

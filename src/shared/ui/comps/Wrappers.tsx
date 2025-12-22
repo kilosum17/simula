@@ -5,7 +5,6 @@ import { Players, TweenService } from "@rbxts/services"
 import { col, getMousePos, getPlayer } from "shared/help/assist"
 import { BUY_IMG, colors, GPT_ICONS, icons } from "shared/help/DATA"
 import { playSoundType } from "shared/help/play_sound"
-import motion from "@rbxts/react-motion"
 import { cursors, icon } from "shared/help/icons"
 
 export type TChildren = '_jsx_children'
@@ -19,7 +18,7 @@ type TLBoxProps = {
     SpaceY?: UDim, SpaceX?: UDim, SpaceT?: UDim, SpaceB?: UDim, SpaceL?: UDim, SpaceR?: UDim,
     Spacing?: UDim, NoList?: boolean, TransVal?: number, Ref?: Ref<Frame>,
     Aspect?: number, isScroll?: boolean, RandomBG?: boolean,
-    LayoutOrder?: number, SortOrder?: 'Name' | 'LayoutOrder', ScrollThickness?: number,
+    LayoutOrder?: number, SortOrder?: 'Name' | 'LayoutOrder',
     children?: React.ReactNode,
     AutoCanvasSize?: "X" | "Y" | "XY",
     TrackWidth?: number,
@@ -31,7 +30,7 @@ export const LBox = (props: TLBoxProps) => {
     const { Size, Pos, Trans, Vert, StokeColor, StrokeThickness = 0, AutoSize, Aspect = 0,
         VAlign, HAlign, Padding, Center, Visible, Background, AnchorPoint, MaxSize, TransVal, Wraps,
         SpaceY, SpaceX, SpaceL, SpaceR, SpaceB, SpaceT, NoList = false, MinSize, BorderSizePixel, ZIndex, CornerRadius2,
-        isScroll, SortOrder, LayoutOrder, ScrollThickness, RandomBG, Spacing, Ref,
+        isScroll, SortOrder, LayoutOrder, RandomBG, Spacing, Ref,
         HoverEffect, BgPatterns,
     } = props
 
@@ -66,8 +65,8 @@ export const LBox = (props: TLBoxProps) => {
     if (isScroll) {
         return <scrollingframe  {...scrollProps}
             Size={Size} Position={Pos} BackgroundTransparency={bgTrans}
-            Visible={Visible} BackgroundColor3={bg} AnchorPoint={AnchorPoint} BorderSizePixel={BorderSizePixel}
-            ZIndex={ZIndex} AutomaticSize={AutoSize} LayoutOrder={LayoutOrder} ScrollBarThickness={ScrollThickness}
+            Visible={Visible} BackgroundColor3={bg} AnchorPoint={AnchorPoint} BorderSizePixel={BorderSizePixel || 0}
+            ZIndex={ZIndex} AutomaticSize={AutoSize} LayoutOrder={LayoutOrder}
             AutomaticCanvasSize={"Y"}
         >
             {children}
@@ -81,7 +80,8 @@ export const LBox = (props: TLBoxProps) => {
 
     if (BgPatterns) {
         return (
-            <imagelabel {...frameProps} ref={Ref as Ref<ImageLabel>} Image={icon('bg_patterns')} >
+            <imagelabel {...frameProps} ref={Ref as Ref<ImageLabel>} Image={icon('bg_patterns')}
+                BackgroundColor3={col('white')} >
                 {children}
             </imagelabel >
         )
@@ -566,6 +566,7 @@ export const LText = ({
 export const LTextbox = ({
     Text, Size, Pos, StrokeThickness = 0, StrokeColor, Align, AnchorPoint, RichText, ZIndex, Visible = true,
     TextSize = 0, AutoSize, Color, LayoutOrder, MaxSize = 0, MinSize = 0, Ref, Placeholder, StrokeMode, CornerRadius,
+    onChange,
 }: {
     Pos?: UDim2, Size?: UDim2,
     StrokeThickness?: number, StrokeColor?: Color3, Align?: 'Left' | 'Right' | 'Center',
@@ -583,12 +584,14 @@ export const LTextbox = ({
     Placeholder?: string,
     StrokeMode?: "Border" | "Contextual",
     CornerRadius?: UDim,
+    onChange?: (val: string) => void,
 }) => {
 
     return (
         <textbox ref={Ref} Visible={Visible} Text={Text} TextColor3={Color} Size={Size} Position={Pos} AnchorPoint={AnchorPoint} ZIndex={ZIndex}
             Font={'FredokaOne'} TextScaled={TextSize === 0} BackgroundTransparency={1} TextXAlignment={Align} RichText={RichText} TextSize={TextSize}
             AutomaticSize={AutoSize} LayoutOrder={LayoutOrder} PlaceholderText={Placeholder}
+            Event={{ InputChanged: rbx => onChange?.(rbx.Text) }}
         >
             {StrokeThickness > 0 && <uistroke Thickness={StrokeThickness} Color={StrokeColor} ApplyStrokeMode={StrokeMode} />}
             {(MaxSize > 0 || MinSize > 0) && <uitextsizeconstraint MaxTextSize={MaxSize} MinTextSize={MinSize} />}
@@ -674,18 +677,16 @@ export const Tooltip = (props: { Text: string, Size?: UDim2, Position?: UDim2, c
                 MouseEnter: () => setVis(true),
                 MouseLeave: () => setVis(false)
             }} >
-            <>
-                <frame Size={new UDim2(1, 0, 1, 0)} Position={new UDim2(0, 0, 0, 0)} BackgroundTransparency={1} >
-                    {props.children}
-                    <uigridlayout CellSize={new UDim2(1, 0, 1, 0)} />
-                </frame>
-                <LBox Visible={vis} Pos={new UDim2(0.5, 0, 0.5, 0)} AutoSize={'XY'} ZIndex={10}
-                    Background={colors.backdrop.base} ScrollThickness={2} StokeColor={colors.backdrop.stroke}
-                    CornerRadius2={new UDim(0, 5)} SpaceX={new UDim(0, 5)} SpaceY={new UDim(0, 5)} NoList >
-                    <LText Text={Text} AnchorPoint={new Vector2(0.5, 0.5)} Pos={UDim2.fromScale(0.5, 0.5)}
-                        Size={new UDim2(0, 0, 0, 40)} Var='black' ZIndex={10} TextSize={24} AutoSize="X" />
-                </LBox>
-            </>
+            <frame Size={new UDim2(1, 0, 1, 0)} Position={new UDim2(0, 0, 0, 0)} BackgroundTransparency={1} >
+                {props.children}
+                <uigridlayout CellSize={new UDim2(1, 0, 1, 0)} />
+            </frame>
+            <LBox Visible={vis} Pos={new UDim2(0.5, 0, 0.5, 0)} AutoSize={'XY'} ZIndex={10}
+                Background={colors.backdrop.base} TrackWidth={2} StokeColor={colors.backdrop.stroke}
+                CornerRadius2={new UDim(0, 5)} SpaceX={new UDim(0, 5)} SpaceY={new UDim(0, 5)} NoList >
+                <LText Text={Text} AnchorPoint={new Vector2(0.5, 0.5)} Pos={UDim2.fromScale(0.5, 0.5)}
+                    Size={new UDim2(0, 0, 0, 40)} Var='black' ZIndex={10} TextSize={24} AutoSize="X" />
+            </LBox>
         </frame>
     )
 }
@@ -1007,4 +1008,8 @@ export const LProgressBar = ({ val, Size, Pos }: {
             <uistroke Thickness={2} />
         </frame>
     )
+}
+
+export const LEmpty = () => {
+    return <frame BackgroundTransparency={1} />
 }
