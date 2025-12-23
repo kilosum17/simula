@@ -1,24 +1,22 @@
 import React, { useRef } from "@rbxts/react";
 import { STAGE_TELEPORT_DATA } from "shared/help/DATA";
-import { LBox, LEmpty, LHover, LImage, LLine, LPusher, LText } from "shared/ui/comps/Wrappers";
+import { LBox, LHover, LImage, LLine, LPusher, LText } from "shared/ui/comps/Wrappers";
 import { icon } from "shared/help/icons";
 import { col } from "shared/help/assist";
 import { usePlayerAtts } from "shared/signals/player_attributes";
-import { getCellsData, TCellData } from "./teleport_utils";
+import { getCellsData } from "./teleport_utils";
 import { teleport_to } from "./teleport_mover";
 import { canNotAtom } from "shared/signals/atoms";
 import { useFrameState } from "shared/signals/use_frame_state";
 import { RunService } from "@rbxts/services";
 
+const stagesCount = STAGE_TELEPORT_DATA.size()
+const cellsData = getCellsData(stagesCount)
 
 export function TeleportFrameBody() {
-    const stagesCount = STAGE_TELEPORT_DATA.size()
     const cols = 5
     const ref = useRef<Frame>()
-    const { inStageNo } = usePlayerAtts({ inStageNo: 0, progStage: 0 })
-
-    const cellsData = getCellsData(stagesCount)
-    warn('Teleport cell data', cellsData, 'stage', inStageNo)
+    warn('Teleport render stage')
 
     return (
         <LBox isScroll Vert Pos={new UDim2(0.5, 0, 0.5, 0)} Size={new UDim2(1, 20, 0.95, 0)}
@@ -28,7 +26,7 @@ export function TeleportFrameBody() {
             <LBox Size={new UDim2(1, 0, 0, 0)} AutoSize="Y" Wraps HAlign="Center" VAlign="Center" Trans SortOrder="LayoutOrder"
                 Ref={ref} >
                 {cellsData.map((cell, i) => {
-                    return <TeleportCell key={cell.idx} idx={i} colsNo={cols} cellsData={cellsData} />
+                    return <TeleportCell key={cell.idx} idx={i} colsNo={cols} />
                 })}
             </LBox>
             <LPusher gapF={40} />
@@ -36,15 +34,15 @@ export function TeleportFrameBody() {
     )
 }
 
-const TeleportCell = ({ idx, colsNo, cellsData }: {
-    idx: number, colsNo: number, cellsData: TCellData[]
+const TeleportCell = ({ idx, colsNo }: {
+    idx: number, colsNo: number,
 }) => {
     const { closeFrame } = useFrameState()
+    const { inStageNo, progStage } = usePlayerAtts({ inStageNo: 0, progStage: 0 })
     const colsCount = colsNo * 2 - 1
     const data = cellsData[idx]
     const arrowSize = (1 / colsCount) * 0.4
     const cellSize = (1 - arrowSize * (colsNo - 1)) / colsNo
-    const { inStageNo, progStage } = usePlayerAtts({ inStageNo: 0, progStage: 0 })
     let stageData = STAGE_TELEPORT_DATA[data.idx]
     const isExtra = !stageData
     stageData = isExtra ? STAGE_TELEPORT_DATA[0] : stageData
@@ -71,7 +69,7 @@ const TeleportCell = ({ idx, colsNo, cellsData }: {
         })
     }
 
-    // warn('Teleport cell render', idx)
+    if (idx === 0) warn('Teleport cell render')
 
     if (data.isArrow) {
         const size = data.isGap ? 1 / colsCount : arrowSize

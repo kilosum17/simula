@@ -73,16 +73,18 @@ export const teleport_to = (stageNo: number) => {
         }
 
         recoilTween.Play();
-        recoilTween.Completed.Connect(() => recoverTween.Play());
+        recoilTween.Completed.Wait()
+        recoverTween.Play()
+        recoverTween.Completed.Wait()
     }
 
     let isRun = false
     const runTeleport = () => {
-        task.wait(1.5)
-        fireCanon()
-        task.wait(1)
         if (isRun) return
         isRun = true
+        task.wait(1.5)
+        fireCanon()
+        task.wait(0.2)
         teleportAtom.update({ loaded: 1 })
         const m1 = createMotion(0)
         const startCam = game.Workspace.Camera.CFrame

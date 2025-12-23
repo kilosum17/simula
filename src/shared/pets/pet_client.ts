@@ -1,9 +1,9 @@
-import { RunService, Workspace } from "@rbxts/services"
+import { Workspace } from "@rbxts/services"
 import { TPetBody } from "./pet"
 import { PetsMover } from "./pets_mover"
 import { PetsServiceClient } from "./pets_service_client"
 import { PetBouncer } from "./pet_bouncer"
-import { getFossilsFolder, getHRP, getHumanoid } from "shared/help/assist"
+import { getFossilsFolder, getHRP } from "shared/help/assist"
 import { randSample } from "shared/help/math"
 import { PetMineActions } from "./pet_mine_actions"
 import { Remotes } from "shared/signals/remotes"
@@ -23,10 +23,10 @@ export class PetClient {
     status = "FOLLOW" as "FOLLOW" | "GOMINE" | "MINING"
     goingToMine = false
     isMining = false
-    connection: RBXScriptConnection
+    // connection: RBXScriptConnection
     isFrozen = false
     targetPos = new Vector3()
-
+    petIdx = 0
 
     constructor(petsMover: PetsMover, body: TPetBody) {
         this.petsMover = petsMover
@@ -34,23 +34,6 @@ export class PetClient {
         this._body = body
         this.petBouncher = new PetBouncer()
         this.petMineActions = new PetMineActions(this)
-
-        let i = 0
-        const hrp = getHRP()
-        this.connection = RunService.Heartbeat.Connect(() => {
-            if (!body.Parent) {
-                this.killPet()
-                return
-            }
-            i++
-            let skips = petsMover.pets.size()
-            const playerMoving = hrp.AssemblyLinearVelocity.Magnitude > 0.1
-            if (playerMoving) skips *= 0.3
-            const rate = math.clamp(skips, 3, 12)
-            if (i % rate === 0) {
-                this.update()
-            }
-        })
 
         freezePetsSig.Connect((freeze) => {
             this.isFrozen = freeze
@@ -63,6 +46,17 @@ export class PetClient {
             }
         })
 
+    }
+
+    heartBeat(no: number) {
+        if (!this._body.Parent) {
+            this.killPet()
+            return
+        }
+        const petIdx = (this._body.GetAttribute("idx") || 0) as number
+        if (no % (petIdx + 1) === 0) {
+            this.update()
+        }
     }
 
     startMining() {
@@ -83,13 +77,13 @@ export class PetClient {
         const fosFold = getFossilsFolder(this.petsMover.stageNo)
         this._mineSpots = fosFold.GetDescendants()
             .filter(c => c.HasTag('spot')) as Part[]
-        const petIdx = (pet.GetAttribute("idx") || 0) as number
+        this.petIdx = (pet.GetAttribute("idx") || 0) as number
         const hrp = getHRP()
         if (this.status === "FOLLOW") {
             const frontPos = hrp.Position.add(hrp.CFrame.LookVector.mul(100))
-            let pos = this.petCServ.petPos.pos[petIdx]
+            let pos = this.petCServ.petPos.pos[this.petIdx]
             pos = this._raycastPos(pet, pos)
-            pos = this.petBouncher.update(pos, petIdx * 10000)
+            pos = this.petBouncher.update(pos, this.petIdx * 10000)
             this.targetPos = pos
             if (!this.isFrozen) {
                 pet.BodyPosition.Position = pos
@@ -112,26 +106,25 @@ export class PetClient {
             }
             this.goingToMine = true
             this.mineSpot = this._chooseMineSpot()
-            Remotes.Client.Get("SetAttribute").SendToServer(this.mineSpot, "occupied", true)
-
-            const frontPos = this.mineSpot.Position.add(this.mineSpot.CFrame.LookVector.mul(100))
-            let pos = this.mineSpot.Position
-            pos = this.petBouncher.update(pos, petIdx * 10000)
-            this.targetPos = pos
-            if (!this.isFrozen) {
-                pet.BodyPosition.Position = pos
-                pet.BodyGyro.CFrame = new CFrame(pos, frontPos)
+            if (this.mineSpot) {
+                Remotes.Client.Get("SetAttribute").SendToServer(this.mineSpot, "occupied", true)
+                const frontPos = this.mineSpot.Position.add(this.mineSpot.CFrame.LookVector.mul(100))
+                let pos = this.mineSpot.Position
+                pos = this.petBouncher.update(pos, this.petIdx * 10000)
+                this.targetPos = pos
+                if (!this.isFrozen) {
+                    pet.BodyPosition.Position = pos
+                    pet.BodyGyro.CFrame = new CFrame(pos, frontPos)
+                }
             }
         }
 
     }
 
-    freePart = new Instance('Part')
     _chooseMineSpot() {
         const spots = this._mineSpots.filter(c => !c.GetAttribute('occupied'))
         if (spots.size() === 0) {
-            warn("No free spots")
-            return randSample(this._mineSpots)
+            return undefined
         }
         return randSample(spots)
     }
@@ -165,7 +158,7 @@ export class PetClient {
 
     killPet() {
         this.petsMover.removePetClient(this._body)
-        this.connection.Disconnect()
+        // this.connection.Disconnect()
     }
 
 }

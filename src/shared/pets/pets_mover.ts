@@ -3,6 +3,7 @@ import { TPetBody } from "./pet";
 import { PetBouncer } from "./pet_bouncer";
 import { getPlayerPetsFolder } from "./pet_utils";
 import { PetClient } from "./pet_client";
+import { RunService } from "@rbxts/services";
 
 export class PetsMover {
     petCServ: PetsServiceClient
@@ -10,6 +11,7 @@ export class PetsMover {
     pets = [] as PetClient[]
     moverStatus = "FOLLOW" as "FOLLOW" | "GOMINE" | "MINING"
     stageNo = 0
+    connection: RBXScriptConnection
 
     constructor(petCServ: PetsServiceClient) {
         this.petCServ = petCServ
@@ -21,8 +23,17 @@ export class PetsMover {
         })
         fold.ChildAdded.Connect(c => this.addPetClient(c as TPetBody))
         fold.ChildRemoved.Connect(c => this.removePetClient(c as TPetBody))
-    
-        
+
+        let i = 0
+        let j = 0
+        this.connection = RunService.Heartbeat.Connect(() => {
+            j++
+            if (j % 4 === 0) return
+            i++
+            this.pets.forEach(pet => {
+                pet.heartBeat(i)
+            })
+        })
     }
 
     addPetClient(petBody: TPetBody) {

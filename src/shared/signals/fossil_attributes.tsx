@@ -6,6 +6,7 @@ export type TFossilAtts = {
     maxHealth: number,
     guid: number,
     lastMineTime: number,
+    accessed: boolean,
 }
 
 export const FOSSIL_ATTS_DEF = {
@@ -14,6 +15,7 @@ export const FOSSIL_ATTS_DEF = {
     killed: false,
     guid: 0,
     lastMineTime: 0,
+    accessed: false,
 } as TFossilAtts
 
 export const getFossilAtts = (fossil: BasePart) => {

@@ -4,6 +4,7 @@ import { mountBillboardGui } from "shared/ui/create_root"
 import { FossilBoardOne } from "./FossilBoardOne"
 import React from "@rbxts/react"
 import ReactRoblox from "@rbxts/react-roblox"
+import { getFossilAtts } from "shared/signals/fossil_attributes"
 
 export class FossilBoards {
     billboards = [] as ReactRoblox.Root[]
@@ -18,6 +19,9 @@ export class FossilBoards {
             this.billboards.forEach(root => {
                 root.unmount()
             })
+            this.connections.forEach(conn => {
+                conn.Disconnect()
+            })
             print("Enter", areaNo, this.prevAreaNo)
             this.prevAreaNo = areaNo
             const fold = getFossilsFolder(areaNo)
@@ -30,8 +34,18 @@ export class FossilBoards {
         })
     }
 
+    connections = [] as RBXScriptConnection[]
     mountFossilBoard(fos: BasePart) {
-        if (!fos.IsA('BasePart') || !fos.HasTag('fossil')) return
+        if (!fos.IsA('BasePart') || !fos.HasTag('fossil') || fos.HasTag('HasUI')) return
+        if (!getFossilAtts(fos).accessed) {
+            const conn = fos.AttributeChanged.Connect((name) => {
+                if (name !== 'accessed') return
+                this.mountFossilBoard(fos)
+            })
+            this.connections.push(conn)
+            return
+        }
+        fos.AddTag('HasUI')
         const root = mountBillboardGui({
             part: fos,
             size: new UDim2(10, 0, 0.65, 0),

@@ -148,7 +148,6 @@ export class Fossil {
         });
         scaleTween.Completed.Connect(() => {
             const damage = randInt(5, 15)
-            print("Click mine", damage)
             task.wait(0.02)
             this.takeDamage(damage)
         });
@@ -173,6 +172,7 @@ export class Fossil {
         if (createDrops) {
             addDropsSig.Fire(this.body.GetPivot().Position)
         }
+        this.body.SetAttribute('accessed', true)
     }
 
     kill() {
