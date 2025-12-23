@@ -35,14 +35,16 @@ export const getPlayerAtts = (player?: Player) => {
     return { ...PLAYER_ATTS_DEF, ...decData } as TPlayerAtts
 }
 
-export const usePlayerAtts = () => {
-    const [data, setData] = useState(getPlayerAtts())
+export const usePlayerAtts = <T extends Partial<TPlayerAtts>,>(def: T) => {
+    const [data, setData] = useState(getPlayerAtts() as T)
 
     useEffect(() => {
-        const connection = getPlayer().AttributeChanged.Connect(() => {
-            const newData = getPlayerAtts()
-            setData(newData)
-            // print('got data', newData)
+        const connection = getPlayer().AttributeChanged.Connect((name) => {
+            if (def[name as 'gems']) {
+                const newData = getPlayerAtts() as T
+                setData(newData)
+                // print('got data', newData)
+            }
         })
         return () => connection.Disconnect()
     }, [])

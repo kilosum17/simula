@@ -13,7 +13,7 @@ export function TeleportFrameBody() {
     const ref = useRef<Frame>()
 
     const cellsData = getCellsData(stagesCount)
-    warn('cell data', cellsData)
+    warn('Teleport cell data', cellsData)
 
     return (
         <LBox isScroll Vert Pos={new UDim2(0.5, 0, 0.5, 0)} Size={new UDim2(1, 20, 0.95, 0)}
@@ -38,7 +38,7 @@ const TeleportCell = ({ idx, colsNo, cellsData }: {
     const data = cellsData[idx]
     const arrowSize = (1 / colsCount) * 0.4
     const cellSize = (1 - arrowSize * (colsNo - 1)) / colsNo
-    const { inStageNo, progStage } = usePlayerAtts()
+    const { inStageNo, progStage } = usePlayerAtts({ inStageNo: 0, progStage: 0 })
     const stageData = STAGE_TELEPORT_DATA[data.idx]
     if (!stageData) return <LEmpty />
     const isActive = (inStageNo + 1) === stageData.no
@@ -50,6 +50,7 @@ const TeleportCell = ({ idx, colsNo, cellsData }: {
         if (isLocked) return { start: col('gray_light'), end: col('gray_dark') }
         return { start: col('green_light'), end: col('green_dark') }
     })()
+    warn('Teleport cell render', idx)
 
     if (data.isArrow) {
         const size = data.isGap ? 1 / colsCount : arrowSize

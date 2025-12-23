@@ -1,6 +1,9 @@
 {
-	"name": "roblox-ts-game",
-	"globIgnorePaths": ["**/package.json", "**/tsconfig.json"],
+	"name": "simulator-game",
+	"globIgnorePaths": [
+		"**/package.json",
+		"**/tsconfig.json"
+	],
 	"tree": {
 		"$className": "DataModel",
 		"ServerScriptService": {

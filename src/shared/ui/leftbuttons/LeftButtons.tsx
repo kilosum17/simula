@@ -31,7 +31,7 @@ export function LeftButtons() {
     const ref1 = useRef<UIScale>()
     const ref2 = useRef<UIScale>()
     const { toggleFrame } = useFrameState()
-    const { coins: cash, gems } = usePlayerAtts()
+    const { coins: cash, gems } = usePlayerAtts({ coins: 0, gems: 0 })
     const { size } = useSceenSize()
 
     const isDesk = size.Y > 430
