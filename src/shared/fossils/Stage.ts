@@ -1,18 +1,18 @@
-import { DEF_AREA_CACHE } from "shared/help/DATA"
+import { DEF_AREA_CACHE, getStagePos } from "shared/help/DATA"
 import { Fossil } from "./fossil"
 import { STAGE_CONF } from "shared/help/CONF"
-import { chooseRandom, col, ensureInstance, getFossilsFolder } from "shared/help/assist"
+import { chooseRandom, col, ensureInstance } from "shared/help/assist"
 
 export class Stage {
     stageNo: number
     center: Vector3
     fossils = [] as Fossil[]
     hidePart = new Instance('Part')
+    curGuid = 0
 
     constructor(stageNo: number) {
         this.stageNo = stageNo
-        const _pos = DEF_AREA_CACHE[tostring(stageNo + 1)]
-        this.center = new Vector3(_pos[0], _pos[1], _pos[2])
+        this.center = getStagePos(stageNo + 1)
         ensureInstance({ path: `Targets.Fossils.${stageNo}` })
         ensureInstance({ path: `Targets.Drops.${stageNo}` })
     }
@@ -105,7 +105,8 @@ export class Stage {
     // }
 
     addFossilAt(pos: Vector3) {
-        const fos = new Fossil(this, pos)
+        const fos = new Fossil(this, pos, this.curGuid)
+        this.curGuid++
         this.fossils.push(fos)
     }
 

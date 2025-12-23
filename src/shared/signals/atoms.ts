@@ -2,9 +2,9 @@ import { Atom } from "./atom";
 
 // UI atoms
 
-export const canNotBuyAtom = new Atom({
+export const canNotAtom = new Atom({
     open: false,
-    kind: '' as 'STAGE' | 'EGG'
+    kind: '' as 'STAGE' | 'EGG' | "LOCKED_AREA" | 'ALREADY_IN_AREA'
 })
 
 

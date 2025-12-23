@@ -3,10 +3,11 @@ import { TPetBody } from "./pet"
 import { PetsMover } from "./pets_mover"
 import { PetsServiceClient } from "./pets_service_client"
 import { PetBouncer } from "./pet_bouncer"
-import { getFossilsFolder, getHRP } from "shared/help/assist"
+import { getFossilsFolder, getHRP, getHumanoid } from "shared/help/assist"
 import { randSample } from "shared/help/math"
 import { PetMineActions } from "./pet_mine_actions"
 import { Remotes } from "shared/signals/remotes"
+import { freezePetsSig } from "shared/signals/server_signals"
 
 const rayParams = new RaycastParams()
 const RAY_DIST = 15
@@ -23,6 +24,9 @@ export class PetClient {
     goingToMine = false
     isMining = false
     connection: RBXScriptConnection
+    isFrozen = false
+    targetPos = new Vector3()
+
 
     constructor(petsMover: PetsMover, body: TPetBody) {
         this.petsMover = petsMover
@@ -32,16 +36,33 @@ export class PetClient {
         this.petMineActions = new PetMineActions(this)
 
         let i = 0
+        const hrp = getHRP()
         this.connection = RunService.Heartbeat.Connect(() => {
             if (!body.Parent) {
                 this.killPet()
                 return
             }
             i++
-            if (i % 1 === 0) {
+            let skips = petsMover.pets.size()
+            const playerMoving = hrp.AssemblyLinearVelocity.Magnitude > 0.1
+            if (playerMoving) skips *= 0.3
+            const rate = math.clamp(skips, 3, 12)
+            if (i % rate === 0) {
                 this.update()
             }
         })
+
+        freezePetsSig.Connect((freeze) => {
+            this.isFrozen = freeze
+            if (!freeze) {
+                const pet = this._body
+                const cframe = new CFrame(this.targetPos, getHRP().Position)
+                pet.PivotTo(cframe)
+                pet.BodyPosition.Position = this.targetPos
+                pet.BodyGyro.CFrame = cframe
+            }
+        })
+
     }
 
     startMining() {
@@ -69,8 +90,11 @@ export class PetClient {
             let pos = this.petCServ.petPos.pos[petIdx]
             pos = this._raycastPos(pet, pos)
             pos = this.petBouncher.update(pos, petIdx * 10000)
-            pet.BodyPosition.Position = pos
-            pet.BodyGyro.CFrame = new CFrame(pos, frontPos)
+            this.targetPos = pos
+            if (!this.isFrozen) {
+                pet.BodyPosition.Position = pos
+                pet.BodyGyro.CFrame = new CFrame(pos, frontPos)
+            }
         }
 
         if (this.status === "MINING") {
@@ -93,8 +117,11 @@ export class PetClient {
             const frontPos = this.mineSpot.Position.add(this.mineSpot.CFrame.LookVector.mul(100))
             let pos = this.mineSpot.Position
             pos = this.petBouncher.update(pos, petIdx * 10000)
-            pet.BodyPosition.Position = pos
-            pet.BodyGyro.CFrame = new CFrame(pos, frontPos)
+            this.targetPos = pos
+            if (!this.isFrozen) {
+                pet.BodyPosition.Position = pos
+                pet.BodyGyro.CFrame = new CFrame(pos, frontPos)
+            }
         }
 
     }

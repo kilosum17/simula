@@ -28,7 +28,7 @@ export function FossilBoardOne({ fos }: {
 
     const vis = (() => {
         const dur = math.abs(os.time() - lastMine)
-        // return true
+        print('fossil min dur', dur, lastMine)
         return !killed && dur < 4
     })()
 

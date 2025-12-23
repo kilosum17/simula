@@ -9,6 +9,7 @@ export const getCellsData = (count: number) => {
     const cols = 5
     const rows = math.ceil(count / cols)
     const colsCount = cols * 2 - 1
+    // const extraCols = 
 
     const data = [] as TCellData[]
     let idx = 0

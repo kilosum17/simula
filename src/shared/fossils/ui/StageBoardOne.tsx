@@ -4,7 +4,7 @@ import { RunService } from "@rbxts/services"
 import { col, getStageBoardPart } from "shared/help/assist"
 import { shouldRebirth } from "shared/help/CONF"
 import { getStageCostV2, icons } from "shared/help/DATA"
-import { canNotBuyAtom } from "shared/signals/atoms"
+import { canNotAtom } from "shared/signals/atoms"
 import { usePlayerAtts } from "shared/signals/player_attributes"
 import { Remotes } from "shared/signals/remotes"
 import { LRecButton } from "shared/ui/comps/base_comps"
@@ -22,7 +22,7 @@ export const StageBoardOne = ({ stageNo }: {
     const onBuyStage = () => {
         warn("Clicked buy", stageNo)
         if (coins < cost) {
-            canNotBuyAtom.update({ open: true, kind: "STAGE" })
+            canNotAtom.update({ open: true, kind: "STAGE" })
             return
         }
         Remotes.Client.Get('BuyStage').SendToServer(stageNo - 1)

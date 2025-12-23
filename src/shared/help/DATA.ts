@@ -349,6 +349,11 @@ export const DEF_AREA_CACHE = {
     '94': [9066.97851, 2.89766, -4971.72851],
 } as { [key: string]: number[] }
 
+export const getStagePos = (stageNo: number) => {
+    const _pos = DEF_AREA_CACHE[tostring(stageNo)]
+    return new Vector3(_pos[0], _pos[1], _pos[2])
+}
+
 export const nearestStage = (player: Player) => {
     let dist = 10000000000
     let area = 0

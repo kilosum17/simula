@@ -21,6 +21,8 @@ export class PetsMover {
         })
         fold.ChildAdded.Connect(c => this.addPetClient(c as TPetBody))
         fold.ChildRemoved.Connect(c => this.removePetClient(c as TPetBody))
+    
+        
     }
 
     addPetClient(petBody: TPetBody) {

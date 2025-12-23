@@ -68,7 +68,7 @@ export function CostUI(props: ICProps) {
             {validData.map((d, i) => {
                 const cashInfo = formatNumber(d.cash)
                 return (
-                    <LBox Center LayoutOrder={1000 - i} AutoSize="X" Size={new UDim2(0, 0, 1, 0)} Trans >
+                    <LBox key={d.img} Center LayoutOrder={1000 - i} AutoSize="X" Size={new UDim2(0, 0, 1, 0)} Trans >
                         <LImage Size={new UDim2(0, 1000, 0.97, 0)} Image={d.img} Aspect
                             MinSize={minSize} />
                         <LPusher gapS={0.05} />

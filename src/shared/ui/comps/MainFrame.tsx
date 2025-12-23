@@ -44,7 +44,7 @@ export function MainFrame({
             })
             anim.Play()
         }
-        warn(`${state.frameKind} changed!`, open)
+        // warn(`${state.frameKind} changed!`, open)
     }, [open])
 
     return (

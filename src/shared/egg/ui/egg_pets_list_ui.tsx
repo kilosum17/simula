@@ -42,7 +42,7 @@ export function EggPetListUi({ egg }: {
                 const perc = `${p.perc}%`
                 const petConf = getPetConf(p.id)!
                 return (
-                    <LBox Size={new UDim2(0.2, 0, 0.8, 0)} NoList Trans Aspect={1} >
+                    <LBox key={p.id} Size={new UDim2(0.2, 0, 0.8, 0)} NoList Trans Aspect={1} >
                         <LImage Image={petConf.icon} Size={new UDim2(1, 0, 1, 0)} />
                         <LImage Size={new UDim2(0.9, 0, 0.9, 0)} Image={icon('rand')} />
                         <LText Text={perc} Pos={new UDim2(0.9, 0, 0.1, 0)} Size={new UDim2(0.7, 0, 0.5, 0)}

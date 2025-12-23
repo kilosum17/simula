@@ -3,7 +3,6 @@ import { LBox, LHover, LImage, LPusher, LText, LTextbox } from "../comps/Wrapper
 import { icon } from "shared/help/icons"
 import { col } from "shared/help/assist"
 import { useFrameState } from "shared/signals/use_frame_state"
-import { TFrameKind } from "shared/signals/atoms"
 import { Atom, useAtom } from "shared/signals/atom"
 import { TMainFrameAtom } from "./MainFrame"
 
@@ -20,7 +19,7 @@ export function MainFrameHeader({
             <LBox Size={new UDim2(0.35, 0, 1, 0)} Trans NoList >
                 <LImage Pos={new UDim2(0, 0, 0.5, 0)} Size={new UDim2(1, 0, 1, 0)} AnchorPoint={new Vector2(0.5, 0.5)}
                     Aspect Image={state.headerIcon} Scale={1.2} />
-                <LText Pos={new UDim2(0.1, 0, 0.5, -2)} Size={new UDim2(0.8, 0, 1, 0)} AnchorPoint={new Vector2(0, 0.5)}
+                <LText Pos={new UDim2(0.05, 0, 0.5, -2)} Size={new UDim2(0.8, 0, 1, 0)} AnchorPoint={new Vector2(0, 0.5)}
                     Color={col("white")} StrokeThickness={4} Text={state.headerTitle} Align="Left" />
             </LBox>
             <LBox Size={new UDim2(0.3, 0, 0.6, 0)} Center Trans >

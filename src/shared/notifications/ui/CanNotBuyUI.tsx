@@ -2,26 +2,32 @@ import React, { useEffect } from "@rbxts/react";
 import { col } from "shared/help/assist";
 import { icon } from "shared/help/icons";
 import { useAtom } from "shared/signals/atom";
-import { canNotBuyAtom } from "shared/signals/atoms";
+import { canNotAtom } from "shared/signals/atoms";
 import { LRecButton } from "shared/ui/comps/base_comps";
 import { LBox, LHiders, LHover, LImage, LPusher, LText } from "shared/ui/comps/Wrappers";
 
 const TOP_COLOR = Color3.fromHex('4eddff')
 
 export function CanNotBuyUI() {
-    const { open, kind } = useAtom(canNotBuyAtom)
+    const { open, kind } = useAtom(canNotAtom)
 
     useEffect(() => {
         warn('open', open)
     }, [open])
 
     const onClose = () => {
-        canNotBuyAtom.update({ open: false, kind })
+        canNotAtom.update({ open: false, kind })
     }
 
-    const message = kind === 'STAGE' ?
-        "You cannot afford this \n area!" :
-        "You cannot afford this \n egg!"
+    const message = (() => {
+        switch (kind) {
+            case 'STAGE': return "You cannot afford this \n area!"
+            case 'EGG': return "You cannot afford this \n egg!"
+            case 'LOCKED_AREA': return "This area is \n locked!"
+            case 'ALREADY_IN_AREA': return 'You are already here'
+            default: return '--'
+        }
+    })()
 
     return (
         <LBox BgPatterns NoList StrokeThickness={5} Size={new UDim2(0.9, 0, 0.8, 0)} Pos={new UDim2(0.5, 0, 0.5, 0)}

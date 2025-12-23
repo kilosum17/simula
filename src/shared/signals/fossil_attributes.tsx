@@ -1,16 +1,19 @@
-import { useEventListener } from "@rbxts/pretty-react-hooks"
-import { useEffect, useRef, useState } from "@rbxts/react"
+import { useEffect, useState } from "@rbxts/react"
 
 export type TFossilAtts = {
     health: number,
     killed: boolean,
     maxHealth: number,
+    guid: number,
+    lastMineTime: number,
 }
 
 export const FOSSIL_ATTS_DEF = {
     maxHealth: 100,
     health: 100,
     killed: false,
+    guid: 0,
+    lastMineTime: 0,
 } as TFossilAtts
 
 export const getFossilAtts = (fossil: BasePart) => {

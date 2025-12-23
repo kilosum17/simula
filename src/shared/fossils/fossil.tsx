@@ -22,11 +22,13 @@ export class Fossil {
     changeSig = new Signal()
     spots: FossilMiningSpots
     highlight: Highlight
+    guid: number
 
-    constructor(stage: Stage, pos: Vector3) {
+    constructor(stage: Stage, pos: Vector3, guid: number) {
         this.spots = new FossilMiningSpots(this)
         this.stage = stage
         this.pos = pos
+        this.guid = guid
         const res = this.resetFossil()
         this.body = res.body
         this.activePart = res.activePart
@@ -52,6 +54,7 @@ export class Fossil {
         const body = getFossilBody({ dropType: this.dropType, stage: this.stage.stageNo })
         this.body = body
         const { highlight, clicker } = this._setUpClickerAndHighlight()
+        body.SetAttribute('guid', this.guid)
         body.Parent = getFossilsFolder(this.stage.stageNo)
         const cframe = new CFrame(this.pos, this.stage.center)
         body.PivotTo(cframe.add(new Vector3(0, -0.5, 0)))
@@ -180,5 +183,6 @@ export class Fossil {
         this.body.SetAttribute('maxHealth', this.maxHealth)
         this.body.SetAttribute('health', this.health)
         this.body.SetAttribute('killed', this.health <= 0)
+        this.body.SetAttribute('lastMineTime', os.time())
     }
 }

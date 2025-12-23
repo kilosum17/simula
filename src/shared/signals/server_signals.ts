@@ -1,9 +1,9 @@
 import Signal from "@rbxts/signal";
 import { TPetBody } from "shared/pets/pet";
 
-export const enteredAreaSig = new Signal<(player: Player, areaNo: number, val: number) => void>()
+export const enteredAreaSig = new Signal<(player: Player, areaNo: number, enter: number) => void>()
 
-export const enteredMineSig = new Signal<(player: Player, areaNo: number, val: boolean) => void>()
+export const enteredMineSig = new Signal<(player: Player, areaNo: number, enter: boolean) => void>()
 
 export const fossilDamageSig = new Signal<(player: Player, fossil: BasePart, petBody: TPetBody) => void>()
 
@@ -18,3 +18,5 @@ export const unlockEggSig = new Signal<(player: Player, eggNo: number) => void>(
 export const buyEggSig = new Signal<(player: Player, eggNo: number, count: number) => void>()
 
 export const updateEquipedPets = new Signal<(player: Player, petsIds: Record<string, number>) => void>()
+
+export const freezePetsSig = new Signal<(freeze: boolean) => void>()

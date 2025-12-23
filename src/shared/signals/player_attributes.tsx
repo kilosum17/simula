@@ -40,7 +40,7 @@ export const usePlayerAtts = <T extends Partial<TPlayerAtts>,>(def: T) => {
 
     useEffect(() => {
         const connection = getPlayer().AttributeChanged.Connect((name) => {
-            if (def[name as 'gems']) {
+            if (def[name as 'gems'] !== undefined) {
                 const newData = getPlayerAtts() as T
                 setData(newData)
                 // print('got data', newData)

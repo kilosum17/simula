@@ -12,7 +12,7 @@ import { EggPetListUi } from "./ui/egg_pets_list_ui";
 import { randInt } from "shared/help/math";
 import { buyEggSig } from "shared/signals/server_signals";
 import { getPlayerAtts } from "shared/signals/player_attributes";
-import { canNotBuyAtom } from "shared/signals/atoms";
+import { canNotAtom } from "shared/signals/atoms";
 
 
 
@@ -113,7 +113,7 @@ export class EggOne {
         const eggCount = 1
         const { coins } = getPlayerAtts()
         if ((eggCost * eggCount) > coins) {
-            canNotBuyAtom.update({ open: true, kind: "EGG" })
+            canNotAtom.update({ open: true, kind: "EGG" })
         } else {
             this.hideUI()
             buyEggSig.Fire(getPlayer(), this.eggNo, eggCount)

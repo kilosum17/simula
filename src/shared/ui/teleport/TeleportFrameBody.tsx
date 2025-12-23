@@ -5,15 +5,20 @@ import { icon } from "shared/help/icons";
 import { col } from "shared/help/assist";
 import { usePlayerAtts } from "shared/signals/player_attributes";
 import { getCellsData, TCellData } from "./teleport_utils";
+import { teleport_to } from "./teleport_mover";
+import { canNotAtom } from "shared/signals/atoms";
+import { useFrameState } from "shared/signals/use_frame_state";
+import { RunService } from "@rbxts/services";
 
 
 export function TeleportFrameBody() {
     const stagesCount = STAGE_TELEPORT_DATA.size()
     const cols = 5
     const ref = useRef<Frame>()
+    const { inStageNo } = usePlayerAtts({ inStageNo: 0, progStage: 0 })
 
     const cellsData = getCellsData(stagesCount)
-    warn('Teleport cell data', cellsData)
+    warn('Teleport cell data', cellsData, 'stage', inStageNo)
 
     return (
         <LBox isScroll Vert Pos={new UDim2(0.5, 0, 0.5, 0)} Size={new UDim2(1, 20, 0.95, 0)}
@@ -22,8 +27,8 @@ export function TeleportFrameBody() {
             <LPusher gapF={10} />
             <LBox Size={new UDim2(1, 0, 0, 0)} AutoSize="Y" Wraps HAlign="Center" VAlign="Center" Trans SortOrder="LayoutOrder"
                 Ref={ref} >
-                {cellsData.map((_, i) => {
-                    return <TeleportCell key={i} idx={i} colsNo={cols} cellsData={cellsData} />
+                {cellsData.map((cell, i) => {
+                    return <TeleportCell key={cell.idx} idx={i} colsNo={cols} cellsData={cellsData} />
                 })}
             </LBox>
             <LPusher gapF={40} />
@@ -34,13 +39,15 @@ export function TeleportFrameBody() {
 const TeleportCell = ({ idx, colsNo, cellsData }: {
     idx: number, colsNo: number, cellsData: TCellData[]
 }) => {
+    const { closeFrame } = useFrameState()
     const colsCount = colsNo * 2 - 1
     const data = cellsData[idx]
     const arrowSize = (1 / colsCount) * 0.4
     const cellSize = (1 - arrowSize * (colsNo - 1)) / colsNo
     const { inStageNo, progStage } = usePlayerAtts({ inStageNo: 0, progStage: 0 })
-    const stageData = STAGE_TELEPORT_DATA[data.idx]
-    if (!stageData) return <LEmpty />
+    let stageData = STAGE_TELEPORT_DATA[data.idx]
+    const isExtra = !stageData
+    stageData = isExtra ? STAGE_TELEPORT_DATA[0] : stageData
     const isActive = (inStageNo + 1) === stageData.no
     const isLocked = stageData.no > (progStage + 1)
     const noInfo = `#${stageData.no}`
@@ -50,7 +57,21 @@ const TeleportCell = ({ idx, colsNo, cellsData }: {
         if (isLocked) return { start: col('gray_light'), end: col('gray_dark') }
         return { start: col('green_light'), end: col('green_dark') }
     })()
-    warn('Teleport cell render', idx)
+
+    const onTeleport = () => {
+        if (isExtra) return
+        if (isLocked && !RunService.IsStudio()) {
+            canNotAtom.update({ kind: 'LOCKED_AREA', open: true })
+            return
+        }
+        closeFrame('TELEPORT')
+        task.spawn(() => {
+            task.wait(0.5)
+            teleport_to(stageData.no)
+        })
+    }
+
+    // warn('Teleport cell render', idx)
 
     if (data.isArrow) {
         const size = data.isGap ? 1 / colsCount : arrowSize
@@ -60,7 +81,7 @@ const TeleportCell = ({ idx, colsNo, cellsData }: {
         const vis = !data.hide
         const arrowSizeRatio = arrowSize / size
         return (
-            <LBox Trans Size={new UDim2(size, -3, 0, 500)}
+            <LBox Trans Size={new UDim2(size, -3, 0, 500)} Visible={!isExtra}
                 Aspect={data.isGap ? 1.3 : 1} NoList LayoutOrder={idx}   >
                 <LImage Image={icon('black_arrow')} Size={new UDim2(arrowSizeRatio, 0, 0.9, 0)} Aspect
                     Pos={new UDim2(0.5, 0, 0.5, 0)} AnchorPoint={new Vector2(0.5, 0.5)}
@@ -71,8 +92,9 @@ const TeleportCell = ({ idx, colsNo, cellsData }: {
         )
     }
     return (
-        <LHover Size={new UDim2(cellSize, -3, 0, 500)} Aspect={1} Scale={1.08} LayoutOrder={idx} >
-            <LBox Size={new UDim2(0.95, 0, 0.95, 0)} Vert StrokeThickness={4}
+        <LHover Size={new UDim2(cellSize, -3, 0, 500)} Aspect={1} Scale={1.08} LayoutOrder={idx}
+            onClick={onTeleport} >
+            <LBox Size={new UDim2(0.95, 0, 0.95, 0)} Vert StrokeThickness={4} Visible={!isExtra}
                 CornerRadius2={new UDim(0.06, 0)} Background={col("white")} HAlign="Center" >
                 <LPusher gapS={0.03} />
                 <LText Text={noInfo} Size={new UDim2(0.85, 0, 0.25, 0)} StrokeThickness={1}
