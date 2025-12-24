@@ -4,7 +4,7 @@ import React from "@rbxts/react";
 import { Players } from "@rbxts/services";
 import { col, getPlayer } from "shared/help/assist";
 import { KButton } from "../comps/KButton";
-import { getPlayerAtts, TPlayerAtts, usePlayerAtts } from "shared/signals/player_attributes";
+import { usePlayerAtts } from "shared/signals/player_attributes";
 import { TPlayerDataSettings } from "shared/player/player_utils";
 import { Remotes } from "shared/signals/remotes";
 
@@ -48,8 +48,8 @@ export const TradeListRow = ({ remotePlayer, idx }: {
     const isFriendsOnly = remoteData.settings.tradingType !== 'all'
     const isPending = localData.sentTradeRegs.includes(remotePlayer.UserId)
     const isReceived = remoteData.sentTradeRegs.includes(localPlayer.UserId)
-    const text = isFriendsOnly ? 'Friends Only' : isPending ? 'Pending' : isReceived ? "Accept!" : 'Trade!'
-    const color = isFriendsOnly ? 'gray' : isPending ? 'dark_green' : isReceived ? 'green' : 'green'
+    const text = isFriendsOnly ? 'Friends Only' : isReceived ? "Accept!" : isPending ? 'Pending' : 'Trade!'
+    const color = isFriendsOnly ? 'gray' : isReceived ? 'green' : isPending ? 'dark_green' : 'green'
 
     const onClick = () => {
         warn(remotePlayer.Name, 'pending', isPending, 'recv', isReceived, 'frends only', isFriendsOnly)

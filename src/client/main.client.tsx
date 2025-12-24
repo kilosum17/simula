@@ -20,7 +20,7 @@ import { buyEggSig } from "shared/signals/server_signals";
 import { getPlayer } from "shared/help/assist";
 import { TeleportFrame } from "shared/ui/teleport/TeleportFrame";
 import { PetViewer } from "shared/ui/comps/pet_viewer";
-import { TradeListFrame } from "shared/ui/treade/TradeListFrame";
+import { TradeListFrame } from "shared/ui/trade/TradeListFrame";
 import { SettingsFrame } from "shared/ui/settings/SettingsFrame";
 
 mountFrame(<LeftButtons />)
