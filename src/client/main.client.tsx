@@ -22,12 +22,15 @@ import { TeleportFrame } from "shared/ui/teleport/TeleportFrame";
 import { PetViewer } from "shared/ui/comps/pet_viewer";
 import { TradeListFrame } from "shared/ui/trade/TradeListFrame";
 import { SettingsFrame } from "shared/ui/settings/SettingsFrame";
+import { frameStateAtom } from "shared/signals/atoms";
+import { TradeFrame } from "shared/ui/trade/TradeFrame";
 
 mountFrame(<LeftButtons />)
 mountFrame(<InvFrame />)
 mountFrame(<TeleportFrame />)
 mountFrame(<TradeListFrame />)
 mountFrame(<SettingsFrame />)
+mountFrame(<TradeFrame />)
 
 mountFrame(<NTooltipFrame />, 3)
 mountFrame(<EggPetsRevealUI />)
@@ -44,6 +47,7 @@ new EggServiceClient()
 if (RunService.IsStudio()) {
 
     // mountFrame(<PetViewer />)
+    frameStateAtom.update({ frame: "TRADE" })
 
     const cracker = new EggCracker()
     UserInputService.InputBegan.Connect((inp, gpe) => {

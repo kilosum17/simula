@@ -16,6 +16,7 @@ export type TMainFrameAtom = {
     frameKind: TFrameKind,
     showSearch?: boolean,
     showSidebar?: boolean,
+    hideHeader?: boolean,
     mode?: 'THIN',
     sidebarItems?: { name: string, icon: string }[],
     onSidebarClicked?: (name: string) => void
@@ -56,7 +57,7 @@ export function MainFrame({
             <LBox Size={new UDim2(1, 0, 1, 0)} CornerRadius2={new UDim(0.04, 0)}
                 BgPatterns StokeColor={col('black')} StrokeThickness={5} NoList  >
                 {children}
-                <MainFrameHeader atom={atom} />
+                {!state.hideHeader && <MainFrameHeader atom={atom} />}
             </LBox>
             {state.showSidebar && <MainFrameSidebar atom={atom} />}
             <uiscale ref={scaleRef} />

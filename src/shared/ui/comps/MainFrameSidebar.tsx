@@ -13,16 +13,16 @@ export function MainFrameSidebar({ atom }: {
     return (
         <LBox Vert Size={new UDim2(0.055, 0, 0.9, 0)} Pos={new UDim2(0.005, 0, 1, 0)}
             AnchorPoint={new Vector2(1, 1)} Background={col("white")} Center
-            StrokeThickness={3.5} CornerRadius2={new UDim(0.5, 0)}
+            StrokeThickness={3.5} CornerRadius2={new UDim(0.5, 0)} SortOrder='LayoutOrder'
             Padding={new UDim(0.02, 0)} MinSize={new Vector2(40, 0)}
         >
-            {state.sidebarItems?.map(h => {
+            {state.sidebarItems?.map((h, i) => {
                 const callOnClick = () => {
                     state.onSidebarClicked?.(h.name)
                 }
                 return (
                     <LHover key={h.name} Size={new UDim2(0.95, 0, 0.2, 0)} Aspect={1} Scale={1.05}
-                        onClick={callOnClick} >
+                        onClick={callOnClick} LayoutOrder={i} >
                         <NTooltip data={{ kind: 'TEXT', text: h.name }}  >
                             <LBox Size={new UDim2(1, 0, 1, 0)} Center Trans >
                                 <LImage Size={new UDim2(1, 0, 1, 0)} Aspect Image={h.icon} />

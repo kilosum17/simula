@@ -11,6 +11,7 @@ export const ICONS = {
     'bg_patterns': 'rbxassetid://103724644688898',
     'egg_crack': 'rbxassetid://93105624333856',
     'black_arrow': 'rbxassetid://106720597714648',
+    'diamond': GPT_ICONS.diamond,
 
     "green_rec_but": "rbxassetid://76946062015574",
     "darkgreen_rec_but": "rbxassetid://139885474046683",
