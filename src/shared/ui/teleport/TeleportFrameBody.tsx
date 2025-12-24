@@ -95,10 +95,10 @@ const TeleportCell = ({ idx, colsNo }: {
             <LBox Size={new UDim2(0.95, 0, 0.95, 0)} Vert StrokeThickness={4} Visible={!isExtra}
                 CornerRadius2={new UDim(0.06, 0)} Background={col("white")} HAlign="Center" >
                 <LPusher gapS={0.03} />
-                <LText Text={noInfo} Size={new UDim2(0.85, 0, 0.25, 0)} StrokeThickness={1}
+                <LText Text={noInfo} Size={new UDim2(0.85, 0, 0.25, 0)} StrokeThickness={2}
                     Color={col('white')} />
                 <LLine />
-                <LText Text={stageData?.name} Size={new UDim2(0.85, 0, 0.45, 0)} StrokeThickness={1}
+                <LText Text={stageData?.name} Size={new UDim2(0.85, 0, 0.45, 0)} StrokeThickness={2}
                     Color={col('white')} />
                 <uigradient Rotation={90} Color={new ColorSequence(gradient.start, gradient.end)} />
             </LBox>

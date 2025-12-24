@@ -1,4 +1,7 @@
 
+## 24/12/2025
+- Trade Policy check for blocked countries
+
 ## 23/12/2025
 - Fix position of extra teleport items
 

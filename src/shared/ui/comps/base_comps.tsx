@@ -5,14 +5,17 @@ import { icon } from "shared/help/icons"
 export const LRecButton = ({
     color, Size, Pos, onClick, children, disabled,
 }: {
-    Size?: UDim2, Pos?: UDim2, color: 'green' | 'red',
+    Size?: UDim2, Pos?: UDim2, color: 'gray' | 'green' | 'red' | 'dark_green',
     children: React.JSX.Element, disabled?: boolean
     onClick?: () => void,
 }) => {
 
     const getImg = () => {
         if (disabled) return icon('gray_rec_but')
-        return color === "green" ? icon('green_rec_but') : icon('red_rec_but')
+        return color === "green" ? icon('green_rec_but') :
+            color === "dark_green" ? icon('darkgreen_rec_but') :
+                color === 'gray' ? icon('gray_rec_but') :
+                    icon('red_rec_but')
     }
 
     return <LHover Size={Size} Pos={Pos} onClick={onClick} >

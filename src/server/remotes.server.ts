@@ -1,4 +1,6 @@
+import { Players } from "@rbxts/services";
 import { getEggState } from "shared/egg/egg_utils";
+import { getPlayerAtts, setPlayerAtts } from "shared/signals/player_attributes";
 import { Remotes } from "shared/signals/remotes";
 import { buyEggSig, buyStageSig, collectDropsSig, fossilDamageSig, unlockEggSig } from "shared/signals/server_signals";
 
@@ -35,5 +37,13 @@ Remotes.Server.Get('UnlockEgg').Connect((player, eggNo) => {
 
 Remotes.Server.Get('BuyEgg').Connect((player, eggNo, eggCount) => {
     buyEggSig.Fire(player, eggNo, eggCount)
+});
+
+Remotes.Server.Get('AddTradeRequest').Connect((player, remoteUserId,) => {
+    const remotePlayer = Players.GetPlayerByUserId(remoteUserId)
+    if (!remotePlayer) return
+    const { sentTradeRegs } = getPlayerAtts(player)
+    sentTradeRegs.push(remoteUserId)
+    setPlayerAtts({ sentTradeRegs }, player)
 });
 

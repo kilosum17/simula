@@ -1,36 +1,18 @@
 import { DataStoreService } from "@rbxts/services";
-import { PlayerService } from "./player_service"
-import { encodedAttribute, tableSize } from "shared/help/assist";
+import { PlayerService } from "./player_service";
+import { deepClone, tableSize } from "shared/help/assist";
 import { updateEquipedPets } from "shared/signals/server_signals";
+import { PLAYER_DATA_DEF, TPlayerData } from "./player_utils";
+import { setPlayerAtts } from "shared/signals/player_attributes";
 
 const MAX_RETRIES = 3
-
-type TPlayerData = {
-    name: string,
-    coins: number,
-    gems: number,
-    progStage: number,
-    rebirth: number,
-    eggs: number[],
-    petIds: Record<string, number>
-}
-
-const PLAYER_DATA_DEF = {
-    name: '',
-    coins: 0,
-    gems: 0,
-    progStage: 0,
-    rebirth: 0,
-    eggs: [],
-    petIds: {},
-} satisfies TPlayerData as TPlayerData
 
 const dataStore = DataStoreService.GetDataStore("PlayerData");
 
 export class PlayerData {
     ps: PlayerService
     isLoading = false
-    store = PLAYER_DATA_DEF
+    store = deepClone(PLAYER_DATA_DEF)
 
     constructor(ps: PlayerService) {
         this.ps = ps
@@ -61,7 +43,7 @@ export class PlayerData {
                 this.loadData(retries + 1)
             }
         }
-        this.updatePlayerAtts()
+        setPlayerAtts(this.store, this.ps.player)
         this.isLoading = false
     }
 
@@ -91,12 +73,7 @@ export class PlayerData {
     updateOne<T extends keyof TPlayerData>(key: T, val: TPlayerData[T]) {
         if (this.isLoading) return
         this.store[key] = val
-        this.updatePlayerAtts()
+        setPlayerAtts(this.store, this.ps.player)
     }
 
-    updatePlayerAtts() {
-        for (const [key, val] of pairs(this.store)) {
-            this.ps.player.SetAttribute(key, encodedAttribute(val))
-        }
-    }
 }

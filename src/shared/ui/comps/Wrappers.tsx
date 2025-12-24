@@ -494,19 +494,21 @@ export const LTooltip = (props: {
 }
 
 export const LPusher = ({
-    gapS = 0, gapF = 0, Visible = true, LayoutOrder,
+    gapS = 0, gapF = 0, Visible = true, LayoutOrder, NoAspect,
 }: {
     gapS?: number, gapF?: number, Visible?: boolean, LayoutOrder?: number,
+    NoAspect?: boolean,
 }) => {
     return <frame Size={new UDim2(gapS, gapF, gapS, gapF)} BackgroundTransparency={1}
         Visible={Visible} LayoutOrder={LayoutOrder} >
-        <uiaspectratioconstraint AspectRatio={1} />
+        {!NoAspect && <uiaspectratioconstraint AspectRatio={1} />}
     </frame>
 }
 
 export const LText = ({
     Text, Var = 'black', Size, Pos, StrokeThickness = 0, StrokeColor, Align, AnchorPoint, RichText, ZIndex, Visible = true,
-    TextSize = 0, AutoSize, Color, LayoutOrder, MaxSize = 0, MinSize = 0, Ref, Background, BorderSizePixel,
+    TextSize = 0, AutoSize, Color, LayoutOrder, MaxSize = 0, MinSize = 0, Ref, Background, BorderSizePixel, Aspect,
+    fontWeight,
 }: {
     Pos?: UDim2, Size?: UDim2,
     StrokeThickness?: number, StrokeColor?: Color3, Align?: 'Left' | 'Right' | 'Center',
@@ -521,45 +523,49 @@ export const LText = ({
     Color?: Color3,
     Background?: Color3,
     Font?: Font,
+    fontWeight?: "Bold" | "ExtraBold" | "Light" | "ExtraLight" | "Heavy" | "Medium"
+    | "Regular" | "SemiBold" | "Thin",
+    Aspect?: number,
     LayoutOrder?: number, MaxSize?: number, MinSize?: number, Ref?: Ref<TextLabel>,
     BorderSizePixel?: number,
 }) => {
     const color = (() => {
-        if (Color) {
-            return Color
-        }
-        if (Var === 'black') {
-            return BrickColor.Black().Color
-        }
-        if (Var === 'gray') {
-            return BrickColor.Gray().Color
-        }
-        if (Var === 'white') {
-            return BrickColor.White().Color
-        }
-        if (Var === 'blue') {
-            return colors.backdrop.stroke
-        }
-        if (Var === 'green') {
-            return colors.tgreen.base
-        }
-        if (Var === 'yellow') {
-            return BrickColor.Yellow().Color
-        }
-        if (Var === 'red') {
-            return BrickColor.Red().Color
+        if (Color) return Color
+        if (Var === 'black') return BrickColor.Black().Color
+        if (Var === 'gray') return BrickColor.Gray().Color
+        if (Var === 'white') return BrickColor.White().Color
+        if (Var === 'blue') return colors.backdrop.stroke
+        if (Var === 'green') return colors.tgreen.base
+        if (Var === 'yellow') return BrickColor.Yellow().Color
+        if (Var === 'red') return BrickColor.Red().Color
+    })()
+    const weight = (() => {
+        switch (fontWeight) {
+            case "Bold": return Enum.FontWeight.Bold
+            case "ExtraBold": return Enum.FontWeight.ExtraBold
+            case "Light": return Enum.FontWeight.Light
+            case "ExtraLight": return Enum.FontWeight.ExtraLight
+            case "Heavy": return Enum.FontWeight.Heavy
+            case "Medium": return Enum.FontWeight.Medium
+            case "Regular": return Enum.FontWeight.Regular
+            case "SemiBold": return Enum.FontWeight.SemiBold
+            case "Thin": return Enum.FontWeight.Thin
         }
     })()
-
+    const extras = weight ? { FontFace: new Font('FredokaOne', weight) } :
+        { Font: 'FredokaOne' as const }
     return <textlabel ref={Ref} Visible={Visible} Text={Text} TextColor3={color} Size={Size} Position={Pos} AnchorPoint={AnchorPoint} ZIndex={ZIndex}
-        Font={'FredokaOne'}
+        {...extras}
         // Font={Enum.Font.F} 
         BorderSizePixel={BorderSizePixel}
-        TextScaled={TextSize === 0} BackgroundTransparency={Background ? 0 : 1} TextXAlignment={Align} RichText={RichText} TextSize={TextSize}
+        TextScaled={TextSize === 0
+        } BackgroundTransparency={Background ? 0 : 1} TextXAlignment={Align} RichText={RichText} TextSize={TextSize}
         AutomaticSize={AutoSize} LayoutOrder={LayoutOrder} BackgroundColor3={Background} >
-        {StrokeThickness > 0 && <uistroke Thickness={StrokeThickness} Color={StrokeColor} />}
+        {StrokeThickness > 0 && <uistroke Thickness={StrokeThickness} Color={StrokeColor} />
+        }
         {(MaxSize > 0 || MinSize > 0) && <uitextsizeconstraint MaxTextSize={MaxSize} MinTextSize={MinSize} />}
-    </textlabel>
+        {Aspect && <uiaspectratioconstraint AspectRatio={Aspect} />}
+    </textlabel >
 }
 
 

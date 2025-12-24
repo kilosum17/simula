@@ -11,6 +11,7 @@ export const Remotes = Net.Definitions.Create({
     BuyStage: Net.Definitions.ClientToServerEvent<[stageNo: number]>(),
     UnlockEgg: Net.Definitions.ClientToServerEvent<[eggNo: number]>(),
     BuyEgg: Net.Definitions.ClientToServerEvent<[eggNo: number, count: number]>(),
+    AddTradeRequest: Net.Definitions.ClientToServerEvent<[remoteUserId: number]>(),
 
     PlayVFX: Net.Definitions.ServerToClientEvent<[pos: Vector3, type: TVfxTypes]>(),
     BreakStageBoard: Net.Definitions.ServerToClientEvent<[stageNo: number]>(),

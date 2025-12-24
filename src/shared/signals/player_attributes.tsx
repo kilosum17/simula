@@ -1,30 +1,23 @@
-import { useEventListener } from "@rbxts/pretty-react-hooks"
 import { useEffect, useState } from "@rbxts/react"
-import { decodeAttribute, getPlayer } from "shared/help/assist"
+import { decodeAttribute, encodedAttribute, getPlayer } from "shared/help/assist"
+import { PLAYER_DATA_DEF, PLAYER_TEMP_DATA_DEF, TPlayerData, TPlayerTempData } from "shared/player/player_utils"
 
 export type TPlayerAtts = {
-    coins: number,
-    gems: number,
-    progStage: number,
-    rebirth: number,
     inMine: boolean,
     inStageNo: number,
-    eggs: number[],
-
     isCrackingEgg: boolean,
 
-}
+} & TPlayerData & TPlayerTempData
 
 export const PLAYER_ATTS_DEF = {
-    coins: 0,
-    gems: 0,
-    progStage: 0,
-    rebirth: 0,
+    ...PLAYER_DATA_DEF,
+    ...PLAYER_TEMP_DATA_DEF,
+
     inMine: false,
     inStageNo: 0,
-    eggs: [1],
     isCrackingEgg: false,
-} as TPlayerAtts
+
+} satisfies TPlayerAtts as TPlayerAtts
 
 export const getPlayerAtts = (player?: Player) => {
     const data = (player || getPlayer()).GetAttributes() as unknown as TPlayerAtts
@@ -35,13 +28,21 @@ export const getPlayerAtts = (player?: Player) => {
     return { ...PLAYER_ATTS_DEF, ...decData } as TPlayerAtts
 }
 
-export const usePlayerAtts = <T extends Partial<TPlayerAtts>,>(def: T) => {
+export const setPlayerAtts = (data: Partial<TPlayerAtts>, _player?: Player) => {
+    const player = (_player || getPlayer())
+    for (const [key, val] of pairs(data)) {
+        player.SetAttribute(key, encodedAttribute(val))
+    }
+}
+
+export const usePlayerAtts = <T extends Partial<TPlayerAtts>,>(def: T, _player?: Player) => {
     const [data, setData] = useState(getPlayerAtts() as T)
 
     useEffect(() => {
-        const connection = getPlayer().AttributeChanged.Connect((name) => {
+        const player = _player || getPlayer()
+        const connection = player.AttributeChanged.Connect((name) => {
             if (def[name as 'gems'] !== undefined) {
-                const newData = getPlayerAtts() as T
+                const newData = getPlayerAtts(player) as T
                 setData(newData)
                 // print('got data', newData)
             }

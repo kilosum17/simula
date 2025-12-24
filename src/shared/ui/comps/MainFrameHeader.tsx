@@ -39,12 +39,12 @@ export function MainFrameHeader({
                 </LBox>}
             </LBox>
             <LBox Size={new UDim2(0.35, 0, 1, 0)} Trans NoList >
-                <LBox Pos={new UDim2(0.1, 0, 0.5, 0)} Size={new UDim2(0.72, 0, 0.5, 0)} AnchorPoint={new Vector2(0, 0.5)}
+                {state.showSearch && <LBox Pos={new UDim2(0.1, 0, 0.5, 0)} Size={new UDim2(0.72, 0, 0.5, 0)} AnchorPoint={new Vector2(0, 0.5)}
                     StrokeThickness={3} CornerRadius2={new UDim(0.5, 0)} Center Background={col('white')} >
-                    {state.showSearch && <LTextbox Size={new UDim2(0.95, 0, 0.95, 0)} Placeholder="Search" Text=""
+                    <LTextbox Size={new UDim2(0.95, 0, 0.95, 0)} Placeholder="Search" Text=""
                         Align="Right" Color={col('gray')}
-                        onChange={(inp) => atom.update({ searchText: inp })} />}
-                </LBox>
+                        onChange={(inp) => atom.update({ searchText: inp })} />
+                </LBox>}
                 <LHover Pos={new UDim2(1, 0, 0.5, 0)} Size={new UDim2(2, 0, 1, 0)} Aspect={1} AnchorPoint={new Vector2(0.5, 0.5)}
                     onClick={() => closeFrame(state.frameKind)} >
                     <LImage Size={new UDim2(1, 0, 1, 0)} Aspect Image={icon("square_red_close_but")} />

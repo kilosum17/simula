@@ -16,6 +16,7 @@ export type TMainFrameAtom = {
     frameKind: TFrameKind,
     showSearch?: boolean,
     showSidebar?: boolean,
+    mode?: 'THIN',
     sidebarItems?: { name: string, icon: string }[],
     onSidebarClicked?: (name: string) => void
 }
@@ -23,7 +24,7 @@ export type TMainFrameAtom = {
 export function MainFrame({
     atom, children,
 }: {
-    atom: Atom<TMainFrameAtom>, children: React.JSX.Element,
+    atom: Atom<TMainFrameAtom>, children: React.JSX.Element | React.JSX.Element[],
 }) {
     const state = useAtom(atom)
     const [visible, setVisible] = useState(false)
@@ -46,10 +47,10 @@ export function MainFrame({
         }
         // warn(`${state.frameKind} changed!`, open)
     }, [open])
-
+    const aspect = state.mode === 'THIN' ? 1.5 : 2
     return (
-        <LBox NoList Size={new UDim2(0.9, 0, 0.6, 0)} Pos={new UDim2(0.5, 0, 0.5, 0)}
-            MaxSize={new Vector2(1200, 600)} Trans Aspect={2}
+        <LBox NoList Size={new UDim2(0.85, 0, 0.75, 0)} Pos={new UDim2(0.5, 0, 0.5, 0)}
+            MaxSize={new Vector2(1200, 600)} Trans Aspect={aspect}
             AnchorPoint={new Vector2(0.5, 0.5)} Visible={visible}
         >
             <LBox Size={new UDim2(1, 0, 1, 0)} CornerRadius2={new UDim(0.04, 0)}
@@ -58,7 +59,7 @@ export function MainFrame({
                 <MainFrameHeader atom={atom} />
             </LBox>
             {state.showSidebar && <MainFrameSidebar atom={atom} />}
-            <uiscale ref={scaleRef}  />
+            <uiscale ref={scaleRef} />
         </LBox>
     )
 }

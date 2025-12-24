@@ -19,10 +19,13 @@ import { EggPetsRevealUI } from "shared/egg/ui/egg_pets_reveal_ui";
 import { buyEggSig } from "shared/signals/server_signals";
 import { getPlayer } from "shared/help/assist";
 import { TeleportFrame } from "shared/ui/teleport/TeleportFrame";
+import { PetViewer } from "shared/ui/comps/pet_viewer";
+import { TradeListFrame } from "shared/ui/treade/TradeListFrame";
 
 mountFrame(<LeftButtons />)
 mountFrame(<InvFrame />)
 mountFrame(<TeleportFrame />)
+mountFrame(<TradeListFrame />)
 
 mountFrame(<NTooltipFrame />, 3)
 mountFrame(<EggPetsRevealUI />)
@@ -37,6 +40,9 @@ new EggServiceClient()
 
 // TEST
 if (RunService.IsStudio()) {
+
+    // mountFrame(<PetViewer />)
+
     const cracker = new EggCracker()
     UserInputService.InputBegan.Connect((inp, gpe) => {
         if (gpe) return

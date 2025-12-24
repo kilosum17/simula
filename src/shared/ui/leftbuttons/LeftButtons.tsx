@@ -84,18 +84,7 @@ export function LeftButtons() {
                 // MainPager.togglePage('PLAY_REWARDS')
             },
             'Trade': () => {
-                let tradeAllowed = false
-                try {
-                    const policy = PolicyService.GetPolicyInfoForPlayerAsync(getPlayer())
-                    tradeAllowed = policy.IsPaidItemTradingAllowed
-                } catch (e) {
-                    warn('get trade policy failed')
-                }
-                if (tradeAllowed) {
-                    // MainPager.togglePage('TRADING')
-                } else {
-                    // MainPopupManager.showInfo('❌ Oops!', '🚫 Trading paid items is restricted! 💰')
-                }
+                toggleFrame('TRADE_LIST')
             }
         } as { [key: string]: () => void }
 
