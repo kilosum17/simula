@@ -3,7 +3,7 @@ import { col } from "shared/help/assist";
 import { icon } from "shared/help/icons";
 import { useAtom } from "shared/signals/atom";
 import { canNotAtom } from "shared/signals/atoms";
-import { LRecButton } from "shared/ui/comps/base_comps";
+import { KButton } from "shared/ui/comps/KButton";
 import { LBox, LHiders, LHover, LImage, LPusher, LText } from "shared/ui/comps/Wrappers";
 
 const TOP_COLOR = Color3.fromHex('4eddff')
@@ -46,9 +46,9 @@ export function CanNotBuyUI() {
                         StrokeThickness={0} Color={col('black')} StrokeColor={col('black')} />
                     <LImage Size={new UDim2(1, 0, 0.3, 0)} Aspect Image={icon('inv_pets')} />
                     <LBox Size={new UDim2(1, 0, 0.3, 0)} Center Trans >
-                        <LRecButton color="green" Size={new UDim2(0.5, 0, 0.7, 0)} onClick={onClose} >
+                        <KButton color="green" Size={new UDim2(0.5, 0, 0.7, 0)} onClick={onClose} >
                             <LText StrokeThickness={3} Text="Ok!" Color={col('white')} Size={new UDim2(0.8, 0, 0.8, 0)} />
-                        </LRecButton>
+                        </KButton>
                     </LBox>
                     <LPusher gapS={0.05} />
                 </LBox>

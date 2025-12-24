@@ -1,6 +1,6 @@
 import { useEffect, useState } from "@rbxts/react"
-import { decodeAttribute, encodedAttribute, getPlayer } from "shared/help/assist"
-import { PLAYER_DATA_DEF, PLAYER_TEMP_DATA_DEF, TPlayerData, TPlayerTempData } from "shared/player/player_utils"
+import { addMissingKeysToMap, decodeAttribute, encodedAttribute, getPlayer } from "shared/help/assist"
+import { PLAYER_DATA_DEF, PLAYER_TEMP_DATA_DEF, TPlayerData, TPlayerDataSettings, TPlayerTempData } from "shared/player/player_utils"
 
 export type TPlayerAtts = {
     inMine: boolean,
@@ -31,6 +31,9 @@ export const getPlayerAtts = (player?: Player) => {
 export const setPlayerAtts = (data: Partial<TPlayerAtts>, _player?: Player) => {
     const player = (_player || getPlayer())
     for (const [key, val] of pairs(data)) {
+        if (key === 'settings' && typeIs(val, 'table')) {
+            addMissingKeysToMap(val as Record<string, unknown>, PLAYER_ATTS_DEF.settings)
+        }
         player.SetAttribute(key, encodedAttribute(val))
     }
 }

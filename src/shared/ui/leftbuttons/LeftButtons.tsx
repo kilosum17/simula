@@ -78,7 +78,7 @@ export function LeftButtons() {
                 // MainPager.togglePage('SHOP')
             },
             'Settings': () => {
-                // MainPager.togglePage('SETTINGS')
+                toggleFrame("SETTINGS")
             },
             'Rewards': () => {
                 // MainPager.togglePage('PLAY_REWARDS')

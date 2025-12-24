@@ -7,7 +7,7 @@ import { getStageCostV2, icons } from "shared/help/DATA"
 import { canNotAtom } from "shared/signals/atoms"
 import { usePlayerAtts } from "shared/signals/player_attributes"
 import { Remotes } from "shared/signals/remotes"
-import { LRecButton } from "shared/ui/comps/base_comps"
+import { KButton } from "shared/ui/comps/KButton"
 import { CostUI } from "shared/ui/comps/CostUI"
 import { LBox, LImage, LPusher, LText, NButton } from "shared/ui/comps/Wrappers"
 
@@ -71,9 +71,9 @@ export const StageBoardOne = ({ stageNo }: {
                 <LPusher gapS={0.05} />
                 {/* <LButton Text="Buy Now" MouseClicked={MouseClicked} /> */}
                 {/* <OldLButton Text="Buy Now" onClick={MouseClicked} Size={new UDim2(0.8, 0, 0.3, 0)} /> */}
-                <LRecButton disabled={coins < cost} color="green" Size={new UDim2(0.5, 0, 0.3, 0)} onClick={onBuyStage} >
+                <KButton disabled={coins < cost} color="green" Size={new UDim2(0.5, 0, 0.3, 0)} onClick={onBuyStage} >
                     <LText StrokeThickness={3} Text="Buy" Color={col('white')} Size={new UDim2(0.8, 0, 0.8, 0)} />
-                </LRecButton>
+                </KButton>
             </LBox >
         )
     }

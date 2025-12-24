@@ -501,3 +501,11 @@ export const tableSize = (map: Record<string | number, unknown>) => {
     }
     return no
 }
+
+export const addMissingKeysToMap = (map: Record<string, unknown>, extra: Record<string, unknown>) => {
+    for (const [k1, v1] of pairs(extra)) {
+        if (map[k1] === undefined) {
+            map[k1] = v1
+        }
+    }
+}

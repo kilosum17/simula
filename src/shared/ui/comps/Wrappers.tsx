@@ -494,13 +494,13 @@ export const LTooltip = (props: {
 }
 
 export const LPusher = ({
-    gapS = 0, gapF = 0, Visible = true, LayoutOrder, NoAspect,
+    gapS = 0, gapF = 0, Visible = true, LayoutOrder, NoAspect, RandomBG,
 }: {
     gapS?: number, gapF?: number, Visible?: boolean, LayoutOrder?: number,
-    NoAspect?: boolean,
+    NoAspect?: boolean, RandomBG?: boolean,
 }) => {
-    return <frame Size={new UDim2(gapS, gapF, gapS, gapF)} BackgroundTransparency={1}
-        Visible={Visible} LayoutOrder={LayoutOrder} >
+    return <frame Size={new UDim2(gapS, gapF, gapS, gapF)} BackgroundTransparency={RandomBG ? 0 : 1}
+        Visible={Visible} LayoutOrder={LayoutOrder} BackgroundColor3={RandomBG ? col('random') : undefined} >
         {!NoAspect && <uiaspectratioconstraint AspectRatio={1} />}
     </frame>
 }
@@ -740,12 +740,12 @@ export function LLister<T>(props: IProps) {
 }
 
 export const LImage = ({
-    Pos, Size, Aspect, Image, Ref, ScaleType, MinSize, MaxSize, Child, ZIndex, CornerRadius, Rotation, Vis,
+    Pos, Size, Aspect, Image, Ref, ScaleType, MinSize, MaxSize, children, ZIndex, CornerRadius, Rotation, Vis,
     AnchorPoint, Scale, LayoutOrder,
 }: {
     Pos?: UDim2, Size?: UDim2, Aspect?: boolean, MinSize?: Vector2, MaxSize?: Vector2,
     Image: string, ScaleType?: Enum.ScaleType, Ref?: Ref<ImageLabel>,
-    Child?: ReactNode, ZIndex?: number, CornerRadius?: UDim, Rotation?: number, Vis?: boolean,
+    children?: React.JSX.Element, ZIndex?: number, CornerRadius?: UDim, Rotation?: number, Vis?: boolean,
     AnchorPoint?: Vector2, Scale?: number, LayoutOrder?: number,
 }) => {
     return (
@@ -756,7 +756,7 @@ export const LImage = ({
             <uisizeconstraint MinSize={MinSize} MaxSize={MaxSize} />
             <uicorner CornerRadius={CornerRadius} />
             {Scale && <uiscale Scale={Scale} />}
-            {Child}
+            {children}
         </imagelabel>
     )
 }

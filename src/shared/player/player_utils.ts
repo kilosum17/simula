@@ -1,7 +1,20 @@
 
 export type TPlayerDataSettings = {
-    tradeFriendsOnly: boolean,
-    showNextUi: boolean,
+    music: number,
+    sfx: number,
+    showOtherPets: boolean,
+    tradingType: 'all' | 'none',
+    petSfx: boolean,
+    showAlerts: boolean,
+    alertSfx: number,
+    mountTitans: boolean,
+    petsFollowTaps: boolean,
+    showBoosts: boolean,
+    showGlobalNames: boolean,
+    showNextArea: boolean,
+    vibrations: boolean,
+    showProfiles: boolean,
+
 }
 
 export type TPlayerData = {
@@ -31,8 +44,21 @@ export const PLAYER_DATA_DEF = {
     eggs: [],
     petIds: {},
     settings: {
-        tradeFriendsOnly: false,
-        showNextUi: true,
+        music: 0.5,
+        sfx: 0.5,
+        showOtherPets: true,
+        tradingType: 'all',
+        petSfx: true,
+        showAlerts: true,
+        alertSfx: 0.5,
+        mountTitans: true,
+        petsFollowTaps: true,
+        showBoosts: true,
+        showGlobalNames: true,
+        showNextArea: true,
+        vibrations: true,
+        showProfiles: true,
+
     }
 } satisfies TPlayerData as TPlayerData
 

@@ -3,7 +3,7 @@ import { usePlayers } from "shared/signals/hooks";
 import React from "@rbxts/react";
 import { Players } from "@rbxts/services";
 import { col, getPlayer } from "shared/help/assist";
-import { LRecButton } from "../comps/base_comps";
+import { KButton } from "../comps/KButton";
 import { getPlayerAtts, TPlayerAtts, usePlayerAtts } from "shared/signals/player_attributes";
 import { TPlayerDataSettings } from "shared/player/player_utils";
 import { Remotes } from "shared/signals/remotes";
@@ -23,7 +23,7 @@ export function TradeListBody() {
             {players.map((player, i) => {
                 return <TradeListRow key={player.UserId} remotePlayer={player} idx={i} />
             })}
-            <LPusher gapF={80} LayoutOrder={players.size()} />
+            <LPusher key='push2' gapF={250} LayoutOrder={players.size()} NoAspect />
         </LBox>
     )
 }
@@ -32,7 +32,7 @@ export const TradeListRow = ({ remotePlayer, idx }: {
     remotePlayer: Player, idx: number,
 }) => {
     const defAtts = {
-        settings: { tradeFriendsOnly: false } as TPlayerDataSettings,
+        settings: { tradingType: 'all' } as TPlayerDataSettings,
         sentTradeRegs: [] as number[],
         rank: 0,
     }
@@ -45,7 +45,7 @@ export const TradeListRow = ({ remotePlayer, idx }: {
         Enum.ThumbnailSize.Size150x150
     )
 
-    const isFriendsOnly = remoteData.settings.tradeFriendsOnly
+    const isFriendsOnly = remoteData.settings.tradingType !== 'all'
     const isPending = localData.sentTradeRegs.includes(remotePlayer.UserId)
     const isReceived = remoteData.sentTradeRegs.includes(localPlayer.UserId)
     const text = isFriendsOnly ? 'Friends Only' : isPending ? 'Pending' : isReceived ? "Accept!" : 'Trade!'
@@ -68,7 +68,7 @@ export const TradeListRow = ({ remotePlayer, idx }: {
 
     return (
         <LBox Size={new UDim2(1, 0, 0, 1000)} Aspect={7} Trans Center SpaceX={new UDim(0.025, 0)} >
-            <LBox Size={new UDim2(0.75, 0, 0.9, 0)} Trans LayoutOrder={idx}>
+            <LBox Size={new UDim2(0.75, 0, 0.85, 0)} Trans LayoutOrder={idx}>
                 <LBox Size={new UDim2(1, 0, 1, 0)} Aspect={1} Trans NoList >
                     <LImage Image={avatar} Size={new UDim2(1, 0, 1, 0)} />
                     <LBox Background={col('black')} Size={new UDim2(0.3, 0, 0.3, 0)} Center
@@ -86,10 +86,10 @@ export const TradeListRow = ({ remotePlayer, idx }: {
                 </LBox>
             </LBox>
             <LPusher gapS={0.05} />
-            <LRecButton color={color} Size={new UDim2(0.25, 0, 0.8, 0)} onClick={onClick} >
+            <KButton color={color} Size={new UDim2(0.25, 0, 0.75, 0)} onClick={onClick} >
                 <LText Text={text} Size={new UDim2(0.85, 0, 0.9, 0)} Color={col('white')}
                     StrokeThickness={2} />
-            </LRecButton>
+            </KButton>
         </LBox>
     )
 }

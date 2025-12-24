@@ -21,11 +21,13 @@ import { getPlayer } from "shared/help/assist";
 import { TeleportFrame } from "shared/ui/teleport/TeleportFrame";
 import { PetViewer } from "shared/ui/comps/pet_viewer";
 import { TradeListFrame } from "shared/ui/treade/TradeListFrame";
+import { SettingsFrame } from "shared/ui/settings/SettingsFrame";
 
 mountFrame(<LeftButtons />)
 mountFrame(<InvFrame />)
 mountFrame(<TeleportFrame />)
 mountFrame(<TradeListFrame />)
+mountFrame(<SettingsFrame />)
 
 mountFrame(<NTooltipFrame />, 3)
 mountFrame(<EggPetsRevealUI />)

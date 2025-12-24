@@ -8,7 +8,7 @@ export const canNotAtom = new Atom({
 })
 
 
-export type TFrameKind =  ""|'INV' | "TELEPORT" | "TRADE_LIST"
+export type TFrameKind = "" | 'INV' | "TELEPORT" | "TRADE_LIST" | 'SETTINGS'
 
 export const frameStateAtom = new Atom({ frame: '' as TFrameKind })
 
