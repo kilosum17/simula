@@ -12,6 +12,10 @@ export const ICONS = {
     'egg_crack': 'rbxassetid://93105624333856',
     'black_arrow': 'rbxassetid://106720597714648',
     'diamond': GPT_ICONS.diamond,
+    "tade_arrors": 'rbxassetid://135053301160092',
+    "ring_selct22": "rbxassetid://78771303478406",
+    "ring_selct": "rbxassetid://131286260737461",
+
 
     "green_rec_but": "rbxassetid://76946062015574",
     "darkgreen_rec_but": "rbxassetid://139885474046683",

@@ -120,12 +120,14 @@ denos.forEach((d, i) => {
 })
 
 export function formatNumber(num: number) {
+    num = math.round(num)
 
     function toFixed(number: number, decimalPlaces: number) {
         const factor = 10 ^ decimalPlaces
         const roundedNumber = math.floor(number * factor + 0.0) / factor
         return string.format("%." + decimalPlaces + "f", roundedNumber)
     }
+
     function getDecs(base: number, len = 3) {
         const val = math.round(base) + ''
         if (val.size() >= len) {

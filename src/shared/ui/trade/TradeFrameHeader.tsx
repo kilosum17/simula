@@ -26,7 +26,7 @@ export function TradeFrameHeader({ atom }: {
                 <LImage Image={localAvatar} Size={new UDim2(1, 0, 1, 0)} Aspect CornerRadius={new UDim(0.5, 0)} />
             </LBox>
             <LBox Pos={new UDim2(0.5, 0, 0.5, 0)} Size={new UDim2(0.9, 0, 1, 0)} Trans
-                AnchorPoint={new Vector2(0.5, 0.5)} >
+                AnchorPoint={new Vector2(0.5, 0.5)} Center >
                 <LBox Vert Size={new UDim2(0.4, 0, 1, 0)} Trans>
                     <LText Text="Your Offer" Size={new UDim2(1, 0, 0.6, 0)} Color={col('white')} StrokeThickness={3} Align="Left" />
                     <LText Text="Trade Value: 💎0" Size={new UDim2(1, 0, 0.4, 0)} Color={col('blue_mid')} StrokeThickness={2} Align="Left" />
