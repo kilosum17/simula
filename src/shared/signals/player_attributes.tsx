@@ -38,14 +38,14 @@ export const setPlayerAtts = (data: Partial<TPlayerAtts>, _player?: Player) => {
     }
 }
 
-export const usePlayerAtts = <T extends Partial<TPlayerAtts>,>(def: T, _player?: Player) => {
-    const [data, setData] = useState(getPlayerAtts() as T)
+export const usePlayerAtts = <T extends keyof TPlayerAtts,>(keys: T[], _player?: Player) => {
+    const [data, setData] = useState(getPlayerAtts() as Pick<TPlayerAtts, T>)
 
     useEffect(() => {
         const player = _player || getPlayer()
         const connection = player.AttributeChanged.Connect((name) => {
-            if (def[name as 'gems'] !== undefined) {
-                const newData = getPlayerAtts(player) as T
+            if ((keys as string[]).includes(name)) {
+                const newData = getPlayerAtts(player)
                 setData(newData)
                 // print('got data', newData)
             }

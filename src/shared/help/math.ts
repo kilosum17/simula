@@ -21,6 +21,15 @@ export const countMapToList = <T extends string | number,>(counts: Record<T, num
     return items
 }
 
+export const countMapToTuples = <T extends string | number,>(counts: Record<T, number>) => {
+    const items = [] as [T, number][]
+    for (const [_item, _count] of pairs(counts)) {
+        const [item, count] = [_item as T, _count as number]
+        items.push([item, count])
+    }
+    return items
+}
+
 export const randSample = <T>(vals: T[]) => {
     const idx = randInt(0, vals.size() - 1);
     return vals[idx]

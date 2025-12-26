@@ -15,7 +15,7 @@ export const StageBoardOne = ({ stageNo }: {
     stageNo: number
 }) => {
     const board = getStageBoardPart(stageNo)
-    const { rebirth, progStage, coins } = usePlayerAtts({ rebirth: 0, progStage: 0, coins: 0 })
+    const { rebirth, progStage, coins } = usePlayerAtts(['rebirth', 'progStage', 'coins'])
     const cost = getStageCostV2(stageNo, rebirth)
     const showBoard = stageNo >= (progStage + 2)
 

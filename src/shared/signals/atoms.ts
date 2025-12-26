@@ -4,7 +4,9 @@ import { Atom } from "./atom";
 
 export const canNotAtom = new Atom({
     open: false,
-    kind: '' as 'STAGE' | 'EGG' | "LOCKED_AREA" | 'ALREADY_IN_AREA'
+    message: '',
+    kind: '' as 'STAGE' | 'EGG' | "LOCKED_AREA" | 'ALREADY_IN_AREA' |
+        "ALREADY_TRADING" | 'CUSTOM'
 })
 
 

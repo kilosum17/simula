@@ -9,29 +9,31 @@ import { LBox, LHiders, LHover, LImage, LPusher, LText } from "shared/ui/comps/W
 const TOP_COLOR = Color3.fromHex('4eddff')
 
 export function CanNotBuyUI() {
-    const { open, kind } = useAtom(canNotAtom)
+    const state = useAtom(canNotAtom)
 
     useEffect(() => {
-        warn('open', open)
-    }, [open])
+        warn('open', state.open)
+    }, [state.open])
 
     const onClose = () => {
-        canNotAtom.update({ open: false, kind })
+        canNotAtom.update({ open: false })
     }
 
     const message = (() => {
-        switch (kind) {
+        switch (state.kind) {
             case 'STAGE': return "You cannot afford this \n area!"
             case 'EGG': return "You cannot afford this \n egg!"
             case 'LOCKED_AREA': return "This area is \n locked!"
             case 'ALREADY_IN_AREA': return 'You are already here'
+            case 'ALREADY_TRADING': return 'Player is in a Trade!'
+            case 'CUSTOM': return state.message
             default: return '--'
         }
     })()
 
     return (
         <LBox BgPatterns NoList StrokeThickness={5} Size={new UDim2(0.9, 0, 0.8, 0)} Pos={new UDim2(0.5, 0, 0.5, 0)}
-            MaxSize={new Vector2(800, 600)} Trans Visible={open} Aspect={1.2}
+            MaxSize={new Vector2(800, 600)} Trans Visible={state.open} Aspect={1.2}
             AnchorPoint={new Vector2(0.5, 0.5)} CornerRadius2={new UDim(0.04, 0)}
         >
             <LBox Size={new UDim2(1, 0, 1, 0)} Trans Vert >

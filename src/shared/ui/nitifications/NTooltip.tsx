@@ -1,16 +1,15 @@
-import React, { ReactNode, useState } from "@rbxts/react"
+import React, { ReactNode } from "@rbxts/react"
 import { LBox, LEmpty, LLine, LText } from "../comps/Wrappers"
-import { getPetConf, getRankColor, TPetData } from "shared/help/pet_catalog"
+import { getPetConf, getRankColor } from "shared/help/pet_catalog"
 import { col } from "shared/help/assist"
-import { GuiService } from "@rbxts/services"
-import { Sync } from "shared/signals/Sync"
 import { Atom, useAtom } from "shared/signals/atom"
 
-export type TTooltipKind = 'PET' | 'TEXT'
+export type TTooltipKind = 'PET' | 'TEXT' | 'BOOST'
 
 type TTooltip = {
     pos: UDim2,
     petId?: number,
+    boostId?: number,
     open?: boolean,
     text?: string,
     maxSize?: Vector2,
@@ -61,6 +60,7 @@ export const NTooltip = ({
         text?: string,
         kind: TTooltipKind,
         petId?: number,
+        boostId?: number,
         maxSize?: Vector2,
     }
 }) => {

@@ -38,7 +38,7 @@ const TeleportCell = ({ idx, colsNo }: {
     idx: number, colsNo: number,
 }) => {
     const { closeFrame } = useFrameState()
-    const { inStageNo, progStage } = usePlayerAtts({ inStageNo: 0, progStage: 0 })
+    const { inStageNo, progStage } = usePlayerAtts(['inStageNo', 'progStage'])
     const colsCount = colsNo * 2 - 1
     const data = cellsData[idx]
     const arrowSize = (1 / colsCount) * 0.4

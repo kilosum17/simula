@@ -9,7 +9,6 @@ import { MainFrameHeader } from "./MainFrameHeader";
 import { MainFrameSidebar } from "./MainFrameSidebar";
 
 export type TMainFrameAtom = {
-    searchText: string,
     icons?: { name: string, icon: string }[],
     headerTitle: string, headerIcon: string,
     headerIcons?: { name: string, icon: string }[],
@@ -19,7 +18,9 @@ export type TMainFrameAtom = {
     hideHeader?: boolean,
     mode?: 'THIN',
     sidebarItems?: { name: string, icon: string }[],
-    onSidebarClicked?: (name: string) => void
+
+    searchText: string,
+    sidebarItem?: string,
 }
 
 export function MainFrame({

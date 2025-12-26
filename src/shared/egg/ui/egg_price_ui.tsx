@@ -9,7 +9,7 @@ import { CostUI } from "shared/ui/comps/CostUI"
 export function EggPriceUI({ egg }: {
     egg: EggOne
 }) {
-    const { eggs } = usePlayerAtts({ eggs: [] })
+    const { eggs } = usePlayerAtts(['eggs'])
     const { available, unlocked, eggCost: cost } = getEggState(egg.eggNo)
     let background = new Color3()
     let text = ''

@@ -96,10 +96,11 @@ export const LBox = (props: TLBoxProps) => {
 export const LHover = ({
     Size = new UDim2(1, 0, 1, 0), onClick, AnchorPoint,
     Pos, children, Aspect, Scale = 1.05, LayoutOrder,
+    MinSize,
 }: {
     Size?: UDim2, Pos?: UDim2, children?: ReactNode, Aspect?: number,
     Scale?: number, LayoutOrder?: number, onClick?: () => void, sfx?: boolean,
-    AnchorPoint?: Vector2,
+    AnchorPoint?: Vector2, MinSize?: Vector2,
 }) => {
     const scalerRef = useRef<UIScale>()
 
@@ -120,7 +121,8 @@ export const LHover = ({
     }
 
     return (
-        <LBox Trans Size={Size} Pos={Pos} Aspect={Aspect} LayoutOrder={LayoutOrder} AnchorPoint={AnchorPoint} Center >
+        <LBox Trans Size={Size} Pos={Pos} Aspect={Aspect} LayoutOrder={LayoutOrder} AnchorPoint={AnchorPoint} Center
+            MinSize={MinSize} >
             <imagebutton
                 Event={{
                     MouseEnter: () => playScale(true),
@@ -658,12 +660,12 @@ export const LHiders = ({ Size, Corners, Color, colors }: {
     )
 }
 
-export const LLine = ({ Size = new UDim2(1, 0, 0, 4), Text, TextY }: {
-    Size?: UDim2, Text?: string, TextY?: number,
+export const LLine = ({ Size = new UDim2(1, 0, 0, 4), Text, TextY, LayoutOrder }: {
+    Size?: UDim2, Text?: string, TextY?: number, LayoutOrder?: number,
 }) => {
     return (
         <imagelabel Size={Size} Image={icons.DivideImg}
-            BackgroundTransparency={1}  >
+            BackgroundTransparency={1} LayoutOrder={LayoutOrder} >
             {Text && <LBox Size={new UDim2(1, 0, 1, 0)} Trans Center >
                 <LText Size={new UDim2(0, 0, 0, TextY || 35)} AutoSize="X" RichText
                     Text={Text} Background={col('white')} BorderSizePixel={0}

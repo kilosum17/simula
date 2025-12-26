@@ -50,7 +50,7 @@ export const SettingsListRow = ({ setting, idx }: {
     setting: TSetting, idx: number,
 }) => {
 
-    const settings = usePlayerAtts({ settings: {} as TPlayerDataSettings }).settings
+    const settings = usePlayerAtts(['settings']).settings
 
     const getVal = () => {
         return settings[setting.key]

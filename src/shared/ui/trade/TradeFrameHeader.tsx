@@ -1,15 +1,13 @@
 import React from "@rbxts/react";
 import { LBox, LImage, LText } from "../comps/Wrappers";
-import { TTradeData } from "./TradeFrame";
 import { Atom, useAtom } from "shared/signals/atom";
 import { Players } from "@rbxts/services";
 import { col } from "shared/help/assist";
 import { icon } from "shared/help/icons";
+import { tradeAtom } from "./trade_utils";
 
-export function TradeFrameHeader({ atom }: {
-    atom: Atom<TTradeData>,
-}) {
-    const state = useAtom(atom)
+export function TradeFrameHeader() {
+    const state = useAtom(tradeAtom)
     const remotePlayer = Players.GetPlayerByUserId(state.remotePlayerId)!
     const localPlayer = Players.GetPlayerByUserId(state.localPlayerId)!
 

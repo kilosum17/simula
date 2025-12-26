@@ -18,7 +18,7 @@ export function MainFrameSidebar({ atom }: {
         >
             {state.sidebarItems?.map((h, i) => {
                 const callOnClick = () => {
-                    state.onSidebarClicked?.(h.name)
+                    atom.update({ sidebarItem: h.name })
                 }
                 return (
                     <LHover key={h.name} Size={new UDim2(0.95, 0, 0.2, 0)} Aspect={1} Scale={1.05}

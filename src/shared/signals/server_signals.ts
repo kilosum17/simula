@@ -20,3 +20,7 @@ export const buyEggSig = new Signal<(player: Player, eggNo: number, count: numbe
 export const updateEquipedPets = new Signal<(player: Player, petsIds: Record<string, number>) => void>()
 
 export const freezePetsSig = new Signal<(freeze: boolean) => void>()
+
+export const startTradeSig = new Signal<(remoteUserId: number) => void>()
+
+export const cancelTradeSig = new Signal<(remoteUserId: number) => void>()

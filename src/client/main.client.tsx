@@ -1,4 +1,4 @@
-import { ReplicatedStorage, RunService, UserInputService } from "@rbxts/services";
+import { RunService, UserInputService } from "@rbxts/services";
 import "./dev";
 
 import React from "@rbxts/react";
@@ -19,7 +19,6 @@ import { EggPetsRevealUI } from "shared/egg/ui/egg_pets_reveal_ui";
 import { buyEggSig } from "shared/signals/server_signals";
 import { getPlayer } from "shared/help/assist";
 import { TeleportFrame } from "shared/ui/teleport/TeleportFrame";
-import { PetViewer } from "shared/ui/comps/pet_viewer";
 import { TradeListFrame } from "shared/ui/trade/TradeListFrame";
 import { SettingsFrame } from "shared/ui/settings/SettingsFrame";
 import { frameStateAtom } from "shared/signals/atoms";
@@ -48,7 +47,7 @@ if (RunService.IsStudio()) {
 
     // mountFrame(<PetViewer />)
     frameStateAtom.update({ frame: "TRADE" })
-
+    
     const cracker = new EggCracker()
     UserInputService.InputBegan.Connect((inp, gpe) => {
         if (gpe) return
