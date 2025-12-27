@@ -15,7 +15,7 @@ const petsFolder = getPlayerPetsFolder()
 const getPetsSigData = () => {
     return petsFolder.GetChildren().map(c => {
         const petBody = c as TPetBody
-        const id = (petBody.GetAttribute('id') || 1) as number
+        const id = (petBody.GetAttribute('id') || '1') as string
         const petConf = getPetConf(id)!
         return { petBody, petConf }
     })

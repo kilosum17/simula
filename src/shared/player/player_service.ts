@@ -2,7 +2,7 @@ import Signal from "@rbxts/signal"
 import { PlayerData } from "./player_data"
 import { PlayerLocation } from "./player_location"
 import { getCharacter } from "shared/help/assist"
-import { buyEggSig, buyStageSig, collectDropsSig, unlockEggSig } from "shared/signals/server_signals"
+import { buyEggSig, buyStageSig, collectDropsSig, unlockEggSig, updateSettingsSig } from "shared/signals/server_signals"
 import { RunService } from "@rbxts/services"
 import { PlayerRewards } from "./player_rewards"
 import { randInt } from "shared/help/math"
@@ -35,6 +35,11 @@ export class PlayerService {
             if (player !== this.player) return
             if (!typeIs(stageNo, 'number')) return
             this.psRewards.buyStage(stageNo)
+        })
+
+        updateSettingsSig.Connect((player, settings) => {
+            if (player !== this.player) return
+            this.psData.update({ settings })
         })
 
         unlockEggSig.Connect((player, eggNo) => {

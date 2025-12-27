@@ -50,7 +50,7 @@ export class EggCracker {
                 })
             })
         } else {
-            const petIds = this.cords.map(() => 1)
+            const petIds = this.cords.map(() => '1')
             hatchedDropperAtom.update({ cords: this.cords, petIds, open: false })
             Remotes.Client.Get('BuyEgg').SendToServer(this.eggNo, this.eggCount)
             this.stopCracking()

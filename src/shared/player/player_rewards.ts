@@ -58,12 +58,11 @@ export class PlayerRewards {
         if (costTotal > store.coins) return
 
         const petIdsMap = store.petIds
-        const newPetIds = [] as number[]
+        const newPetIds = [] as string[]
         for (let i = 0; i < count; i++) {
-            const id = choosePetFromWeights(petsWeights)
-            const petId = tostring(id)
+            const petId = choosePetFromWeights(petsWeights)
             petIdsMap[petId] = (petIdsMap[petId] || 0) + 1
-            newPetIds.push(id)
+            newPetIds.push(petId)
         }
         const coins = store.coins - costTotal
         this.psServ.psData.update({ petIds: petIdsMap, coins })

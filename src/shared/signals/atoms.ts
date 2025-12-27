@@ -13,10 +13,13 @@ export const canNotAtom = new Atom({
 export type TFrameKind = "" | 'INV' | "TELEPORT" | "TRADE_LIST" | 'SETTINGS'
     | "TRADE"
 
-export const frameStateAtom = new Atom({ frame: '' as TFrameKind })
+export const frameStateAtom = new Atom({
+    frame: '' as TFrameKind,
+    isLock: false,
+})
 
 export const hatchedDropperAtom = new Atom({
     open: false,
-    petIds: [] as number[],
+    petIds: [] as string[],
     cords: [] as number[][],
 })

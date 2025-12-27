@@ -64,7 +64,7 @@ export function attachPetBillboard(petRoot: TPetBody) {
     clicker.MouseHoverEnter.Connect(() => sig.Fire(true))
     clicker.MouseHoverLeave.Connect(() => sig.Fire(false))
 
-    const conf = getPetConf(petRoot.GetAttribute('id') as number)!
+    const conf = getPetConf(petRoot.GetAttribute('id') as string)!
     const billboardGui = new Instance("BillboardGui");
     billboardGui.Name = "PetNameTag";
 

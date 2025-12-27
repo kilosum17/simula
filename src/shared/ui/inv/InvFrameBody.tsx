@@ -8,7 +8,7 @@ import { Atom, useAtom } from "shared/signals/atom";
 import { icon } from "shared/help/icons";
 import { TMainFrameAtom } from "../comps/MainFrame";
 import { usePlayerAtts } from "shared/signals/player_attributes";
-import { getItemsInGroups } from "./inventory_utils";
+import { getFilteredItems } from "./inventory_utils";
 import { ItemGroupRender } from "../comps/ItemGroupRender";
 
 export function InvFrameBody({ atom }: {
@@ -17,7 +17,11 @@ export function InvFrameBody({ atom }: {
     const state = useAtom(atom)
     const { petIds, boostIds } = usePlayerAtts(['petIds', 'boostIds'])
 
-    const items = getItemsInGroups(state.sidebarItem || 'Pets', petIds, boostIds)
+    const items = getFilteredItems({
+        kind: state.sidebarItem || 'Pets',
+        itemIds: { ...petIds, ...boostIds },
+        searchText: state.searchText
+    })
 
     return (
         <LBox isScroll Vert Pos={new UDim2(0.5, 0, 0.5, 0)} Size={new UDim2(1, 20, 0.95, 0)}
@@ -28,7 +32,7 @@ export function InvFrameBody({ atom }: {
                 TextY={30} LayoutOrder={-2} />
             <LPusher gapF={30} LayoutOrder={-1} />
             <ItemGroupRender LayoutOrder={0} size={new UDim2(1, 0, 0, 0)} items={items}
-                prefersCols={6} minSize={new Vector2(80, 80)} />
+                prefersCols={7} minSize={new Vector2(80, 80)} />
             <LPusher gapF={40} LayoutOrder={1000} />
         </LBox>
     )

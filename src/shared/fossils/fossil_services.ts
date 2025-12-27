@@ -36,7 +36,7 @@ export class FossilService {
                 warn("Not a valid fossil", fossilBody, stageNo, fosNames)
                 return
             }
-            const petConf = getPetConf(petBody.GetAttribute('id') as number)
+            const petConf = getPetConf(petBody.GetAttribute('id') as string)
             if (!petConf) {
                 warn("No pet ", petBody)
                 return

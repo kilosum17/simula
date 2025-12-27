@@ -8,7 +8,7 @@ import { LBox, LHiders, LHover, LImage, LPusher, LText } from "shared/ui/comps/W
 
 const TOP_COLOR = Color3.fromHex('4eddff')
 
-export function CanNotBuyUI() {
+export function CanNotUI() {
     const state = useAtom(canNotAtom)
 
     useEffect(() => {

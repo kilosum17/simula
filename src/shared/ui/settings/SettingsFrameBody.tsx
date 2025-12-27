@@ -5,6 +5,7 @@ import { TPlayerDataSettings } from "shared/player/player_utils";
 import { KSwitch } from "../comps/KSwitch";
 import { KSlider } from "../comps/KSlider";
 import KSelect, { TSelectOption } from "../comps/KSelect";
+import { Remotes } from "shared/signals/remotes";
 
 type TSetting = {
     name: string,
@@ -37,7 +38,7 @@ export function SettingsFrameBody() {
             TrackWidth={15} SortOrder="LayoutOrder" >
             {settings.map((set, i) => {
                 return <>
-                    <SettingsListRow key={set.name} setting={set} idx={i} />
+                    <SettingsListRow key={i} setting={set} idx={i} />
                     <LPusher gapS={0.05} />
                 </>
             })}
@@ -61,6 +62,7 @@ export const SettingsListRow = ({ setting, idx }: {
         const newSettings = { ...settings }
         newSettings[setting.key as 'music'] = val as unknown as number
         setPlayerAtts({ settings: newSettings })
+        Remotes.Client.Get('UpdateSettings').SendToServer(newSettings)
     }
     // warn("Setting", setting.name, getVal(), setting.key, settings)
 

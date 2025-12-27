@@ -474,6 +474,11 @@ export const getAtt = <T>(part: Instance, name: string, def: T) => {
     return (part.GetAttribute(name) ?? def) as T
 }
 
+
+export const toJson = (val: unknown) => {
+    return HttpService.JSONEncode(val);
+};
+
 export const encodedAttribute = (val: unknown): AttributeValue => {
     if (typeIs(val, "table")) {
         return HttpService.JSONEncode(val);

@@ -1,6 +1,7 @@
-import { getItemConf, GPT_ICONS } from "shared/help/DATA";
-import { countMapToTuples } from "shared/help/math";
-import { getPetConf } from "shared/help/pet_catalog";
+import { objValues, toJson } from "shared/help/assist";
+import { GPT_ICONS } from "shared/help/DATA";
+import { countMapToTuples, stringContains } from "shared/help/math";
+import { getAnyConf } from "shared/help/pet_catalog";
 
 export const invSidebarItems = [
     { icon: GPT_ICONS.nav_dinopaw, name: 'Pets', ver: 'pets' },
@@ -13,36 +14,49 @@ export const invSidebarItems = [
 export type TItemGroup = {
     id: string,
     count: number
-    kind: 'pet' | 'boost'
 }
 
-export const getItemsInGroups = (sidebarItem: string, petIds: Record<string, number>,
-    boostIds: Record<string, number>
-): TItemGroup[] => {
-    const pIds = countMapToTuples(petIds).filter(p => {
-        if (sidebarItem === 'all') return true
-        if (sidebarItem === 'Pets') return true
+export const getFilteredItems = ({ kind, itemIds, searchText }: {
+    kind: string, itemIds: Record<string, number>, searchText: string
+}): TItemGroup[] => {
+    const ids = countMapToTuples(itemIds).filter(p => {
+        if (kind === 'all') return true
+        const conf = getAnyConf(p[0])
+        if (searchText && searchText !== '') {
+            const text = toJson(objValues(conf))
+            return stringContains(text, searchText)
+        }
+        if (conf.isPet) {
+            if (kind === 'Pets') return true
+        } else {
+            if (kind === 'Boosts') return conf?.type === "BOOSTS"
+            if (kind === 'Potions') return conf?.type === "POTIONS"
+            if (kind === 'Hovers') return conf?.type === "HOVERBOARDS"
+        }
         return false
     })
-    pIds.sort((a, b) => {
-        return getPetConf(tonumber(a[0])!)!.damage > getPetConf(tonumber(b[1])!)!.damage
+    ids.sort((a, b) => {
+        const confA = getAnyConf(a[0])!
+        const confB = getAnyConf(b[0])!
+        return confA.name! > confB.name!
     })
-    const plist = pIds.map(id => {
-        return { id: id[0], count: id[1], kind: 'pet' as const }
+    ids.sort((a, b) => {
+        const confA = getAnyConf(a[0])!
+        const confB = getAnyConf(b[0])!
+        return confA.isPet && !confB.isPet
     })
-    const bIds = countMapToTuples(boostIds).filter(p => {
-        const conf = getItemConf(tonumber(p[0])!)
-        if (sidebarItem === 'Boosts') return conf?.type === "BOOSTS"
-        if (sidebarItem === 'Potions') return conf?.type === "POTIONS"
-        if (sidebarItem === 'Hovers') return conf?.type === "HOVERBOARDS"
-        return false
+
+    const list = ids.map(id => {
+        const conf = getAnyConf(id[0])
+        return {
+            id: id[0],
+            count: id[1],
+            conf: conf,
+        }
     })
-    bIds.sort((a, b) => {
-        return getItemConf(tonumber(a[0])!)!.name > getItemConf(tonumber(b[0])!)!.name
-    })
-    const blist = bIds.map(id => {
-        return { id: id[0], count: id[1], kind: 'boost' as const }
-    })
-    return [...plist, ...blist]
+    if (searchText) {
+        print('Search', searchText, list.map(l => l.conf.name))
+    }
+    return list
 }
 

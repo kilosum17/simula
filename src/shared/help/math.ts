@@ -1,3 +1,5 @@
+import { TextService } from "@rbxts/services"
+
 export const randInt = (min: number, max: number) => {
     return math.floor(math.random(min, max - 1))
 }
@@ -30,7 +32,29 @@ export const countMapToTuples = <T extends string | number,>(counts: Record<T, n
     return items
 }
 
+export const listToMap = <T extends object,>(list: T[], key: keyof T) => {
+    const map = {} as Record<string, T>
+    for (const item of list) {
+        map[(item as Record<string, string>)[key as string]] = item
+    }
+    return map
+}
+
 export const randSample = <T>(vals: T[]) => {
     const idx = randInt(0, vals.size() - 1);
     return vals[idx]
+}
+
+export function stringContains(haystack: string, needle: string): boolean {
+    if (needle === "") {
+        return true;
+    }
+    const [found] = haystack.lower().find(needle.lower(), 1, true);
+    const res = found !== undefined;
+    return res
+}
+
+export function getTextDimensions(text: string, fontSize: number, maxWidth: number = 10000): Vector2 {
+    const frameSize = new Vector2(maxWidth, 10000);
+    return TextService.GetTextSize(text, fontSize, Enum.Font.FredokaOne, frameSize);
 }

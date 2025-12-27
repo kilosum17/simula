@@ -2,7 +2,7 @@ import { Players, RunService } from "@rbxts/services";
 import { getEggState } from "shared/egg/egg_utils";
 import { getPlayerAtts, setPlayerAtts } from "shared/signals/player_attributes";
 import { Remotes } from "shared/signals/remotes";
-import { buyEggSig, buyStageSig, collectDropsSig, fossilDamageSig, unlockEggSig } from "shared/signals/server_signals";
+import { buyEggSig, buyStageSig, collectDropsSig, fossilDamageSig, unlockEggSig, updateSettingsSig } from "shared/signals/server_signals";
 
 
 Remotes.Server.Get('SetAttribute').Connect((_player, part, name, value) => {
@@ -39,6 +39,10 @@ Remotes.Server.Get('BuyEgg').Connect((player, eggNo, eggCount) => {
     buyEggSig.Fire(player, eggNo, eggCount)
 });
 
+Remotes.Server.Get('UpdateSettings').Connect((player, settings) => {
+    updateSettingsSig.Fire(player, settings)
+});
+
 Remotes.Server.Get('AddTradeRequest').Connect((player, remoteUserId,) => {
     const remotePlayer = Players.GetPlayerByUserId(remoteUserId)
     if (!remotePlayer) return
@@ -53,35 +57,35 @@ Remotes.Server.Get('AcceptTradeRequest').Connect((player, remoteUserId) => {
     const localPlayer = player
     const remoteData = getPlayerAtts(remotePlayer).trade
     const localData = getPlayerAtts(localPlayer).trade
-    if (!RunService.IsStudio() && !remoteData.sentTradeRegs.includes(localPlayer.UserId)) {
-        warn("Player didn't send trade request remote:", remotePlayer.Name, 'local', localPlayer.Name)
+    if (!remoteData.sentTradeRegs.includes(localPlayer.UserId)) {
+        warn("NO trade reg from", remotePlayer.Name, 'local', localPlayer.Name)
         return
     }
     if (remoteData.isTrading) {
-        warn("Player already trading remote:", remotePlayer.Name, 'local', localPlayer.Name)
+        warn("Playe isTrading :", remotePlayer.Name, 'local', localPlayer.Name)
         return
     }
-    remoteData.sentTradeRegs = remoteData.sentTradeRegs.filter(t => t !== localPlayer.UserId)
-    setPlayerAtts({ trade: remoteData }, remotePlayer)
+    remoteData.sentTradeRegs = remoteData.sentTradeRegs
+        .filter(t => t !== localPlayer.UserId)
     remoteData.isTrading = true
-    remoteData.tradePatner = localPlayer.UserId
     localData.isTrading = true
+    remoteData.tradePatner = localPlayer.UserId
     localData.tradePatner = remotePlayer.UserId
     setPlayerAtts({ trade: remoteData }, remotePlayer)
     setPlayerAtts({ trade: localData }, localPlayer)
-
     Remotes.Server.Get("StartTrade").SendToPlayer(localPlayer, remotePlayer.UserId)
     Remotes.Server.Get("StartTrade").SendToPlayer(remotePlayer, localPlayer.UserId)
 });
 
 Remotes.Server.Get('UpdateTrade').Connect((_, data, player) => {
+    if (data.sentTradeRegs) delete data.sentTradeRegs
     const trade = getPlayerAtts(player).trade
-    if (!trade.isTrading) {
-        warn("Not trading", player)
-        return
-    }
     const newTrade = { ...trade, ...data }
     setPlayerAtts({ trade: newTrade }, player)
+})
+
+Remotes.Server.Get('SendEventToClient').Connect((_, player, event, arg) => {
+    Remotes.Server.Get('PassEventToPlayer').SendToPlayer(player, event, arg)
 })
 
 

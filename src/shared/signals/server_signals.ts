@@ -1,5 +1,7 @@
 import Signal from "@rbxts/signal";
 import { TPetBody } from "shared/pets/pet";
+import { TPlayerDataSettings } from "shared/player/player_utils";
+import { TSendEventToPlayerKind } from "./remotes";
 
 export const enteredAreaSig = new Signal<(player: Player, areaNo: number, enter: number) => void>()
 
@@ -17,6 +19,8 @@ export const unlockEggSig = new Signal<(player: Player, eggNo: number) => void>(
 
 export const buyEggSig = new Signal<(player: Player, eggNo: number, count: number) => void>()
 
+export const updateSettingsSig = new Signal<(player: Player, settings: TPlayerDataSettings) => void>()
+
 export const updateEquipedPets = new Signal<(player: Player, petsIds: Record<string, number>) => void>()
 
 export const freezePetsSig = new Signal<(freeze: boolean) => void>()
@@ -24,3 +28,5 @@ export const freezePetsSig = new Signal<(freeze: boolean) => void>()
 export const startTradeSig = new Signal<(remoteUserId: number) => void>()
 
 export const cancelTradeSig = new Signal<(remoteUserId: number) => void>()
+
+export const clientEventSig = new Signal<(event: TSendEventToPlayerKind, args: unknown) => void>()

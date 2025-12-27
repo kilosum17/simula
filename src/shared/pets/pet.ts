@@ -26,7 +26,7 @@ export class Pet {
     constructor(petsMan: PetsManager, id: string) {
         this.petsMan = petsMan
         this.id = id
-        this._conf = getPetConf(tonumber(id)!)!;
+        this._conf = getPetConf(id)!;
         const { anchor, body } = this._createBody()
         // const { body } = this._createBody()
         this._anchor = anchor
@@ -54,7 +54,7 @@ export class Pet {
         anchor.Size = new Vector3(0.8, 0.8, 0.8)
         anchor.Shape = Enum.PartType.Ball
         anchor.Transparency = 1
-        anchor.SetAttribute("id", tonumber(this.id)!)
+        anchor.SetAttribute("id", this.id)
 
         const model = ReplicatedStorage.instance.BoxPets.WaitForChild(this._conf.model_name).Clone() as Model
         model.Parent = anchor

@@ -14,7 +14,7 @@ export const isEggAvailable = (eggNo: number) => {
 }
 
 export type TEggPetWeight = {
-    id: number,
+    id: string,
     perc: number,
 }
 
@@ -28,10 +28,10 @@ export const getEggState = (eggNo: number, player?: Player) => {
     const modelName = `Tier ${eggIdx + 1}`
 
     const petsWeights = [
-        { id: 1, perc: 25 },
-        { id: 2, perc: 25 },
-        { id: 3, perc: 25 },
-        { id: 4, perc: 25 },
+        { id: '1', perc: 25 },
+        { id: '2', perc: 25 },
+        { id: '3', perc: 25 },
+        { id: '4', perc: 25 },
     ] as TEggPetWeight[]
 
 
@@ -44,7 +44,7 @@ export const getEggModel = (modelName: string) => {
     return eggsFold.WaitForChild(modelName) as BasePart
 }
 
-export function choosePetFromWeights(petsList: TEggPetWeight[]): number {
+export function choosePetFromWeights(petsList: TEggPetWeight[]): string {
     let totalWeight = 0;
     for (const pet of petsList) {
         totalWeight += pet.perc;

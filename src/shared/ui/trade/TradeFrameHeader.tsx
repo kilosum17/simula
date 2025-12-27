@@ -1,18 +1,22 @@
 import React from "@rbxts/react";
 import { LBox, LImage, LText } from "../comps/Wrappers";
-import { Atom, useAtom } from "shared/signals/atom";
 import { Players } from "@rbxts/services";
-import { col } from "shared/help/assist";
+import { col, getPlayer } from "shared/help/assist";
 import { icon } from "shared/help/icons";
-import { tradeAtom } from "./trade_utils";
+import { usePlayerAtts } from "shared/signals/player_attributes";
+import { formatNumber } from "shared/help/helpers";
 
 export function TradeFrameHeader() {
-    const state = useAtom(tradeAtom)
-    const remotePlayer = Players.GetPlayerByUserId(state.remotePlayerId)!
-    const localPlayer = Players.GetPlayerByUserId(state.localPlayerId)!
+    const localPlayer = getPlayer()
+    const { tradePatner } = usePlayerAtts(['trade']).trade
+    const remotePlayer = Players.GetPlayerByUserId(tradePatner) || localPlayer
+    const { trade: localData } = usePlayerAtts(['trade'], localPlayer)
+    const { trade: remoteData } = usePlayerAtts(['trade'], remotePlayer)
 
     const remoteAvatar = Players.GetUserThumbnailAsync(remotePlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)[0]
     const localAvatar = Players.GetUserThumbnailAsync(localPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)[0]
+    const localGems = formatNumber(localData.gems)
+    const remoteGems = formatNumber(remoteData.gems)
 
     return (
         <LBox AnchorPoint={new Vector2(0.5, 0.5)} Pos={new UDim2(0.5, 0, 0, -2)}
@@ -27,7 +31,7 @@ export function TradeFrameHeader() {
                 AnchorPoint={new Vector2(0.5, 0.5)} Center >
                 <LBox Vert Size={new UDim2(0.4, 0, 1, 0)} Trans>
                     <LText Text="Your Offer" Size={new UDim2(1, 0, 0.6, 0)} Color={col('white')} StrokeThickness={3} Align="Left" />
-                    <LText Text="Trade Value: 💎0" Size={new UDim2(1, 0, 0.4, 0)} Color={col('blue_mid')} StrokeThickness={2} Align="Left" />
+                    <LText Text={`Trade Value: 💎${localGems}`} Size={new UDim2(1, 0, 0.4, 0)} Color={col('blue_mid')} StrokeThickness={2} Align="Left" />
                 </LBox>
                 <LBox Center Size={new UDim2(0.2, 0, 0.7, 0)} Trans  >
                     <LBox Size={new UDim2(1, 0, 1, 0)} Aspect={1} CornerRadius2={new UDim(0.5, 0)}
@@ -37,7 +41,7 @@ export function TradeFrameHeader() {
                 </LBox>
                 <LBox Vert Size={new UDim2(0.4, 0, 1, 0)} Trans >
                     <LText Text={remotePlayer.DisplayName} Size={new UDim2(1, 0, 0.6, 0)} Color={col('white')} StrokeThickness={3} Align="Right" />
-                    <LText Text="Trade Value: 💎0" Size={new UDim2(1, 0, 0.4, 0)} Color={col('blue_mid')} StrokeThickness={2} Align="Right" />
+                    <LText Text={`Trade Value: 💎${remoteGems}`} Size={new UDim2(1, 0, 0.4, 0)} Color={col('blue_mid')} StrokeThickness={2} Align="Right" />
                 </LBox>
             </LBox>
             {/* AVATAR 2 */}
