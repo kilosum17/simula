@@ -81,6 +81,7 @@ export type TPlayerTradeData = {
     isTrading: boolean,
     isReady: boolean,
     isConfirmed: boolean,
+    confirmedAt: number,
     tradePatner: number,
     sentTradeRegs: number[],
     itemIds: Record<string, number>,
@@ -96,6 +97,7 @@ export const getPlayerDefTrade = () => {
         isTrading: false,
         isReady: false,
         isConfirmed: false,
+        confirmedAt: 0,
         tradePatner: 0,
         sentTradeRegs: [],
         itemIds: {},
@@ -107,4 +109,3 @@ export const PLAYER_TEMP_DATA_DEF = {
     trade: getPlayerDefTrade(),
 
 } satisfies TPlayerTempData as TPlayerTempData
-

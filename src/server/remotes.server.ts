@@ -1,8 +1,7 @@
-import { Players, RunService } from "@rbxts/services";
-import { getEggState } from "shared/egg/egg_utils";
-import { getPlayerAtts, setPlayerAtts } from "shared/signals/player_attributes";
-import { Remotes } from "shared/signals/remotes";
-import { buyEggSig, buyStageSig, collectDropsSig, fossilDamageSig, unlockEggSig, updateSettingsSig } from "shared/signals/server_signals";
+import { Players } from "@rbxts/services";
+import { getPlayerAtts, playerHasItems, setPlayerAtts } from "shared/signals/player_attributes";
+import { Remotes, sendEventToClient } from "shared/signals/remotes";
+import { addRemoveItemsSig, buyEggSig, buyStageSig, collectDropsSig, fossilDamageSig, unlockEggSig, updateSettingsSig } from "shared/signals/server_signals";
 
 
 Remotes.Server.Get('SetAttribute').Connect((_player, part, name, value) => {
@@ -73,8 +72,8 @@ Remotes.Server.Get('AcceptTradeRequest').Connect((player, remoteUserId) => {
     localData.tradePatner = remotePlayer.UserId
     setPlayerAtts({ trade: remoteData }, remotePlayer)
     setPlayerAtts({ trade: localData }, localPlayer)
-    Remotes.Server.Get("StartTrade").SendToPlayer(localPlayer, remotePlayer.UserId)
-    Remotes.Server.Get("StartTrade").SendToPlayer(remotePlayer, localPlayer.UserId)
+    sendEventToClient(localPlayer, 'START_TRADE', remotePlayer.UserId)
+    sendEventToClient(remotePlayer, 'START_TRADE', localPlayer.UserId)
 });
 
 Remotes.Server.Get('UpdateTrade').Connect((_, data, player) => {
@@ -82,6 +81,36 @@ Remotes.Server.Get('UpdateTrade').Connect((_, data, player) => {
     const trade = getPlayerAtts(player).trade
     const newTrade = { ...trade, ...data }
     setPlayerAtts({ trade: newTrade }, player)
+})
+
+Remotes.Server.Get('ConfirmTrade').Connect((player) => {
+    const localPlayer = player
+    const localData = getPlayerAtts(player).trade
+    const remotePlayer = Players.GetPlayerByUserId(localData.tradePatner)
+    if (!remotePlayer) return
+    const remoteData = getPlayerAtts(remotePlayer).trade
+    if (!localData.isTrading || !remoteData.isTrading) return
+
+    localData.isTrading = false
+    remoteData.isTrading = false
+    remoteData.isConfirmed = false
+    localData.isConfirmed = false
+    remoteData.isReady = false
+    localData.isReady = false
+
+    setPlayerAtts({ trade: localData }, player)
+    setPlayerAtts({ trade: remoteData }, remotePlayer)
+    if (!playerHasItems(localPlayer, localData.itemIds)) return
+    if (!playerHasItems(remotePlayer, remoteData.itemIds)) return
+
+    addRemoveItemsSig.Fire(localPlayer, remoteData.itemIds, 'add')
+    addRemoveItemsSig.Fire(remotePlayer, localData.itemIds, 'add')
+    addRemoveItemsSig.Fire(localPlayer, localData.itemIds, 'remove')
+    addRemoveItemsSig.Fire(remotePlayer, remoteData.itemIds, 'remove')
+
+    sendEventToClient(localPlayer, "CONFIRM_TRADE", 0)
+    sendEventToClient(remotePlayer, "CONFIRM_TRADE", 0)
+    print('confirm trade', player, remotePlayer)
 })
 
 Remotes.Server.Get('SendEventToClient').Connect((_, player, event, arg) => {

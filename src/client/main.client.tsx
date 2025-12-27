@@ -24,7 +24,7 @@ mountFrame(<InvFrame />)
 mountFrame(<TradeListFrame />)
 mountFrame(<SettingsFrame />)
 mountFrame(<TradeFrame />)
-mountFrame(<TeleportFrame />)
+// mountFrame(<TeleportFrame />)
 
 mountFrame(<NTooltipFrame />, 3)
 mountFrame(<EggPetsRevealUI />)

@@ -25,8 +25,7 @@ export const updateEquipedPets = new Signal<(player: Player, petsIds: Record<str
 
 export const freezePetsSig = new Signal<(freeze: boolean) => void>()
 
-export const startTradeSig = new Signal<(remoteUserId: number) => void>()
-
-export const cancelTradeSig = new Signal<(remoteUserId: number) => void>()
-
 export const clientEventSig = new Signal<(event: TSendEventToPlayerKind, args: unknown) => void>()
+
+export const addRemoveItemsSig = new Signal<(player: Player, itemIds: Record<string, number>, action: 'add' | 'remove') => void>()
+

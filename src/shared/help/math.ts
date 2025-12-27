@@ -1,4 +1,4 @@
-import { TextService } from "@rbxts/services"
+import { RunService, TextService } from "@rbxts/services"
 
 export const randInt = (min: number, max: number) => {
     return math.floor(math.random(min, max - 1))
@@ -57,4 +57,16 @@ export function stringContains(haystack: string, needle: string): boolean {
 export function getTextDimensions(text: string, fontSize: number, maxWidth: number = 10000): Vector2 {
     const frameSize = new Vector2(maxWidth, 10000);
     return TextService.GetTextSize(text, fontSize, Enum.Font.FredokaOne, frameSize);
+}
+
+export function setHeartbeatInterval(dur: number, callback: () => void): RBXScriptConnection {
+    let accumulator = 0;
+
+    return RunService.Heartbeat.Connect((dt) => {
+        accumulator += dt;
+        if (accumulator >= dur) {
+            accumulator -= dur;
+            callback();
+        }
+    });
 }

@@ -19,15 +19,6 @@ export const PLAYER_ATTS_DEF = {
 
 } satisfies TPlayerAtts as TPlayerAtts
 
-export const getPlayerAtts = (player?: Player) => {
-    const data = (player || getPlayer()).GetAttributes() as unknown as TPlayerAtts
-    const decData = {} as Record<string, unknown>
-    for (const [key, val] of pairs(data)) {
-        decData[key] = decodeAttribute(val)
-    }
-    return { ...PLAYER_ATTS_DEF, ...decData } as TPlayerAtts
-}
-
 export const setPlayerAtts = (data: Partial<TPlayerAtts>, _player?: Player) => {
     const player = (_player || getPlayer())
     for (const [key, val] of pairs(data)) {
@@ -56,3 +47,22 @@ export const usePlayerAtts = <T extends keyof TPlayerAtts,>(keys: T[], _player?:
     return data
 }
 
+export const playerHasItems = (player: Player, itemIds: Record<string, number>) => {
+    if (player?.UserId === undefined) return false
+    const data = getPlayerAtts(player)
+    const allItems = { ...data.boostIds, ...data.petIds }
+    for (const [key, count] of pairs(itemIds)) {
+        if (allItems[key] === undefined) return false
+        if (allItems[key] < itemIds[key]) return false
+    }
+    return true
+}
+
+export const getPlayerAtts = (player?: Player) => {
+    const data = (player || getPlayer()).GetAttributes() as unknown as TPlayerAtts
+    const decData = {} as Record<string, unknown>
+    for (const [key, val] of pairs(data)) {
+        decData[key] = decodeAttribute(val)
+    }
+    return { ...PLAYER_ATTS_DEF, ...decData } as TPlayerAtts
+}

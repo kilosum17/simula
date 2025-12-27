@@ -4,6 +4,7 @@ import { deepClone, tableSize } from "shared/help/assist";
 import { updateEquipedPets } from "shared/signals/server_signals";
 import { PLAYER_DATA_DEF, TPlayerData } from "./player_utils";
 import { setPlayerAtts } from "shared/signals/player_attributes";
+import { isPetId } from "shared/help/pet_catalog";
 
 const MAX_RETRIES = 3
 
@@ -76,4 +77,25 @@ export class PlayerData {
         setPlayerAtts(this.store, this.ps.player)
     }
 
+    addRemoveItems(itemIds: Record<string, number>, action: 'add' | 'remove') {
+        const isAdd = action === 'add'
+        for (const [id, count] of pairs(itemIds)) {
+            const isPet = isPetId(id)
+            const curIds = isPet ? this.store.petIds : this.store.boostIds
+            const curCount = curIds[id] || 0
+            let no = isAdd ? (curCount + count) : (curCount - count)
+            no = math.max(0, no)
+            if (isPet) this.store.petIds[id] = no
+            else this.store.boostIds[id] = no
+            if (no === 0) {
+                if (isPet) delete this.store.petIds[id]
+                else delete this.store.boostIds[id]
+            }
+        }
+        warn(action, itemIds, 'player: ', this.ps.player.Name)
+        setPlayerAtts(this.store, this.ps.player)
+        updateEquipedPets.Fire(this.ps.player, this.store.petIds)
+    }
+
 }
+

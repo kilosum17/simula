@@ -4,7 +4,7 @@ import { MainFrame } from "../comps/MainFrame";
 import { TradeFrameBody } from "./TradeFrameBody";
 import { getPlayer } from "shared/help/assist";
 import { TradeFrameHeader } from "./TradeFrameHeader";
-import { clientEventSig, startTradeSig } from "shared/signals/server_signals";
+import { clientEventSig } from "shared/signals/server_signals";
 import { useFrameState } from "shared/signals/use_frame_state";
 import { Players } from "@rbxts/services";
 import { canNotAtom } from "shared/signals/atoms";
@@ -25,18 +25,20 @@ export function TradeFrame() {
     }, [])
 
     useEffect(() => {
-        const con1 = startTradeSig.Connect((remotePlayerId) => {
-            openFrame("TRADE", true)
-            print('Start trade', remotePlayerId)
-            const resetData = getPlayerDefTrade() as Partial<TPlayerTradeData>
-            delete resetData.isReady
-            delete resetData.tradePatner
-            delete resetData.sentTradeRegs
-            Remotes.Client.Get('UpdateTrade').SendToServer(resetData, getPlayer())
-            Remotes.Client.Get('UpdateTrade').SendToServer(resetData,
-                Players.GetPlayerByUserId(remotePlayerId)!)
-        })
         const con2 = clientEventSig.Connect((event, args) => {
+            if (event === 'START_TRADE') {
+                const remotePlayerId = args as number
+                openFrame("TRADE", true)
+                print('Start trade', remotePlayerId)
+                const resetData = getPlayerDefTrade() as Partial<TPlayerTradeData>
+                delete resetData.isTrading
+                delete resetData.tradePatner
+                delete resetData.sentTradeRegs
+                Remotes.Client.Get('UpdateTrade').SendToServer(resetData, getPlayer())
+                Remotes.Client.Get('UpdateTrade').SendToServer(resetData,
+                    Players.GetPlayerByUserId(remotePlayerId)!)
+
+            }
             if (event === 'CANCEL_TRADE') {
                 const cancelUserId = args as number
                 const message = getCancelTradeMessage(cancelUserId)
@@ -44,10 +46,13 @@ export function TradeFrame() {
                 canNotAtom.update({ kind: 'CUSTOM', open: true, message })
                 print('Cancel trade', cancelUserId)
             }
+            if (event === 'CONFIRM_TRADE') {
+                closeFrame("TRADE")
+                print('confirm trade')
+            }
         })
 
         return () => {
-            con1.Disconnect()
             con2.Disconnect()
         }
     }, [openFrame, closeFrame])
